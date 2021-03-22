@@ -12,7 +12,7 @@ const routes: Routes = [
       { path: 'sprint-backlog', component: SprintBacklogComponent }
     ]},
   { path: 'login-page', component: LoginPageComponent},
-  { path: 'registration-page', component: RegistrationPageComponent}
+  { path: 'registration-page', component: RegistrationPageComponent},
 ];
 
 @NgModule({
