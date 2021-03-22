@@ -9,13 +9,16 @@ import { MaterialModule } from './material.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
+import { LoginPageComponent } from './login-page/login-page.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    ProductBacklogComponent
+    ProductBacklogComponent,
+    LoginPageComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,8 @@ import {MatSelectModule} from "@angular/material/select";
     MaterialModule,
     BrowserAnimationsModule,
     MatToolbarModule,
-    MatSelectModule
+    MatSelectModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,30 @@
+<div class="main-container">
+  <div class="button-login">
+    <span>SIGN IN</span>
+  </div>
+  <div class="button-registration">
+    <span>REGISTRATION</span>
+  </div>
+  <div class="form-login">
+    <form [formGroup]="loginForm">
+      <div class="data-login">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input [formControl]="emailFC" matInput required type="email"/>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input [formControl]="passwordFC" matInput required type="password"/>
+        </mat-form-field>
+      </div>
+      <div class="submit">
+        <div class="name-button">
+          SIGN IN
+        </div>
+        <button>
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
