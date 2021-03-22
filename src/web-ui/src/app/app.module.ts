@@ -12,6 +12,10 @@ import {MatSelectModule} from "@angular/material/select";
 import { LoginPageComponent } from './authorization/login-page/login-page.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { RegistrationPageComponent } from './authorization/registration-page/registration-page.component';
+import {MatMenuModule} from "@angular/material/menu";
+import { SprintBacklogComponent } from './sprint-backlog/sprint-backlog.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import { TaskStatesComponent } from './task-states/task-states.component';
 
 
 @NgModule({
@@ -20,7 +24,9 @@ import { RegistrationPageComponent } from './authorization/registration-page/reg
     MainLayoutComponent,
     ProductBacklogComponent,
     LoginPageComponent,
-    RegistrationPageComponent
+    RegistrationPageComponent,
+    SprintBacklogComponent,
+    TaskStatesComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +35,9 @@ import { RegistrationPageComponent } from './authorization/registration-page/reg
     BrowserAnimationsModule,
     MatToolbarModule,
     MatSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
