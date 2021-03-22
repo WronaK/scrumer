@@ -10,18 +10,17 @@
     font-size: 1.2em;
     line-height: 1.2em;
     min-height: 50px;
-    display: flex;
+    @include centerElements;
     align-self: stretch;
-    align-items: center;
-    justify-content: center;
     box-shadow: 0 3px 6px black;
-    border-radius: 5px;
+    border-radius: 10px;
   }
 
   mat-expansion-panel {
     margin-top: 1em;
     background: $yellow;
     box-shadow: 0 3px 6px black;
+    border-radius: 10px;
 
     mat-expansion-panel-header {
       mat-panel-title {

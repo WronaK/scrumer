@@ -5,11 +5,13 @@ import {ProductBacklogComponent} from "./product-backlog/product-backlog.compone
 import {LoginPageComponent} from "./authorization/login-page/login-page.component";
 import {RegistrationPageComponent} from "./authorization/registration-page/registration-page.component";
 import {SprintBacklogComponent} from "./sprint-backlog/sprint-backlog.component";
+import {HomePageComponent} from "./home-page/home-page.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
       { path: 'product-backlog', component: ProductBacklogComponent },
-      { path: 'sprint-backlog', component: SprintBacklogComponent }
+      { path: 'sprint-backlog', component: SprintBacklogComponent },
+      { path: 'home', component: HomePageComponent}
     ]},
   { path: 'login-page', component: LoginPageComponent},
   { path: 'registration-page', component: RegistrationPageComponent},

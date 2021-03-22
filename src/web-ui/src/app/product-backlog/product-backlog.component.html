@@ -16,36 +16,17 @@
     </mat-toolbar>
 
     <div class="product-backlog-content">
-        <table mat-table [dataSource]="productBacklog">
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef>ID</th>
-              <td mat-cell *matCellDef="let element"> {{element.id}}</td>
-            </ng-container>
-            <ng-container matColumnDef="userStory">
-              <th mat-header-cell *matHeaderCellDef>USER STORY</th>
-              <td mat-cell *matCellDef="let element"> {{element.userStory}}</td>
-            </ng-container>
-            <ng-container matColumnDef="priority">
-              <th mat-header-cell *matHeaderCellDef>PRIRIORITY</th>
-              <td mat-cell *matCellDef="let element"> {{element.priority}}</td>
-            </ng-container>
-            <ng-container matColumnDef="storyPoint">
-              <th mat-header-cell *matHeaderCellDef>STORY POINT</th>
-              <td mat-cell *matCellDef="let element"> {{element.storyPoint}}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      <mat-paginator [pageSize]="8"  showFirstLastButtons></mat-paginator>
-    </div>
-
-    <div class="add-task">
-      <div class="button-name">ADD A NEW TASK TO THE PRODUCT BACKLOG</div>
-      <button>
-        <i class="fas fa-chevron-right"></i>
-      </button>
+       <div class="row headRow">
+         <div *ngFor="let element of displayedColumns">
+         {{element}}
+         </div>
+        </div>
+        <div class="row" *ngFor="let task of productBacklog">
+          <div>{{task.id}}</div>
+          <div>{{task.title}}</div>
+          <div>{{task.priority}}</div>
+          <div>{{task.storyPoint}}</div>
+        </div>
     </div>
   </div>
-
 </div>

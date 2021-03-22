@@ -9,6 +9,8 @@ $green: #49D593;
 $grey: #6E6E6E;
 $purple: #AEABF5;
 $yellow: #DDE1D3;
+$purple: #AEABF5;
+$pink: #ECC0F5;
 
 html, body {
   height: 100%;
@@ -17,5 +19,36 @@ html, body {
   padding: 0;
   background: $brown;
   font-family: 'Roboto Mono', monospace;
+}
+
+@mixin fullPage() {
+  height: 100%;
+  width: 100%;
+  @include centerElements;
+}
+
+@mixin centerElements() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin headerContent() {
+  background: $dark-brown;
+  box-shadow: 0 3px 6px black;
+
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+
+@mixin fontHeader() {
+  font-size: 1.5em;
+  color: $green;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 2%;
 }
 

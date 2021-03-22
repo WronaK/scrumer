@@ -1,0 +1,60 @@
+<div class="main-container">
+
+  <div class="home-page-container">
+    <div class="projects">
+      <div class="header">
+        My projects
+      </div>
+      <div class="content">
+        <div class="project">
+          Project 1
+        </div>
+        <div class="project">
+          Project 2
+        </div>
+        <div class="project">
+          Project 3
+        </div>
+      </div>
+    </div>
+
+    <div class="teams">
+      <div class="header">
+        My teams
+      </div>
+      <div class="content">
+        <div class="team">
+          Team 1
+        </div>
+        <div class="team">
+          Team 2
+        </div>
+        <div class="team">
+          Team 3
+        </div>
+      </div>
+    </div>
+
+    <div class="tasks">
+      <div class="header">
+        My tasks
+      </div>
+      <div class="content">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let task of tasks" hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{task.title}} ({{task.storyPoint}})
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>{{task.userStory}}</p>
+            <div class="details">
+              <i class="far fa-eye"></i>
+              see details
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>
