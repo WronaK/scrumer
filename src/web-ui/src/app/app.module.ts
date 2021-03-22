@@ -9,8 +9,9 @@ import { MaterialModule } from './material.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
-import { LoginPageComponent } from './login-page/login-page.component';
+import { LoginPageComponent } from './authorization/login-page/login-page.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import { RegistrationPageComponent } from './authorization/registration-page/registration-page.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     AppComponent,
     MainLayoutComponent,
     ProductBacklogComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    RegistrationPageComponent
   ],
   imports: [
     BrowserModule,
