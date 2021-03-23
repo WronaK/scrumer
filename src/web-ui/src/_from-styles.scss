@@ -1,0 +1,54 @@
+@import "main-styles";
+
+:host {
+  @include fullPage;
+}
+
+.main-container {
+  width: 90%;
+  height: 90%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  box-shadow: 0 3px 6px black;
+  border-radius: 10px;
+
+
+  .button-login,
+  .button-registration {
+    background-position: center;
+    background-size: cover;
+    @include centerElements;
+    font-size: 2em;
+    font-weight: bold;
+    text-shadow: 3px -21px 14px white;
+  }
+
+  .button-login {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    background-image: url("assets/login.jpg");
+    border-radius: 10px 0 0 0;
+  }
+
+  .button-registration {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    background-image: url("assets/registration.jpg");
+    border-radius: 0 0 0 10px;
+
+  }
+
+  form {
+    grid-column-start: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+
+    height: 100%;
+
+    @include formFields;
+    @include beltWithButton;
+  }
+}
+
+

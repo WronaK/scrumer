@@ -9,11 +9,12 @@
     background: $green;
     font-size: 1.2em;
     line-height: 1.2em;
-    min-height: 50px;
+    min-height: 60px;
     @include centerElements;
     align-self: stretch;
     box-shadow: 0 3px 6px black;
     border-radius: 10px;
+    min-width: 250px;
   }
 
   mat-expansion-panel {
@@ -23,6 +24,8 @@
     border-radius: 10px;
 
     mat-expansion-panel-header {
+      min-height: 60px;
+      min-width: 250px;
       mat-panel-title {
         font-weight: bold;
       }

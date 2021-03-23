@@ -1,0 +1,10 @@
+@import "../../from-styles";
+
+.button-login {
+  filter: brightness(30%);
+}
+
+.button-registration {
+  filter: brightness(60%);
+  color: $green;
+}

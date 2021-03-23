@@ -40,6 +40,7 @@ html, body {
   display: flex;
   justify-content: space-between;
   border-radius: 10px;
+  min-height: 60px;
 }
 
 @mixin fontHeader() {
@@ -52,3 +53,48 @@ html, body {
   padding-left: 2%;
 }
 
+@mixin beltWithButton() {
+  .submit {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: space-between;
+
+    .name-button {
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $grey;
+      font-size: 1.2em;
+      background: $brown;
+    }
+    button {
+      width: 20%;
+      background: $green;
+      border: none;
+      border-radius: 0 0 10px 0 ;
+    }
+  }
+}
+
+@mixin formFields() {
+  .data {
+    height: 85%;
+    @include centerElements;
+    flex-direction: column;
+
+    background: $dark-brown;
+    border-radius: 0 10px 0 0;
+
+    mat-form-field {
+      width: 80%;
+      color: $green;
+      font-size: 1.5em;
+
+      mat-label {
+        color: $grey;
+      }
+    }
+  }
+}

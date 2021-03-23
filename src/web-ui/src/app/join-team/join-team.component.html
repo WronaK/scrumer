@@ -1,0 +1,56 @@
+<div class="main-container">
+
+  <div class="join-team-container">
+    <div class="header">
+      <button mat-raised-button>SKIP</button>
+    </div>
+
+    <div class="create-project">
+      <div class="header">CREATE A NEW PROJECT</div>
+        <form [formGroup]="projectForm">
+          <div class="data">
+            <mat-form-field>
+              <mat-label>Project name</mat-label>
+              <input [formControl]="projectNameFC" matInput required type="email"/>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Password</mat-label>
+              <input [formControl]="passwordFC" matInput required type="password"/>
+            </mat-form-field>
+          </div>
+          <div class="submit">
+            <div class="name-button">
+              CREATE A PROJECT
+            </div>
+            <button>
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </form>
+    </div>
+
+    <div class="join-team">
+      <div class="header">JOIN THE TEAM</div>
+        <form [formGroup]="joinTeamForm">
+          <div class="data">
+            <mat-form-field>
+              <mat-label>Team name</mat-label>
+              <input [formControl]="teamNameFC" matInput required type="email"/>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Access code</mat-label>
+              <input [formControl]="accessCodeFC" matInput required type="password"/>
+            </mat-form-field>
+          </div>
+          <div class="submit">
+            <div class="name-button">
+              JOIN THE TEAM
+            </div>
+            <button>
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </form>
+    </div>
+    </div>
+</div>

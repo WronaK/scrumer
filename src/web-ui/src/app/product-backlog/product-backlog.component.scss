@@ -30,6 +30,7 @@
         min-height: 50px;
         background: $yellow;
         margin-top: 10px;
+        border-radius: 10px;
 
         div {
           @include centerElements;
