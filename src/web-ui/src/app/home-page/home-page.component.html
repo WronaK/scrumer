@@ -6,14 +6,10 @@
         My projects
       </div>
       <div class="content">
-        <div class="project">
-          Project 1
-        </div>
-        <div class="project">
-          Project 2
-        </div>
-        <div class="project">
-          Project 3
+        <div class="project"
+             *ngFor="let project of projects"
+             (click)="goToProject(project.id)">
+          {{project.name}}
         </div>
       </div>
     </div>
@@ -22,15 +18,11 @@
       <div class="header">
         My teams
       </div>
-      <div class="content">
-        <div class="team">
-          Team 1
-        </div>
-        <div class="team">
-          Team 2
-        </div>
-        <div class="team">
-          Team 3
+      <div class="content" >
+        <div class="team"
+             *ngFor="let team of teams"
+             (click)="goToTeam(team.id)">
+          {{team.name}}
         </div>
       </div>
     </div>

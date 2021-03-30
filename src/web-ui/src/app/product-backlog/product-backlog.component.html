@@ -21,7 +21,7 @@
          {{element}}
          </div>
         </div>
-        <div class="row" *ngFor="let task of productBacklog">
+        <div class="row" *ngFor="let task of productBacklog" (click)="showTask(task)">
           <div>{{task.id}}</div>
           <div>{{task.title}}</div>
           <div>{{task.priority}}</div>

@@ -32,6 +32,11 @@
         margin-top: 10px;
         border-radius: 10px;
 
+        &:hover {
+          background: $green;
+          cursor: pointer;
+        }
+
         div {
           @include centerElements;
         }
@@ -65,3 +70,4 @@
   }
 
 }
+

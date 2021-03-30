@@ -37,8 +37,14 @@ import { JoinTeamComponent } from './join-team/join-team.component';
     MatToolbarModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatExpansionModule,
     MatMenuModule,
-    MatExpansionModule
+    DragDropModule
+  ],
+
+  entryComponents: [
+    AddTaskToProductBacklogComponent,
+    ShowTaskFromProductBacklogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

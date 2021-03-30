@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-registration-page',
@@ -14,7 +15,7 @@ export class RegistrationPageComponent implements OnInit {
   repeatPasswordFC: FormControl;
   registrationForm: FormGroup;
 
-  constructor() {
+  constructor(private router: Router) {
     this.emailFC = new FormControl('', Validators.required);
     this.nameFC = new FormControl('', Validators.required);
     this.surnameFC = new FormControl('', Validators.required);
@@ -32,4 +33,7 @@ export class RegistrationPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  goToLogin() {
+    this.router.navigate(['login']);
+  }
 }

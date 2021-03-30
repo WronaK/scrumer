@@ -5,7 +5,7 @@
       <span class="header">SPRINT BACKLOG</span>
     </mat-toolbar>
 
-    <div class="sprint-backlog-content">
+    <div class="sprint-backlog-content" cdkDropListGroup>
       <app-task-states [title]="backlog" [tasks]="tasksBacklog"></app-task-states>
       <app-task-states [title]="pbi" [tasks]="tasksPBI"></app-task-states>
       <app-task-states [title]="inProgress" [tasks]="tasksInProgress"></app-task-states>

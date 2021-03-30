@@ -7,7 +7,6 @@ $dark-brown: #100E0F;
 $brown: #312C2D;
 $green: #49D593;
 $grey: #6E6E6E;
-$purple: #AEABF5;
 $yellow: #DDE1D3;
 $purple: #AEABF5;
 $pink: #ECC0F5;
@@ -74,6 +73,16 @@ html, body {
       background: $green;
       border: none;
       border-radius: 0 0 10px 0 ;
+
+      &:hover {
+        cursor: pointer;
+        filter: brightness(70%);
+      }
+
+      &:focus {
+        outline: none;
+      }
+
     }
   }
 }

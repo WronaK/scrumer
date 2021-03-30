@@ -1,7 +1,6 @@
 import { Task } from './task'
 
 export const PRODUCT_BACKLOG: Task[] = [
-  {id: 1, title: "Utworzyć podstawowe widoki aplikacji", userStory: "Utworzyć podstawowe widoki aplikacji", priority: 1, storyPoint: 8},
   {id: 2, title: "Przetestować aplikację", userStory: "Przetestować aplikację", priority: 3, storyPoint: 10},
   {id: 3, title: "Dodać chat", userStory: "Dodać chat", priority: 6, storyPoint: 20},
   {id: 4, title: "Edytować wygląd przycisków", userStory: "Lorem ipsum Lorem ipsum", priority: 5, storyPoint: 2},
