@@ -3,9 +3,8 @@ package com.example.scrumer.team.domain;
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.user.domain.User;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +12,8 @@ import java.util.Set;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Team {
     @Id
@@ -22,8 +22,10 @@ public class Team {
     private String name;
     private String accessCode;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
+    @JsonIgnoreProperties("teams")
     private Set<User> members;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
+    @JsonIgnoreProperties("teams")
     private Set<Project> projects;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
