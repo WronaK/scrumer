@@ -2,15 +2,16 @@ package com.example.scrumer.project.domain;
 
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.team.domain.Team;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Project {
     @Id
@@ -23,12 +24,11 @@ public class Project {
     private List<Task> productBacklog;
     @ManyToMany
     @JoinTable
-    private List<Team> teams;
+    @JsonIgnoreProperties("projects")
+    private Set<Team> teams;
 
     public Project(String name, String accessCode) {
         this.name = name;
         this.accessCode = accessCode;
-        this.productBacklog = new ArrayList<>();
-        this.teams = new ArrayList<>();
     }
 }
