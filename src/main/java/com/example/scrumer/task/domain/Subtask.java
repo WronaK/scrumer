@@ -1,13 +1,14 @@
 package com.example.scrumer.task.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Subtask {
     @Id
     @GeneratedValue
@@ -19,10 +20,9 @@ public class Subtask {
     @Enumerated(value = EnumType.STRING)
     private StatusTask statusTask = StatusTask.PBI;
 
-    public Subtask(String title, String description, Integer priority, Integer storyPoints) {
+    public Subtask(String title, String description, Integer priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.storyPoints = storyPoints;
     }
 }

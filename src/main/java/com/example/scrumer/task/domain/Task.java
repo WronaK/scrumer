@@ -1,6 +1,8 @@
 package com.example.scrumer.task.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Task {
     @Id
     @GeneratedValue
@@ -21,10 +25,13 @@ public class Task {
     @JoinColumn(name = "task_id")
     private List<Subtask> subtasks;
 
-    public Task(String title, String description, Integer priority, Integer storyPoints) {
+    public Task(String title, String description, Integer priority) {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.storyPoints = storyPoints;
+    }
+
+    public void addSubtask(Subtask subtask) {
+        subtasks.add(subtask);
     }
 }
