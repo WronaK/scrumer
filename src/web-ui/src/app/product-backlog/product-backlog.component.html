@@ -1,0 +1,32 @@
+<div class="main-container">
+
+  <div class="product-backlog-container">
+    <mat-toolbar class="product-backlog-header">
+      <span class="header">PRODUCT BACKLOG</span>
+      <form>
+        <mat-form-field>
+          <mat-label>Choose project</mat-label>
+          <mat-select class="project-name">
+          <mat-option>Project 1</mat-option>
+          <mat-option>Project 2</mat-option>
+          <mat-option>Project 3</mat-option>
+        </mat-select>
+        </mat-form-field>
+      </form>
+    </mat-toolbar>
+
+    <div class="product-backlog-content">
+       <div class="row headRow">
+         <div *ngFor="let element of displayedColumns">
+         {{element}}
+         </div>
+        </div>
+        <div class="row" *ngFor="let task of productBacklog" (click)="showTask(task)">
+          <div>{{task.id}}</div>
+          <div>{{task.title}}</div>
+          <div>{{task.priority}}</div>
+          <div>{{task.storyPoint}}</div>
+        </div>
+    </div>
+  </div>
+</div>

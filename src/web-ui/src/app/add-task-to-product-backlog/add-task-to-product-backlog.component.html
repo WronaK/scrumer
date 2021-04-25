@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Add a task</h1>
+<div mat-dialog-content>
+  <form [formGroup]="taskGroup">
+    <mat-form-field>
+      <mat-label>Enter a title for the task</mat-label>
+      <input [formControl]="titleFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a task description</mat-label>
+      <textarea [formControl]="descriptionFC"
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="5"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Give priority</mat-label>
+      <input [formControl]="priorityFC" matInput required>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button (click)="save()" [disabled]="!taskGroup.valid">Add</button>
+</div>

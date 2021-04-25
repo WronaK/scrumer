@@ -1,0 +1,73 @@
+@import "../../main-styles";
+
+:host {
+  @include fullPage;
+}
+
+.main-container {
+  width: 90%;
+  height: 90%;
+
+  .join-team-container {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-rows: 10% 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 5em;
+
+    .header {
+      grid-column-start: 2;
+      grid-row-start: 1;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5em;
+
+      button {
+        background: $green;
+        min-width: 100px;
+        box-shadow: 0 3px 6px black;
+      }
+    }
+
+    .create-project {
+      grid-column-start: 1;
+      grid-row-start: 2;
+    }
+
+    .join-team {
+      grid-column-start: 2;
+      grid-row-start: 2;
+    }
+
+    .create-project,
+    .join-team {
+      height: 100%;
+      box-shadow: 0 3px 6px black;
+      border-radius: 10px;
+      background: $dark-brown;
+
+      display: flex;
+      flex-direction: column;
+
+      .header {
+        height: 20%;
+        font-size: 1.7em;
+        line-height: 1.7em;
+        color: $green;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 2em;
+      }
+
+      form {
+        height: 80%;
+
+        @include formFields;
+        @include beltWithButton;
+      }
+    }
+  }
+}
