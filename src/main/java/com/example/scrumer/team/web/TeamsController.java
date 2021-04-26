@@ -3,6 +3,7 @@ package com.example.scrumer.team.web;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
+import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
 import com.example.scrumer.team.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,6 +41,12 @@ public class TeamsController {
         teams.addMember(id, command.toCommand());
     }
 
+    @PutMapping("/{id}/projects")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addProjectToTeam(@PathVariable Long id, @RequestBody RestProjectCommand command) {
+        teams.addProjectToTeam(id, command.toCommand());
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
@@ -62,6 +69,16 @@ public class TeamsController {
 
         MemberCommand toCommand() {
             return new MemberCommand(email);
+        }
+    }
+
+    @Data
+    private static class RestProjectCommand {
+        String name;
+        String accessCode;
+
+        ProjectCommand toCommand() {
+            return new ProjectCommand(name, accessCode);
         }
     }
 }

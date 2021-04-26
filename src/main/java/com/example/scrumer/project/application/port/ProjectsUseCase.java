@@ -13,6 +13,7 @@ public interface ProjectsUseCase {
     void removeById(Long id);
     List<Project> findAll();
     void addTaskToProductBacklog(Long id, CreateTaskCommand command);
+    void addTeamToProject(Long id, TeamCommand toCommand);
 
     @Value
     class CreateProjectCommand {
@@ -22,5 +23,11 @@ public interface ProjectsUseCase {
         public Project toProject() {
             return new Project(name, accessCode);
         }
+    }
+
+    @Value
+    class TeamCommand {
+        String name;
+        String accessCode;
     }
 }

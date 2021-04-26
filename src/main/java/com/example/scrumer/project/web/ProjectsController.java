@@ -1,7 +1,9 @@
 package com.example.scrumer.project.web;
 
 import com.example.scrumer.project.application.ProjectsService;
+import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
+import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
 import com.example.scrumer.project.domain.Project;
 
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
@@ -41,6 +43,12 @@ public class ProjectsController {
         projects.addTaskToProductBacklog(id, command.toCreateCommand());
     }
 
+    @PutMapping("/{id}/teams")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addTeamToProject(@PathVariable Long id, @RequestBody RestTeamCommand command) {
+        projects.addTeamToProject(id, command.toCommand());
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
@@ -65,6 +73,16 @@ public class ProjectsController {
 
         CreateTaskCommand toCreateCommand() {
             return new CreateTaskCommand(title, description, priority);
+        }
+    }
+
+    @Data
+    private static class RestTeamCommand {
+        private String name;
+        private String accessCode;
+
+        TeamCommand toCommand() {
+            return new TeamCommand(name, accessCode);
         }
     }
 }
