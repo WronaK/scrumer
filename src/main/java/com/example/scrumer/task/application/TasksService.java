@@ -24,12 +24,6 @@ public class TasksService implements TasksUseCase {
     }
 
     @Override
-    public Task addTask(CreateTaskCommand command) {
-        Task task = command.toTask();
-        return repository.save(task);
-    }
-
-    @Override
     public List<Task> findAll() {
         return repository.findAll();
     }
@@ -44,7 +38,11 @@ public class TasksService implements TasksUseCase {
         repository.findById(id)
                 .ifPresent(task -> {
                     Subtask subtask = subtasksRepository
-                            .save(new Subtask(command.getTitle(), command.getDescription(), command.getPriority()));
+                            .save(Subtask.builder()
+                                    .title(command.getTitle())
+                                    .description(command.getDescription())
+                                    .priority(command.getPriority())
+                                    .build());
                     task.addSubtask(subtask);
                     repository.save(task);
                 });

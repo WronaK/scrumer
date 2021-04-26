@@ -9,8 +9,6 @@ import java.util.Optional;
 public interface TasksUseCase {
     Optional<Task> findById(Long id);
 
-    Task addTask(CreateTaskCommand command);
-
     List<Task> findAll();
 
     void deleteById(Long id);

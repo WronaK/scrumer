@@ -28,15 +28,8 @@ public class TasksController {
         return tasks.findById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addTask(@RequestBody RestTaskCommand command) {
-        tasks.addTask(command.toCreateCommand());
-    }
-
-
     @PutMapping("/{id}/subtasks")
-    public void addSubtask(@PathVariable Long id, @RequestBody RestTaskCommand command) {
+    public void addSubtask(@PathVariable Long id, @RequestBody RestSubtaskCommand command) {
         tasks.addSubtask(id, command.toCreateCommand());
     }
 
@@ -47,7 +40,7 @@ public class TasksController {
     }
 
     @Data
-    private static class RestTaskCommand {
+    private static class RestSubtaskCommand {
         private String title;
         private String description;
         private Integer priority;

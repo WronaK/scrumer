@@ -31,4 +31,8 @@ public class Project {
         this.name = name;
         this.accessCode = accessCode;
     }
+
+    public void addTaskToProductBacklog(Task task) {
+        productBacklog.add(task);
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.scrumer.project.application.port;
 
 import com.example.scrumer.project.domain.Project;
+import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import lombok.Value;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public interface ProjectsUseCase {
     Project addProject(CreateProjectCommand command);
     void removeById(Long id);
     List<Project> findAll();
+    void addTaskToProductBacklog(Long id, CreateTaskCommand command);
 
     @Value
     class CreateProjectCommand {
