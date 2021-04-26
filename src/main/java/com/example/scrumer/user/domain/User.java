@@ -34,4 +34,8 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
 }

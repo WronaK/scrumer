@@ -35,4 +35,8 @@ public class Team {
         this.name = name;
         this.accessCode = accessCode;
     }
+
+    public void addMember(User user) {
+        members.add(user);
+    }
 }

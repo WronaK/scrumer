@@ -15,6 +15,8 @@ public interface UserUseCase {
 
     List<User> findAll();
 
+    void joinTeam(Long id, TeamCommand command);
+
     @Value
     class CreateUserCommand {
         String name;
@@ -25,5 +27,11 @@ public interface UserUseCase {
         public User toUser() {
             return new User(name, surname, email, password);
         }
+    }
+
+    @Value
+    class TeamCommand {
+        String name;
+        String accessCode;
     }
 }

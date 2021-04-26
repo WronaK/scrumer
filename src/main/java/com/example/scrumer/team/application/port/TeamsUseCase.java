@@ -15,6 +15,8 @@ public interface TeamsUseCase {
 
     void deleteById(Long id);
 
+    void addMember(Long id, MemberCommand command);
+
     @Value
     class CreateTeamCommand {
         String name;
@@ -23,5 +25,10 @@ public interface TeamsUseCase {
         public Team toTeam() {
             return new Team(name, accessCode);
         }
+    }
+    
+    @Value
+    class MemberCommand {
+        String email;
     }
 }

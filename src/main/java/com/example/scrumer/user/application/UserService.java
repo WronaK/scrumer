@@ -1,5 +1,7 @@
 package com.example.scrumer.user.application;
 
+import com.example.scrumer.team.db.TeamJpaRepository;
+import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.user.application.port.UserUseCase;
 import com.example.scrumer.user.db.UserJpaRepository;
 import com.example.scrumer.user.domain.User;
@@ -13,6 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserService implements UserUseCase {
     private final UserJpaRepository repository;
+    private final TeamJpaRepository teamRepository;
 
     @Override
     public Optional<User> findById(Long id) {
@@ -33,5 +36,18 @@ public class UserService implements UserUseCase {
     @Override
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public void joinTeam(Long id, TeamCommand command) {
+        repository.findById(id)
+                .ifPresent(user ->
+                {
+                    Team team = teamRepository.findByNameAndAccessCode(command.getName(), command.getAccessCode());
+                    team.addMember(user);
+                    teamRepository.save(team);
+                    user.addTeam(team);
+                    repository.save(user);
+                });
     }
 }
