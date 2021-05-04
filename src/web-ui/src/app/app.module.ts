@@ -11,10 +11,18 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
 import { LoginPageComponent } from './login-page/login-page.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import { RegistrationPageComponent } from './authorization/registration-page/registration-page.component';
+import { RegistrationPageComponent } from './registration-page/registration-page.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { HomePageComponent } from './home-page/home-page.component';
 import { JoinTeamComponent } from './join-team/join-team.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {AddTaskToProductBacklogComponent} from "./add-task-to-product-backlog/add-task-to-product-backlog.component";
+import {ShowTaskFromProductBacklogComponent} from "./show-task-from-product-backlog/show-task-from-product-backlog.component";
+import { SprintBacklogComponent } from './sprint-backlog/sprint-backlog.component';
+import { TaskStatesComponent } from './task-states/task-states.component';
+import {DragDropModule} from "@angular/cdk/drag-drop";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {AuthInterceptor} from "./shared/auth.interceptor";
 
 
 @NgModule({
@@ -24,10 +32,12 @@ import { JoinTeamComponent } from './join-team/join-team.component';
     ProductBacklogComponent,
     LoginPageComponent,
     RegistrationPageComponent,
+    HomePageComponent,
+    JoinTeamComponent,
+    AddTaskToProductBacklogComponent,
+    ShowTaskFromProductBacklogComponent,
     SprintBacklogComponent,
     TaskStatesComponent,
-    HomePageComponent,
-    JoinTeamComponent
   ],
   imports: [
     BrowserModule,
@@ -39,14 +49,21 @@ import { JoinTeamComponent } from './join-team/join-team.component';
     ReactiveFormsModule,
     MatExpansionModule,
     MatMenuModule,
-    DragDropModule
+    DragDropModule,
+    HttpClientModule
   ],
 
   entryComponents: [
     AddTaskToProductBacklogComponent,
     ShowTaskFromProductBacklogComponent
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

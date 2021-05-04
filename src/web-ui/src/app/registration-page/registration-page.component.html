@@ -7,32 +7,50 @@
   </div>
   <form [formGroup]="registrationForm">
     <div class="data">
+      <span class="error" *ngIf="error!=null">{{error}}</span>
       <mat-form-field>
         <mat-label>Email</mat-label>
         <input [formControl]="emailFC" matInput required type="email"/>
+        <mat-error>
+          Pole powino być emailem
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input [formControl]="nameFC" matInput required type="text"/>
+        <mat-error>
+          To pole jest wymagane
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Surname</mat-label>
         <input [formControl]="surnameFC" matInput required type="text"/>
+        <mat-error>
+          To pole jest wymagane
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Password</mat-label>
         <input [formControl]="passwordFC" matInput required type="password"/>
+        <mat-error>
+          To pole jest wymagane
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Repeat Password</mat-label>
-        <input [formControl]="repeatPasswordFC" matInput required type="password"/>
+        <input [formControl]="repeatPasswordFC"
+               [errorStateMatcher]="errorMatcher"
+               matInput required type="password"/>
+        <mat-error>
+          <span *ngIf="registrationForm.hasError('isEqual')">Hasła nie są takie same</span>
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="submit">
       <div class="name-button">
         CREATE AN ACCOUNT
       </div>
-      <button>
+      <button (click)="signUp()" [disabled]="!registrationForm.valid">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>

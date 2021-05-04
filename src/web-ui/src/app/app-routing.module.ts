@@ -7,16 +7,17 @@ import {RegistrationPageComponent} from "./registration-page/registration-page.c
 import {SprintBacklogComponent} from "./sprint-backlog/sprint-backlog.component";
 import {HomePageComponent} from "./home-page/home-page.component";
 import {JoinTeamComponent} from "./join-team/join-team.component";
+import {AuthGuard} from "./shared/auth.guard";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
-      { path: 'product-backlog/:id', component: ProductBacklogComponent },
-      { path: 'sprint-backlog/:id', component: SprintBacklogComponent },
-      { path: 'home', component: HomePageComponent}
+      { path: 'product-backlog/:id', component: ProductBacklogComponent, canActivate: [AuthGuard] },
+      { path: 'sprint-backlog/:id', component: SprintBacklogComponent, canActivate: [AuthGuard]},
+      { path: 'home', component: HomePageComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent},
-  { path: 'join-team', component: JoinTeamComponent},
+  { path: 'join-team', component: JoinTeamComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

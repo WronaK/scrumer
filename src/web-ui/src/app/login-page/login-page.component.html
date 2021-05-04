@@ -10,17 +10,23 @@
       <mat-form-field>
         <mat-label>Email</mat-label>
         <input [formControl]="emailFC" matInput required type="email"/>
+        <mat-error>
+          Pole powino być emailem
+        </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Password</mat-label>
         <input [formControl]="passwordFC" matInput required type="password"/>
+        <mat-error>
+          To pole jest wymagane
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="submit">
       <div class="name-button">
         SIGN IN
       </div>
-      <button>
+      <button (click)="signIn()">
         <i class="fas fa-chevron-right"></i>
       </button>
     </div>
