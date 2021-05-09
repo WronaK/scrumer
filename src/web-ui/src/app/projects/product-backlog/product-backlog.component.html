@@ -1,0 +1,23 @@
+<div class="main-container">
+
+  <div class="product-backlog-container">
+    <mat-toolbar class="product-backlog-header">
+      <span class="header">PRODUCT BACKLOG</span>
+      <button mat-button (click)="addTask()">Add task</button>
+    </mat-toolbar>
+
+    <div class="product-backlog-content">
+       <div class="row headRow">
+         <div *ngFor="let element of displayedColumns">
+         {{element}}
+         </div>
+        </div>
+        <div class="row" *ngFor="let task of productBacklog" (click)="showTask(task)">
+          <div>{{task.id}}</div>
+          <div>{{task.taskDetails.title}}</div>
+          <div>{{task.taskDetails.priority}}</div>
+          <div>{{task.taskDetails.storyPoint}}</div>
+        </div>
+    </div>
+  </div>
+</div>

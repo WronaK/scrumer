@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>Create project</h1>
+<div mat-dialog-content>
+  <form [formGroup]="projectForm">
+    <mat-form-field>
+      <mat-label>Enter a title for the project</mat-label>
+      <input [formControl]="projectNameFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a project description</mat-label>
+      <textarea [formControl]="descriptionFC"
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="5"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a password for the project</mat-label>
+      <input [formControl]="passwordFC" matInput required>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button (click)="save()" [disabled]="!projectForm.valid">Add</button>
+</div>

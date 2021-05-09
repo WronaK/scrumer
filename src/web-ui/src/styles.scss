@@ -3,3 +3,18 @@
 @import "_main-styles";
 
 
+.mat-dialog-container {
+  background: $dark-brown !important;
+
+  .mat-dialog-title {
+    color: $green;
+  }
+
+  .mat-dialog-content {
+    color: $green;
+
+    .mat-form-field-label {
+      color: #DDE1D3;
+    }
+  }
+}

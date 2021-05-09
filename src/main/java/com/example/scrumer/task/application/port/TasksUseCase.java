@@ -20,9 +20,5 @@ public interface TasksUseCase {
         String title;
         String description;
         Integer priority;
-
-        public Task toTask() {
-            return new Task(title, description, priority);
-        }
     }
 }

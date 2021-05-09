@@ -1,0 +1,19 @@
+<div class="board-tasks">
+  <div class="status-name">{{title}}</div>
+  <mat-accordion cdkDropList
+                 [cdkDropListData]="tasks"
+                 (cdkDropListDropped)="onDrop($event)">
+    <mat-expansion-panel *ngFor="let task of tasks" hideToggle cdkDrag>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{task.title}} ({{task.storyPoint}})
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>{{task.userStory}}</p>
+      <div class="details">
+        <i class="far fa-eye"></i>
+        see details
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
