@@ -17,6 +17,7 @@ public interface ProjectsUseCase {
     void removeById(Long id);
     List<Project> findAll();
     void addTaskToProductBacklog(Long id, CreateTaskCommand command);
+    void addTeamToProject(Long id, TeamCommand toCommand);
 
     List<Task> getProductBacklog(Long id);
 
@@ -29,5 +30,11 @@ public interface ProjectsUseCase {
         public Project toProject() {
             return new Project(name, accessCode, description);
         }
+    }
+
+    @Value
+    class TeamCommand {
+        String name;
+        String accessCode;
     }
 }

@@ -1,8 +1,12 @@
 package com.example.scrumer.team.application;
 
+import com.example.scrumer.project.db.ProjectJpaRepository;
+import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.db.TeamJpaRepository;
 import com.example.scrumer.team.domain.Team;
+import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.user.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TeamsService implements TeamsUseCase {
     private final TeamJpaRepository repository;
+    private final UserJpaRepository userRepository;
+    private final ProjectJpaRepository projectRepository;
 
     @Override
     public List<Team> findAll() {
@@ -33,5 +39,30 @@ public class TeamsService implements TeamsUseCase {
     @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void addMember(Long id, MemberCommand command) {
+        repository.findById(id)
+                .ifPresent(team -> {
+                    User user = userRepository.findByEmail(command.getEmail());
+                    user.addTeam(team);
+                    userRepository.save(user);
+                    team.addMember(user);
+                    repository.save(team);
+                });
+    }
+
+    @Override
+    public void addProjectToTeam(Long id, ProjectCommand command) {
+        repository.findById(id)
+                .ifPresent(team -> {
+                    Project project = projectRepository
+                            .findByNameAndAccessCode(command.getName(), command.getAccessCode());
+                    project.addTeam(team);
+                    projectRepository.save(project);
+                    team.addProject(project);
+                    repository.save(team);
+                });
     }
 }

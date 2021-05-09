@@ -61,4 +61,8 @@ public class Project {
     public void addTaskToProductBacklog(Task task) {
         productBacklog.add(task);
     }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
 }

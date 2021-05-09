@@ -15,5 +15,6 @@ public interface ProjectJpaRepository extends JpaRepository<Project, Long> {
                     " WHERE p.id = :id_project "
     )
     List<Task> getProductBacklog(@Param("id_project") Long id);
+    Project findByNameAndAccessCode(String name, String accessCode);
 
 }

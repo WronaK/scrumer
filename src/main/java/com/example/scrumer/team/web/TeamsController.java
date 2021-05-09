@@ -2,6 +2,8 @@ package com.example.scrumer.team.web;
 
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
+import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
+import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
 import com.example.scrumer.team.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -37,6 +39,18 @@ public class TeamsController {
         Team team = teams.addTeam(command.toCommand());
     }
 
+    @PutMapping("/{id}/members")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMemberCommand command) {
+        teams.addMember(id, command.toCommand());
+    }
+
+    @PutMapping("/{id}/projects")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addProjectToTeam(@PathVariable Long id, @RequestBody RestProjectCommand command) {
+        teams.addProjectToTeam(id, command.toCommand());
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id, @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
@@ -50,6 +64,25 @@ public class TeamsController {
 
         CreateTeamCommand toCommand() {
             return new CreateTeamCommand(name, accessCode);
+        }
+    }
+
+    @Data
+    private static class RestMemberCommand {
+        String email;
+
+        MemberCommand toCommand() {
+            return new MemberCommand(email);
+        }
+    }
+
+    @Data
+    private static class RestProjectCommand {
+        String name;
+        String accessCode;
+
+        ProjectCommand toCommand() {
+            return new ProjectCommand(name, accessCode);
         }
     }
 }

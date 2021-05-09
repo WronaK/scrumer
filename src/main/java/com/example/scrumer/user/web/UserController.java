@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserService userService;
+    private final UserService users;
 
     @GetMapping("/{id}")
     public Optional<User> getById(@PathVariable Long id) {

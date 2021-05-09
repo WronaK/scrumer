@@ -33,4 +33,10 @@ public interface UserUseCase {
         String name;
         String accessCode;
     }
+
+    @Value
+    class TeamCommand {
+        String name;
+        String accessCode;
+    }
 }

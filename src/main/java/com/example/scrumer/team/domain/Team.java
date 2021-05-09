@@ -39,4 +39,8 @@ public class Team {
     public void addMember(User user) {
         members.add(user);
     }
+
+    public void addProject(Project project) {
+        projects.add(project);
+    }
 }

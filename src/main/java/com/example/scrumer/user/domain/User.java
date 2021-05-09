@@ -49,5 +49,9 @@ public class User {
     public void addTeam(Team team) {
         teams.add(team);
     }
+
+    public void addTeam(Team team) {
+        teams.add(team);
+    }
 }
 

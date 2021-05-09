@@ -9,6 +9,8 @@ import com.example.scrumer.task.db.TaskJpaRepository;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
 import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.team.db.TeamJpaRepository;
+import com.example.scrumer.team.domain.Team;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class ProjectsService implements ProjectsUseCase {
     private final TaskJpaRepository taskRepository;
     private final UserJpaRepository userRepository;
     private final TaskDetailsJpaRepository taskDetailsRepository;
+    private final TeamJpaRepository teamRepository;
 
     @Override
     public Optional<Project> findById(Long id) {
@@ -66,6 +69,15 @@ public class ProjectsService implements ProjectsUseCase {
     @Override
     public List<Task> getProductBacklog(Long id) {
         return repository.getProductBacklog(id);
+    public void addTeamToProject(Long id, TeamCommand command) {
+        repository.findById(id)
+                .ifPresent(project -> {
+                    Team team = teamRepository.findByNameAndAccessCode(command.getName(), command.getAccessCode());
+                    team.addProject(project);
+                    teamRepository.save(team);
+                    project.addTeam(team);
+                    repository.save(project);
+                });
     }
 }
 
