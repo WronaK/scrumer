@@ -1,0 +1,22 @@
+<div class="main-container">
+
+  <div class="projects-container">
+    <mat-toolbar class="projects-header">
+      <span class="header">MY PROJECTS</span>
+      <button mat-button (click)="addProject()">Add Project</button>
+    </mat-toolbar>
+
+    <div class="projects-content">
+      <div class="row headRow">
+        <div *ngFor="let element of displayedColumns">
+          {{element}}
+        </div>
+      </div>
+      <div class="row" *ngFor="let project of projects" (click)="goToProject(project.id)">
+        <div>{{project.id}}</div>
+        <div>{{project.name}}</div>
+        <div>{{project.firstName}} {{project.lastName}}</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+@import "../../../main-styles";
+
+:host {
+  @include fullPage;
+}
+
+.main-container {
+  height: 95%;
+  width: 95%;
+
+  .sprint-backlog-container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .sprint-backlog-header {
+      @include headerContent;
+
+      .header {
+        @include fontHeader;
+      }
+    }
+
+    .sprint-backlog-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      grid-gap: 1em;
+
+    }
+  }
+
+}

@@ -1,0 +1,73 @@
+@import "../../../main-styles";
+
+:host {
+  @include fullPage;
+}
+
+  .main-container {
+    height: 95%;
+    width: 95%;
+
+  .product-backlog-container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    .product-backlog-content {
+      display: flex;
+      flex-direction: column;
+
+      .row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 6fr 2fr 2fr;
+        text-align: center;
+        font-size: 1.1em;
+        line-height: 1.1em;
+        min-height: 50px;
+        background: $yellow;
+        margin-top: 10px;
+        border-radius: 10px;
+
+        &:hover {
+          background: $green;
+          cursor: pointer;
+        }
+
+        div {
+          @include centerElements;
+        }
+      }
+
+      .headRow {
+        font-size: 1.5em;
+        line-height: 1.5em;
+        background: $green;
+      }
+    }
+
+    .product-backlog-header {
+      @include headerContent;
+
+      .header {
+        @include fontHeader;
+      }
+
+      .project-name {
+        background: #49D593;
+      }
+
+      button {
+        background: $green;
+        color: $dark-brown;
+        height: 70%;
+        font-size: 1.1em;
+      }
+    }
+  }
+
+}
+
