@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ProjectsService} from "../projects.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {CreateProject} from "../../model/create.project";
+import {CreateTeam} from "../../model/create.team";
 
 @Component({
   selector: 'app-add-project',
@@ -14,6 +15,16 @@ export class AddProjectComponent implements OnInit {
   passwordFC: FormControl;
   projectForm: FormGroup;
   descriptionFC: FormControl;
+  projectDetailsForm: FormGroup;
+
+  productOwnerFC: FormControl;
+  scrumMasterFC: FormControl;
+
+  teamForm: FormGroup;
+  teamNameFC: FormControl;
+  accessCodeFC: FormControl;
+
+  teams: CreateTeam[] = [];
 
   constructor(private dialogRef: MatDialogRef<AddProjectComponent>,
               private projectService: ProjectsService) {
@@ -25,13 +36,25 @@ export class AddProjectComponent implements OnInit {
       passwordFC: this.passwordFC,
       descriptionFC: this.descriptionFC
     });
+
+    this.productOwnerFC = new FormControl('', Validators.email);
+    this.scrumMasterFC = new FormControl('', Validators.email);
+    this.teamNameFC = new FormControl('');
+    this.accessCodeFC = new FormControl('');
+
+    this.teamForm = new FormGroup({
+      teamNameFC: this.teamNameFC,
+      accessCodeFC: this.accessCodeFC
+    });
+
+    this.projectDetailsForm = new FormGroup({
+      productOwnerFC: this.productOwnerFC,
+      scrumMasterFC: this.scrumMasterFC,
+    });
+
   }
 
   ngOnInit(): void {
-  }
-
-  onNoClick() {
-    this.dialogRef.close();
   }
 
   save() {
@@ -43,8 +66,17 @@ export class AddProjectComponent implements OnInit {
     return  {
       name: this.projectNameFC.value,
       accessCode: this.passwordFC.value,
-      description: this.descriptionFC.value
+      description: this.descriptionFC.value,
+      productOwner: this.productOwnerFC.value,
+      scrumMaster: this.scrumMasterFC.value,
+      teams: this.teams
     }
+  }
+
+  addTeam() {
+    this.teams.push({name: this.teamNameFC.value, accessCode: this.accessCodeFC.value});
+    this.teamNameFC.reset();
+    this.accessCodeFC.reset();
   }
 
 }

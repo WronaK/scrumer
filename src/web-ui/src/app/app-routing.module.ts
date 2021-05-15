@@ -8,13 +8,15 @@ import {HomePageComponent} from "./users/home-page/home-page.component";
 import {LoginPageComponent} from "./users/login-page/login-page.component";
 import {RegistrationPageComponent} from "./users/registration-page/registration-page.component";
 import {SprintBacklogComponent} from "./teams/sprint-backlog/sprint-backlog.component";
+import {MyTeamsComponent} from "./teams/my-teams/my-teams.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
       { path: 'product-backlog/:id', component: ProductBacklogComponent, canActivate: [AuthGuard] },
       { path: 'sprint-backlog/:id', component: SprintBacklogComponent, canActivate: [AuthGuard]},
       { path: 'home', component: HomePageComponent, canActivate: [AuthGuard]},
-      { path: 'projects', component: MyProjectsComponent, canActivate: [AuthGuard]}
+      { path: 'projects', component: MyProjectsComponent, canActivate: [AuthGuard]},
+      { path: 'teams', component: MyTeamsComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent}

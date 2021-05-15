@@ -14,11 +14,6 @@ public class Subtask {
     @GeneratedValue
     private Long id;
 
-//    private String title;
-//    private String description;
-//    private Integer priority;
-//    private Integer storyPoints;
-
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "task_details_id", referencedColumnName = "id")
     private TaskDetails taskDetails;

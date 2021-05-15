@@ -31,8 +31,15 @@ public class TeamsService implements TeamsUseCase {
     }
 
     @Override
-    public Team addTeam(CreateTeamCommand command) {
+    public Team addTeam(CreateTeamCommand command, String email) {
         Team team = command.toTeam();
+        userRepository.findByEmail(email).ifPresent(creator -> {
+            team.addCreator(creator);
+            team.addMember(creator);
+            Team save = repository.save(team);
+            creator.addTeam(save);
+            userRepository.save(creator);
+        });
         return repository.save(team);
     }
 
@@ -45,7 +52,7 @@ public class TeamsService implements TeamsUseCase {
     public void addMember(Long id, MemberCommand command) {
         repository.findById(id)
                 .ifPresent(team -> {
-                    User user = userRepository.findByEmail(command.getEmail());
+                    User user = userRepository.findByEmail(command.getEmail()).get();
                     user.addTeam(team);
                     userRepository.save(user);
                     team.addMember(user);
@@ -64,5 +71,10 @@ public class TeamsService implements TeamsUseCase {
                     team.addProject(project);
                     repository.save(team);
                 });
+    }
+
+    @Override
+    public List<Team> findByUser(String userEmail) {
+        return repository.findByUser(userEmail);
     }
 }

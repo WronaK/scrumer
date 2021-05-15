@@ -2,7 +2,7 @@
 
   <div class="home-page-container">
     <div class="projects">
-      <div class="header" (click)="goJoin()">
+      <div class="header" (click)="goToMyProject()">
         My projects
       </div>
       <div class="content">
@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <div class="teams">
+    <div class="teams" (click)="goToMyTeams()">
       <div class="header">
         My teams
       </div>
@@ -36,10 +36,10 @@
           <mat-expansion-panel *ngFor="let task of tasks" hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                {{task.title}} ({{task.storyPoint}})
+                {{task.taskDetails.title}} ({{task.taskDetails.storyPoint}})
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>{{task.userStory}}</p>
+            <p>{{task.taskDetails.description}}</p>
             <div class="details">
               <i class="far fa-eye"></i>
               see details

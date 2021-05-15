@@ -1,5 +1,6 @@
 package com.example.scrumer.team.web;
 
+import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
@@ -8,10 +9,12 @@ import com.example.scrumer.team.domain.Team;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,20 +26,19 @@ public class TeamsController {
 
     @GetMapping
     public List<Team> getAll() {
-        return teams.findAll();
+        return teams.findByUser(this.getUserEmail());
     }
 
     @GetMapping("/{id}")
-    public Optional<Team> getTeamById(@PathVariable Long id,
-                                      @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
+    public Optional<Team> getTeamById(@PathVariable Long id) {
         return teams.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTeam(@RequestBody RestCreateTeamCommand command,
-                        @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
-        Team team = teams.addTeam(command.toCommand());
+    public ResponseEntity<?> addTeam(@RequestBody RestCreateTeamCommand command) {
+        Team team = teams.addTeam(command.toCommand(), getUserEmail());
+        return ResponseEntity.created(createdTeamUri(team)).build();
     }
 
     @PutMapping("/{id}/members")
@@ -53,10 +55,16 @@ public class TeamsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id, @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
+    public void deleteById(@PathVariable Long id) {
         teams.deleteById(id);
     }
 
+    private String getUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
+    private URI createdTeamUri(Team team) {
+        return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + team.getId().toString()).build().toUri();
+    }
     @Data
     private static class RestCreateTeamCommand {
         String name;

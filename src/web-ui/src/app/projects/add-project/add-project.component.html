@@ -1,24 +1,80 @@
-<h1 mat-dialog-title>Create project</h1>
-<div mat-dialog-content>
-  <form [formGroup]="projectForm">
-    <mat-form-field>
-      <mat-label>Enter a title for the project</mat-label>
-      <input [formControl]="projectNameFC" matInput required>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Enter a project description</mat-label>
-      <textarea [formControl]="descriptionFC"
-                matInput
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="5"></textarea>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Enter a password for the project</mat-label>
-      <input [formControl]="passwordFC" matInput required>
-    </mat-form-field>
-  </form>
+<div mat-dialog-title class="dialog-title">
+  <h2>Create project</h2>
+  <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
-<div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button (click)="save()" [disabled]="!projectForm.valid">Add</button>
+<div mat-dialog-content>
+  <mat-horizontal-stepper [linear]="true">
+    <mat-step [stepControl]="projectForm" label="Basic information">
+      <form [formGroup]="projectForm">
+        <mat-form-field>
+          <mat-label>Enter a title for the project</mat-label>
+          <input [formControl]="projectNameFC" matInput required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Enter a project description</mat-label>
+          <textarea [formControl]="descriptionFC"
+                    matInput
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="5"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Enter a password for the project</mat-label>
+          <input [formControl]="passwordFC" matInput required>
+        </mat-form-field>
+        <div class="button one-button">
+          <button mat-raised-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="projectDetailsForm" label="Details">
+      <form [formGroup]="projectDetailsForm">
+        <mat-form-field>
+          <mat-label>Enter a Product Owner: </mat-label>
+          <input [formControl]="productOwnerFC" matInput type="email"/>
+          <mat-error>
+            Pole powino być emailem
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Enter a Scrum Master: </mat-label>
+          <input [formControl]="scrumMasterFC" matInput type="email"/>
+          <mat-error>
+            Pole powino być emailem
+          </mat-error>
+        </mat-form-field>
+        <div class="button">
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="teamForm" label="Add teams">
+        <form [formGroup]="teamForm">
+          <div class="button one-button">
+            <button mat-raised-button (click)="addTeam()" [disabled]="!teamForm.valid">Add team</button>
+          </div>
+          <mat-form-field>
+            <mat-label>Enter a name team: </mat-label>
+            <input [formControl]="teamNameFC" matInput />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Enter a name team: </mat-label>
+            <input [formControl]="accessCodeFC" matInput />
+          </mat-form-field>
+          <mat-list *ngIf="teams.length > 0">
+            Add teams:
+            <mat-list-item *ngFor="let team of teams">
+              <span>Team name: {{team.name}}</span>
+              <span>Team accessCode: {{team.accessCode}}</span>
+            </mat-list-item>
+          </mat-list>
+        <div class="button">
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button (click)="save()" [disabled]="!projectForm.valid">Add</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
 </div>

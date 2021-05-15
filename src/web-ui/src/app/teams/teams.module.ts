@@ -5,11 +5,15 @@ import {SprintBacklogComponent} from "./sprint-backlog/sprint-backlog.component"
 import {TaskStatesComponent} from "./task-states/task-states.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import { MyTeamsComponent } from './my-teams/my-teams.component';
+import { AddTeamComponent } from './add-team/add-team.component';
 
 @NgModule({
   declarations: [
     SprintBacklogComponent,
-    TaskStatesComponent
+    TaskStatesComponent,
+    MyTeamsComponent,
+    AddTeamComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +22,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     DragDropModule,
   ],
   exports: [
-    SprintBacklogComponent
+    SprintBacklogComponent,
+    MyTeamsComponent
   ]
 })
 export class TeamsModule { }

@@ -1,7 +1,6 @@
 package com.example.scrumer.project.web;
 
 import com.example.scrumer.project.application.ProjectsService;
-import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
 import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
 import com.example.scrumer.project.domain.Project;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +44,6 @@ public class ProjectsController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addProject(@RequestBody RestCreateProjectCommand command) {
-        System.out.println("Project");
         Project project = projects.addProject(command.toCreateCommand(), getUserEmail());
         return ResponseEntity.created(createdProjectUri(project)).build();
     }
@@ -53,7 +52,6 @@ public class ProjectsController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToProductBacklog(@PathVariable Long id,
                                         @RequestBody RestCreateTaskCommand command) {
-        System.out.println("Add " + id);
         projects.addTaskToProductBacklog(id, command.toCreateCommand());
     }
 
@@ -81,9 +79,20 @@ public class ProjectsController {
         private String name;
         private String accessCode;
         private String description;
+        private String productOwner;
+        private String scrumMaster;
+        private List<RestTeamCommand> teams;
 
         CreateProjectCommand toCreateCommand() {
-            return new CreateProjectCommand(name, accessCode, description);
+            return new CreateProjectCommand(name, accessCode, description, productOwner, scrumMaster, toCommands(teams));
+        }
+
+        List<TeamCommand> toCommands(List<RestTeamCommand> teams) {
+            List<TeamCommand> listTeam = new ArrayList<>();
+            for (RestTeamCommand team: teams) {
+                listTeam.add(team.toCommand());
+            }
+            return listTeam;
         }
     }
 
@@ -106,5 +115,6 @@ public class ProjectsController {
         TeamCommand toCommand() {
             return new TeamCommand(name, accessCode);
         }
+
     }
 }

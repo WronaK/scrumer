@@ -5,8 +5,13 @@ import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,25 +20,45 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Team {
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     private String accessCode;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("teams")
+    private User creator;
+
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
     @JsonIgnoreProperties("teams")
-    private Set<User> members;
+    private Set<User> members = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
     @JsonIgnoreProperties("teams")
-    private Set<Project> projects;
+    private Set<Project> projects = new HashSet<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private List<Task> sprintBoard;
 
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
     public Team(String name, String accessCode) {
         this.name = name;
         this.accessCode = accessCode;
+    }
+
+    public void addCreator(User creator) {
+        this.creator = creator;
     }
 
     public void addMember(User user) {

@@ -11,10 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,13 +34,22 @@ public class Project {
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("teams")
     private User creator;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("teams")
+    private User productOwner;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("teams")
+    private User scrumMaster;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     private List<Task> productBacklog;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
     @JsonIgnoreProperties("projects")
     private Set<Team> teams;
@@ -63,6 +75,9 @@ public class Project {
     }
 
     public void addTeam(Team team) {
+        if(this.teams == null){
+            this.teams = new HashSet<>();
+        }
         teams.add(team);
     }
 }

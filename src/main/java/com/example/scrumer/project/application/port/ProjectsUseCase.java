@@ -1,12 +1,9 @@
 package com.example.scrumer.project.application.port;
 
 import com.example.scrumer.project.domain.Project;
-import com.example.scrumer.security.UserPrincipal;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
 import lombok.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +23,9 @@ public interface ProjectsUseCase {
         String name;
         String accessCode;
         String description;
-
-        public Project toProject() {
-            return new Project(name, accessCode, description);
-        }
+        String productOwner;
+        String scrumMaster;
+        List<TeamCommand> teams;
     }
 
     @Value

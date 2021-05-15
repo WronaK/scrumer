@@ -8,7 +8,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,8 +18,6 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-//    private String name;
-//    private String surname;
     private String email;
     private String password;
 
@@ -37,7 +36,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
     @JsonIgnoreProperties("members")
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
 
     public User(String email, String password, UserDetails userDetails) {
         this.email = email;
@@ -50,8 +49,5 @@ public class User {
         teams.add(team);
     }
 
-    public void addTeam(Team team) {
-        teams.add(team);
-    }
 }
 

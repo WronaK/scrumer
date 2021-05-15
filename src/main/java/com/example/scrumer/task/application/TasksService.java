@@ -52,7 +52,6 @@ public class TasksService implements TasksUseCase {
                     task.addSubtask(subtask);
                     repository.save(task);
                 });
-
     }
 }
 

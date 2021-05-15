@@ -10,7 +10,6 @@ import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
 import com.example.scrumer.user.db.UserJpaRepository;
 import com.example.scrumer.team.db.TeamJpaRepository;
-import com.example.scrumer.team.domain.Team;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +32,23 @@ public class ProjectsService implements ProjectsUseCase {
 
     @Override
     public Project addProject(CreateProjectCommand command, String email) {
-        Project project = command.toProject();
+        Project project = Project.builder()
+                .name(command.getName())
+                .description(command.getDescription())
+                .accessCode(command.getAccessCode())
+                .build();
         userRepository.findByEmail(email).ifPresent(project::addCreator);
+        userRepository.findByEmail(command.getProductOwner()).ifPresent(project::setProductOwner);
+        userRepository.findByEmail(command.getScrumMaster()).ifPresent(project::setScrumMaster);
+        project = repository.save(project);
+        this.addTeams(command.getTeams(), project);
         return repository.save(project);
+    }
+
+    private void addTeams(List<TeamCommand> commands, Project project) {
+        for (TeamCommand command: commands) {
+            this.addTeamToProject(project.getId(), command);
+        }
     }
 
     @Override
@@ -69,14 +82,20 @@ public class ProjectsService implements ProjectsUseCase {
     @Override
     public List<Task> getProductBacklog(Long id) {
         return repository.getProductBacklog(id);
+    }
+
+    @Override
     public void addTeamToProject(Long id, TeamCommand command) {
         repository.findById(id)
                 .ifPresent(project -> {
-                    Team team = teamRepository.findByNameAndAccessCode(command.getName(), command.getAccessCode());
-                    team.addProject(project);
-                    teamRepository.save(team);
-                    project.addTeam(team);
-                    repository.save(project);
+                    teamRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode()).ifPresent(
+                            team -> {
+                                team.addProject(project);
+                                teamRepository.save(team);
+                                project.addTeam(team);
+                                repository.save(project);
+                            }
+                    );
                 });
     }
 }

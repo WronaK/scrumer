@@ -11,13 +11,15 @@ public interface TeamsUseCase {
 
     Optional<Team> findById(Long id);
 
-    Team addTeam(CreateTeamCommand command);
+    Team addTeam(CreateTeamCommand command, String email);
 
     void deleteById(Long id);
 
     void addMember(Long id, MemberCommand command);
 
     void addProjectToTeam(Long id, ProjectCommand command);
+
+    List<Team> findByUser(String userEmail);
 
     @Value
     class CreateTeamCommand {
