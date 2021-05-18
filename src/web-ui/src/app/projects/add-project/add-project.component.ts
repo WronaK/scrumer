@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ProjectsService} from "../projects.service";
 import {MatDialogRef} from "@angular/material/dialog";
 import {CreateProject} from "../../model/create.project";
-import {CreateTeam} from "../../model/create.team";
+import {JoinTeam} from "../../model/join.team";
 
 @Component({
   selector: 'app-add-project',
@@ -24,7 +24,7 @@ export class AddProjectComponent implements OnInit {
   teamNameFC: FormControl;
   accessCodeFC: FormControl;
 
-  teams: CreateTeam[] = [];
+  teams: JoinTeam[] = [];
 
   constructor(private dialogRef: MatDialogRef<AddProjectComponent>,
               private projectService: ProjectsService) {

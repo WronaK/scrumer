@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { MyTeamsComponent } from './my-teams/my-teams.component';
 import { AddTeamComponent } from './add-team/add-team.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AddTeamComponent } from './add-team/add-team.component';
     MaterialModule,
     ReactiveFormsModule,
     DragDropModule,
+    MatCardModule,
   ],
   exports: [
     SprintBacklogComponent,

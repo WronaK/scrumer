@@ -1,4 +1,4 @@
-import {CreateTeam} from "./create.team";
+import {JoinTeam} from "./join.team";
 
 export interface CreateProject {
   name: string;
@@ -6,5 +6,5 @@ export interface CreateProject {
   description: string;
   productOwner: string;
   scrumMaster: string;
-  teams: CreateTeam[];
+  teams: JoinTeam[];
 }

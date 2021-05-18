@@ -25,10 +25,7 @@ public interface TeamsUseCase {
     class CreateTeamCommand {
         String name;
         String accessCode;
-
-        public Team toTeam() {
-            return new Team(name, accessCode);
-        }
+        List<MemberCommand> members;
     }
     
     @Value

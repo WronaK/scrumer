@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,9 +70,18 @@ public class TeamsController {
     private static class RestCreateTeamCommand {
         String name;
         String accessCode;
+        List<RestMemberCommand> members;
 
         CreateTeamCommand toCommand() {
-            return new CreateTeamCommand(name, accessCode);
+            return new CreateTeamCommand(name, accessCode, toCommands(members));
+        }
+
+        List<MemberCommand> toCommands(List<RestMemberCommand> members) {
+            List<MemberCommand> listMembers = new ArrayList<>();
+            for(RestMemberCommand member: members) {
+                listMembers.add(member.toCommand());
+            }
+            return listMembers;
         }
     }
 
