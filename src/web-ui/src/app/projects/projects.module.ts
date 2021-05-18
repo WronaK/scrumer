@@ -7,6 +7,7 @@ import {AddTaskToProductBacklogComponent} from "./add-task-to-product-backlog/ad
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import { AddProjectComponent } from './add-project/add-project.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AddProjectComponent } from './add-project/add-project.component';
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatCardModule,
   ],
 
   entryComponents: [

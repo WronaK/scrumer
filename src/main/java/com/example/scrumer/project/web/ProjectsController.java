@@ -3,8 +3,10 @@ package com.example.scrumer.project.web;
 import com.example.scrumer.project.application.ProjectsService;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
 import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
+import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
 import com.example.scrumer.project.domain.Project;
 
+import com.example.scrumer.project.request.ProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
 import lombok.AllArgsConstructor;
@@ -19,16 +21,21 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/projects")
 @AllArgsConstructor
 public class ProjectsController {
     private final ProjectsService projects;
+    private final ProjectToProjectRequestConverter projectConverter;
 
     @GetMapping
-    public List<Project> getAll() {
-        return projects.findAll();
+    public List<ProjectRequest> getAll() {
+        return projects.findAll().stream()
+                .map(projectConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

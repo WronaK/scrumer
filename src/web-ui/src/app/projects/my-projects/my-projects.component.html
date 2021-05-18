@@ -7,16 +7,40 @@
     </mat-toolbar>
 
     <div class="projects-content">
-      <div class="row headRow">
-        <div *ngFor="let element of displayedColumns">
-          {{element}}
-        </div>
+      <div class="side">
+        <mat-icon (click)="scrollLeft()">
+          keyboard_arrow_left
+        </mat-icon>
       </div>
-      <div class="row" *ngFor="let project of projects" (click)="goToProject(project.id)">
-        <div>{{project.id}}</div>
-        <div>{{project.name}}</div>
-        <div>{{project.firstName}} {{project.lastName}}</div>
+      <div #widgetsContent class="middle" >
+        <mat-card class="project" *ngFor="let project of projects" (click)="goToProject(project.id)">
+          <mat-card-header>
+            <mat-card-title>{{project.name}}</mat-card-title>
+          </mat-card-header>
+          <img src="./assets/team.jpg">
+          <mat-card-content>
+            <div>
+              <div class="name">{{project.creatorName}}</div>
+              <div class="label">CREATOR NAME</div>
+            </div>
+            <div>
+              <div class="name">{{project.productOwnerName}}</div>
+              <div class="label">PRODUCT OWNER</div>
+            </div>
+            <div>
+              <div class="name">{{project.scrumMasterName}}</div>
+              <div class="label">SCRUM MASTER</div>
+            </div>
+            <div class="description">{{project.description}}</div>
+          </mat-card-content>
+        </mat-card>
       </div>
+      <div class="side">
+        <mat-icon (click)="scrollRight()">
+          keyboard_arrow_right
+        </mat-icon>
+      </div>
+
     </div>
   </div>
 </div>

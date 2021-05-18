@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Project} from "../../model/project";
 import {ProjectsService} from "../projects.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -13,8 +13,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./my-projects.component.scss']
 })
 export class MyProjectsComponent implements OnInit {
-
-  displayedColumns: string[] = ['ID', 'NAME', 'CREATOR'];
+  @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   projects: Project[] = [];
 
   constructor(
@@ -41,11 +40,20 @@ export class MyProjectsComponent implements OnInit {
     return this.projectsService.getProjects().pipe(
       tap(projects => {
         this.projects = projects;
+        console.log(projects);
       })
     )
   }
 
   goToProject(id: number): void {
     this.router.navigate(['product-backlog/' + id]);
+  }
+
+  scrollLeft(){
+    this.widgetsContent.nativeElement.scrollLeft -= 250;
+  }
+
+  scrollRight(){
+    this.widgetsContent.nativeElement.scrollLeft += 250;
   }
 }

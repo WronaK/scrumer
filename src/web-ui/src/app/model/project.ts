@@ -1,6 +1,9 @@
 export interface Project {
   id: number;
   name: string;
-  firstName: string;
-  lastName: string;
+  description: string;
+  creatorName: string;
+  productOwnerName: string;
+  scrumMasterName: string;
 }
+
