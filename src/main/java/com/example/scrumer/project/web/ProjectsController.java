@@ -8,7 +8,8 @@ import com.example.scrumer.project.domain.Project;
 
 import com.example.scrumer.project.request.ProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
-import com.example.scrumer.task.domain.Task;
+import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -30,6 +28,7 @@ import java.util.stream.StreamSupport;
 public class ProjectsController {
     private final ProjectsService projects;
     private final ProjectToProjectRequestConverter projectConverter;
+    private final TaskToTaskRequestConverter taskConverter;
 
     @GetMapping
     public List<ProjectRequest> getAll() {
@@ -44,8 +43,10 @@ public class ProjectsController {
     }
 
     @GetMapping("/{id}/product_backlog")
-    public List<Task> getProductBacklogById(@PathVariable Long id) {
-        return projects.getProductBacklog(id);
+    public List<TaskRequest> getProductBacklogById(@PathVariable Long id) {
+        return projects.getProductBacklog(id).stream()
+                .map(taskConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
@@ -88,14 +89,14 @@ public class ProjectsController {
         private String description;
         private String productOwner;
         private String scrumMaster;
-        private List<RestTeamCommand> teams;
+        private Set<RestTeamCommand> teams;
 
         CreateProjectCommand toCreateCommand() {
             return new CreateProjectCommand(name, accessCode, description, productOwner, scrumMaster, toCommands(teams));
         }
 
-        List<TeamCommand> toCommands(List<RestTeamCommand> teams) {
-            List<TeamCommand> listTeam = new ArrayList<>();
+        Set<TeamCommand> toCommands(Set<RestTeamCommand> teams) {
+            Set<TeamCommand> listTeam = new HashSet<>();
             for (RestTeamCommand team: teams) {
                 listTeam.add(team.toCommand());
             }

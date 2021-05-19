@@ -16,8 +16,7 @@ public class SubtasksController {
     private final SubtasksUseCase subtasks;
 
     @GetMapping("/{id}")
-    public Optional<Subtask> getSubtaskById(@PathVariable Long id,
-                                            @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
+    public Optional<Subtask> getSubtaskById(@PathVariable Long id) {
         return subtasks.findById(id);
     }
 }

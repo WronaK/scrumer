@@ -20,8 +20,4 @@ public class Subtask {
 
     @Enumerated(value = EnumType.STRING)
     private StatusTask statusTask = StatusTask.PBI;
-
-    public Subtask(TaskDetails taskDetails) {
-        this.taskDetails = taskDetails;
-    }
 }

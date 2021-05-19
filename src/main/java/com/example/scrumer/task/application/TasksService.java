@@ -17,8 +17,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TasksService implements TasksUseCase {
     private final TaskJpaRepository repository;
-    private final SubtaskJpaRepository subtasksRepository;
-    private final TaskDetailsJpaRepository taskDetailsRepository;
 
     @Override
     public Optional<Task> findById(Long id) {
@@ -39,16 +37,14 @@ public class TasksService implements TasksUseCase {
     public void addSubtask(Long id, CreateTaskCommand command) {
         repository.findById(id)
                 .ifPresent(task -> {
-                    TaskDetails taskDetails = taskDetailsRepository
-                            .save(TaskDetails.builder()
+                    Subtask subtask = Subtask.builder()
+                            .taskDetails(TaskDetails
+                                    .builder()
                                     .title(command.getTitle())
-                                    .description( command.getDescription())
+                                    .description(command.getDescription())
                                     .priority(command.getPriority())
-                                    .build());
-                    Subtask subtask = subtasksRepository
-                            .save(Subtask.builder()
-                                    .taskDetails(taskDetails)
-                                    .build());
+                                    .build())
+                            .build();
                     task.addSubtask(subtask);
                     repository.save(task);
                 });

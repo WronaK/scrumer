@@ -7,6 +7,7 @@ import lombok.Value;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProjectsUseCase {
     Optional<Project> findById(Long id);
@@ -25,7 +26,7 @@ public interface ProjectsUseCase {
         String description;
         String productOwner;
         String scrumMaster;
-        List<TeamCommand> teams;
+        Set<TeamCommand> teams;
     }
 
     @Value

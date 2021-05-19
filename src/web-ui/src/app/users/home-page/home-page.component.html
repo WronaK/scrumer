@@ -36,10 +36,10 @@
           <mat-expansion-panel *ngFor="let task of tasks" hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                {{task.taskDetails.title}} ({{task.taskDetails.storyPoint}})
+                {{task.title}} ({{task.storyPoint}})
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>{{task.taskDetails.description}}</p>
+            <p>{{task.description}}</p>
             <div class="details">
               <i class="far fa-eye"></i>
               see details

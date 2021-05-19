@@ -2,6 +2,7 @@ package com.example.scrumer.team.domain;
 
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.task.domain.Task;
+import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -30,15 +31,15 @@ public class Team {
 
     private String accessCode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private User creator;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
+    @ManyToMany(mappedBy = "teams", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private Set<User> members = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "teams")
+    @ManyToMany(mappedBy = "teams", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private Set<Project> projects = new HashSet<>();
 
@@ -57,15 +58,17 @@ public class Team {
         this.accessCode = accessCode;
     }
 
-    public void addCreator(User creator) {
-        this.creator = creator;
-    }
-
     public void addMember(User user) {
         members.add(user);
+        user.getTeams().add(this);
+    }
+
+    public void addMembers(Set<User> members) {
+        members.forEach(this::addMember);
     }
 
     public void addProject(Project project) {
         projects.add(project);
+        project.getTeams().add(this);
     }
 }

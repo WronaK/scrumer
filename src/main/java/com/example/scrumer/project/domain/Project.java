@@ -33,23 +33,23 @@ public class Project {
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private User creator;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private User productOwner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
     private User scrumMaster;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private List<Task> productBacklog;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable
     @JsonIgnoreProperties("projects")
     private Set<Team> teams;
@@ -66,10 +66,6 @@ public class Project {
         this.description = description;
     }
 
-    public void addCreator(User creator) {
-        this.creator = creator;
-    }
-
     public void addTaskToProductBacklog(Task task) {
         productBacklog.add(task);
     }
@@ -79,5 +75,6 @@ public class Project {
             this.teams = new HashSet<>();
         }
         teams.add(team);
+        team.getProjects().add(this);
     }
 }

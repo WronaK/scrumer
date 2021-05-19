@@ -5,6 +5,7 @@ import lombok.Value;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface TeamsUseCase {
     List<Team> findAll();
@@ -25,7 +26,7 @@ public interface TeamsUseCase {
     class CreateTeamCommand {
         String name;
         String accessCode;
-        List<MemberCommand> members;
+        Set<MemberCommand> members;
     }
     
     @Value

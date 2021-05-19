@@ -50,10 +50,10 @@ export class ProductBacklogComponent implements OnInit {
     dialogConfig.data = {
       id: task.id,
       taskDetails: {
-        title: task.taskDetails.title,
-        description: task.taskDetails.description,
-        priority: task.taskDetails.priority,
-        storyPoint: task.taskDetails.storyPoint
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        storyPoint: task.storyPoint
       }
       };
     this.dialog.open(ShowTaskFromProductBacklogComponent, dialogConfig);

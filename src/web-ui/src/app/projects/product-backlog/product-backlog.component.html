@@ -14,9 +14,9 @@
         </div>
         <div class="row" *ngFor="let task of productBacklog" (click)="showTask(task)">
           <div>{{task.id}}</div>
-          <div>{{task.taskDetails.title}}</div>
-          <div>{{task.taskDetails.priority}}</div>
-          <div>{{task.taskDetails.storyPoint}}</div>
+          <div>{{task.title}}</div>
+          <div>{{task.priority}}</div>
+          <div>{{task.storyPoint}}</div>
         </div>
     </div>
   </div>

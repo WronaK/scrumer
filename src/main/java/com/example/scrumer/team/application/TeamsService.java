@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,21 +37,12 @@ public class TeamsService implements TeamsUseCase {
         Team team = new Team(command.getName(), command.getAccessCode());
 
         userRepository.findByEmail(email).ifPresent(creator -> {
-            team.addCreator(creator);
+            team.setCreator(creator);
             team.addMember(creator);
-            Team save = repository.save(team);
-            creator.addTeam(save);
-            userRepository.save(creator);
         });
-        Team savedTeam = repository.save(team);
-        this.addMembers(command.getMembers(), savedTeam);
-        return repository.save(savedTeam);
-    }
 
-    private void addMembers(List<MemberCommand> commands, Team team) {
-        for(MemberCommand command: commands) {
-            this.addMember(team.getId(), command);
-        }
+        team.addMembers(this.fetchUserByEmail(command.getMembers()));
+        return repository.save(team);
     }
 
     @Override
@@ -59,14 +52,12 @@ public class TeamsService implements TeamsUseCase {
 
     @Override
     public void addMember(Long id, MemberCommand command) {
-        repository.findById(id)
-                .ifPresent(team -> {
-                    User user = userRepository.findByEmail(command.getEmail()).get();
-                    user.addTeam(team);
-                    userRepository.save(user);
-                    team.addMember(user);
-                    repository.save(team);
-                });
+        repository.findById(id).ifPresent(team -> {
+            userRepository.findByEmail(command.getEmail()).ifPresent(
+                    team::addMember
+            );
+            repository.save(team);
+        });
     }
 
     @Override
@@ -76,8 +67,6 @@ public class TeamsService implements TeamsUseCase {
                     Project project = projectRepository
                             .findByNameAndAccessCode(command.getName(), command.getAccessCode());
                     project.addTeam(team);
-                    projectRepository.save(project);
-                    team.addProject(project);
                     repository.save(team);
                 });
     }
@@ -85,5 +74,12 @@ public class TeamsService implements TeamsUseCase {
     @Override
     public List<Team> findByUser(String userEmail) {
         return repository.findByUser(userEmail);
+    }
+
+    private Set<User> fetchUserByEmail(Set<MemberCommand> members) {
+        return members.stream()
+                .map(member -> userRepository.findByEmail(member.getEmail())
+                        .orElseThrow(() -> new IllegalArgumentException("Not found user by email: " + member.getEmail()))
+                ).collect(Collectors.toSet());
     }
 }
