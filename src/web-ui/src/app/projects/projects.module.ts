@@ -7,7 +7,10 @@ import {AddTaskToProductBacklogComponent} from "./add-task-to-product-backlog/ad
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import { AddProjectComponent } from './add-project/add-project.component';
-import {MatCardModule} from "@angular/material/card";
+import { ProjectComponent } from './project/project.component';
+import { MenuTasksComponent } from './menu-tasks/menu-tasks.component';
+import { ProjectDetailsComponent } from './project-details/project-details.component';
+import { RemoveTaskComponent } from './remove-task/remove-task.component';
 
 @NgModule({
   declarations: [
@@ -16,22 +19,25 @@ import {MatCardModule} from "@angular/material/card";
     ShowTaskFromProductBacklogComponent,
     MyProjectsComponent,
     AddProjectComponent,
+    ProjectComponent,
+    MenuTasksComponent,
+    ProjectDetailsComponent,
+    RemoveTaskComponent,
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    MatCardModule,
   ],
 
   entryComponents: [
     AddTaskToProductBacklogComponent,
-    ShowTaskFromProductBacklogComponent,
-    AddProjectComponent
+    AddProjectComponent,
+    RemoveTaskComponent
   ],
 
   exports: [
-    ProductBacklogComponent,
+    ProjectComponent,
     MyProjectsComponent,
   ]
 })

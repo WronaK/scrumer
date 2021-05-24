@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-projects',
+  selector: 'app-my-projects',
   templateUrl: './my-projects.component.html',
   styleUrls: ['./my-projects.component.scss']
 })
@@ -40,13 +40,12 @@ export class MyProjectsComponent implements OnInit {
     return this.projectsService.getProjects().pipe(
       tap(projects => {
         this.projects = projects;
-        console.log(projects);
       })
     )
   }
 
   goToProject(id: number): void {
-    this.router.navigate(['product-backlog/' + id]);
+    this.router.navigate(['project/' + id]);
   }
 
   scrollLeft(){

@@ -1,12 +1,9 @@
 @import "../../../main-styles";
 
-
 .mat-dialog-content {
-  form {
-    display: flex;
-    flex-direction: column;
-    min-width: 500px;
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
 }
 
 .dialog-title {
@@ -22,5 +19,3 @@
     min-width: 150px;
   }
 }
-
-

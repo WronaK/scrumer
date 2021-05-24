@@ -7,6 +7,7 @@ import com.example.scrumer.task.db.TaskJpaRepository;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
+import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,35 @@ public class TasksService implements TasksUseCase {
                     task.addSubtask(subtask);
                     repository.save(task);
                 });
+    }
+
+    @Override
+    public void updateTask(TaskRequest task) {
+        repository.findById(task.getId())
+                .map(savedTask -> {
+                    this.updateFields(task, savedTask);
+                    return repository.save(savedTask);
+                });
+    }
+
+    private Task updateFields(TaskRequest task, Task savedTask) {
+        if(task.getTitle() != null) {
+            savedTask.getTaskDetails().setTitle(task.getTitle());
+        }
+
+        if(task.getDescription() != null) {
+            savedTask.getTaskDetails().setDescription(task.getDescription());
+        }
+
+        if(task.getPriority() != null) {
+            savedTask.getTaskDetails().setPriority(task.getPriority());
+        }
+
+        if(task.getStoryPoints() != null) {
+            savedTask.getTaskDetails().setStoryPoints(task.getStoryPoints());
+        }
+
+        return savedTask;
     }
 }
 

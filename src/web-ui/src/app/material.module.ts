@@ -14,6 +14,8 @@ import { MatSelectModule } from "@angular/material/select";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
+import {MatCardModule} from "@angular/material/card";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   imports: [
@@ -31,6 +33,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatStepperModule,
     MatListModule,
     MatIconModule,
+    MatCardModule,
+    MatButtonToggleModule,
 
   ],
   exports: [
@@ -48,6 +52,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatStepperModule,
     MatListModule,
     MatIconModule,
+    MatCardModule,
+    MatButtonToggleModule,
 
   ]
 })

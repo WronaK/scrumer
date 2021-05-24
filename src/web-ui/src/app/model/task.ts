@@ -3,7 +3,7 @@ export interface Task {
   title: string;
   description: string;
   priority: number;
-  storyPoint: string | number;
+  storyPoints: string | number;
   status: string;
 }
 

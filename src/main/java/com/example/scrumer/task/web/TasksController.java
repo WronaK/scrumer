@@ -32,8 +32,14 @@ public class TasksController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Task> getById(@PathVariable Long id) {
-        return tasks.findById(id);
+    public TaskRequest getById(@PathVariable Long id) {
+        Optional<Task> task = tasks.findById(id);
+        return task.map(tasksConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found task id: " + id));
+    }
+
+    @PutMapping()
+    public void updateTaskById(@RequestBody TaskRequest task) {
+        tasks.updateTask(task);
     }
 
     @PutMapping("/{id}/subtasks")

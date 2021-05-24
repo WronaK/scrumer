@@ -23,13 +23,11 @@ export class ProjectsService {
     return this.http.get<Project[]>('api/projects');
   }
 
-  getTasksToProductBacklog(id: number) {
+  getTasksToProductBacklog(id: number): Observable<Task[]> {
     return this.http.get<Task[]>('api/projects/' + id + '/product_backlog');
   }
 
   addTaskToProductBacklog(id: number, task: CreateTask) {
     return this.http.put<CreateTask>('api/projects/' + id + '/product_backlog', task)
   }
-
-
 }

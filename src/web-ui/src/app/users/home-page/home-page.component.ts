@@ -28,7 +28,7 @@ export class HomePageComponent implements OnInit {
   }
 
   goToProject(id: number): void {
-    this.router.navigate(['product-backlog/' + id]);
+    this.router.navigate(['project/' + id]);
   }
 
   goToTeam(id: number): void {

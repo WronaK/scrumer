@@ -26,8 +26,10 @@ export class AddProjectComponent implements OnInit {
 
   teams: JoinTeam[] = [];
 
-  constructor(private dialogRef: MatDialogRef<AddProjectComponent>,
-              private projectService: ProjectsService) {
+  constructor(
+    private dialogRef: MatDialogRef<AddProjectComponent>,
+    private projectService: ProjectsService)
+  {
     this.passwordFC = new FormControl('', Validators.required);
     this.projectNameFC = new FormControl('', Validators.required);
     this.descriptionFC = new FormControl('', Validators.required);
