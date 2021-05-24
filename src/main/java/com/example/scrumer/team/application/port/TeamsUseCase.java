@@ -22,6 +22,8 @@ public interface TeamsUseCase {
 
     List<Team> findByUser(String userEmail);
 
+    List<Team> findByProjectId(Long id);
+
     @Value
     class CreateTeamCommand {
         String name;

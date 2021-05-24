@@ -9,8 +9,11 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { AddProjectComponent } from './add-project/add-project.component';
 import { ProjectComponent } from './project/project.component';
 import { MenuTasksComponent } from './menu-tasks/menu-tasks.component';
-import { ProjectDetailsComponent } from './project-details/project-details.component';
 import { RemoveTaskComponent } from './remove-task/remove-task.component';
+import { InformationProjectComponent } from './information-project/information-project.component';
+import { MenuProjectComponent } from './menu-project/menu-project.component';
+import { TeamsComponent } from './teams/teams.component';
+import { AddTeamsComponent } from './add-teams/add-teams.component';
 
 @NgModule({
   declarations: [
@@ -21,8 +24,11 @@ import { RemoveTaskComponent } from './remove-task/remove-task.component';
     AddProjectComponent,
     ProjectComponent,
     MenuTasksComponent,
-    ProjectDetailsComponent,
     RemoveTaskComponent,
+    InformationProjectComponent,
+    MenuProjectComponent,
+    TeamsComponent,
+    AddTeamsComponent,
   ],
   imports: [
     CommonModule,

@@ -9,12 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ProjectRequest {
+public class UpdateProjectRequest {
     private Long id;
     private String name;
     private String accessCode;
     private String description;
-    private String creatorName;
-    private String productOwnerName;
-    private String scrumMasterName;
+    private String productOwner;
+    private String scrumMaster;
 }

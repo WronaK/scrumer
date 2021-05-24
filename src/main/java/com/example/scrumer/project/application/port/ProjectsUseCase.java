@@ -1,6 +1,7 @@
 package com.example.scrumer.project.application.port;
 
 import com.example.scrumer.project.domain.Project;
+import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
 import lombok.Value;
@@ -15,9 +16,13 @@ public interface ProjectsUseCase {
     void removeById(Long id);
     List<Project> findAll();
     void addTaskToProductBacklog(Long id, CreateTaskCommand command);
-    void addTeamToProject(Long id, TeamCommand toCommand);
+    void addTeamToProject(Long id, Set<TeamCommand> toCommand);
 
     List<Task> getProductBacklog(Long id);
+
+    void updateProject(UpdateProjectRequest project);
+
+    void removeTeamWithProject(Long id, Long idTeam);
 
     @Value
     class CreateProjectCommand {

@@ -3,6 +3,7 @@ package com.example.scrumer.project.application;
 import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
+import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
@@ -11,6 +12,7 @@ import com.example.scrumer.team.db.TeamJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -42,8 +44,11 @@ public class ProjectsService implements ProjectsUseCase {
     }
 
     @Override
-    public void addTeamToProject(Long id, TeamCommand command) {
-        repository.findById(id).ifPresent(project -> this.addTeam(project, command));
+    public void addTeamToProject(Long id, Set<TeamCommand> command) {
+        repository.findById(id).ifPresent(project -> {
+           this.addTeams(project, command);
+           repository.save(project);
+        });
     }
 
     @Override
@@ -76,6 +81,49 @@ public class ProjectsService implements ProjectsUseCase {
     @Override
     public List<Task> getProductBacklog(Long id) {
         return repository.getProductBacklog(id);
+    }
+
+    @Override
+    public void updateProject(UpdateProjectRequest project) {
+        repository.findById(project.getId())
+                .map(savedProject -> {
+                    this.updateFields(project, savedProject);
+                    return repository.save(savedProject);
+                });
+    }
+
+    @Override
+    public void removeTeamWithProject(Long id, Long idTeam) {
+        repository.findById(id).ifPresent(project ->
+                teamRepository.findById(idTeam)
+                        .ifPresent(team -> {
+                            project.removeTeam(team);
+                            repository.save(project);
+                        }));
+    }
+
+    private void updateFields(UpdateProjectRequest project, Project savedProject) {
+        if(project.getName() != null) {
+            savedProject.setName(project.getName());
+        }
+
+        if(project.getDescription() != null) {
+            savedProject.setDescription(project.getDescription());
+        }
+
+        if(project.getAccessCode() != null) {
+            savedProject.setAccessCode(project.getAccessCode());
+        }
+
+        if(project.getScrumMaster() != null) {
+            userRepository.findByEmail(project.getScrumMaster())
+                    .ifPresent(savedProject::setScrumMaster);
+        }
+
+        if(project.getProductOwner() != null) {
+            userRepository.findByEmail(project.getProductOwner())
+                    .ifPresent(savedProject::setProductOwner);
+        }
     }
 
     private void addTeams(Project project, Set<TeamCommand> commands) {

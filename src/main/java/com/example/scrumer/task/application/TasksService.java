@@ -60,7 +60,7 @@ public class TasksService implements TasksUseCase {
                 });
     }
 
-    private Task updateFields(TaskRequest task, Task savedTask) {
+    private void updateFields(TaskRequest task, Task savedTask) {
         if(task.getTitle() != null) {
             savedTask.getTaskDetails().setTitle(task.getTitle());
         }
@@ -76,8 +76,6 @@ public class TasksService implements TasksUseCase {
         if(task.getStoryPoints() != null) {
             savedTask.getTaskDetails().setStoryPoints(task.getStoryPoints());
         }
-
-        return savedTask;
     }
 }
 

@@ -1,5 +1,6 @@
 <div mat-dialog-title class="dialog-title">
-  <h2>Create project</h2>
+  <h2 *ngIf="request=='ADD'">Create project</h2>
+  <h2 *ngIf="request=='UPDATE'">Update project: {{idProject}}</h2>
   <button mat-icon-button aria-label="close dialog" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
@@ -46,11 +47,14 @@
         </mat-form-field>
         <div class="button">
           <button mat-raised-button matStepperPrevious>Back</button>
-          <button mat-raised-button matStepperNext>Next</button>
+          <button *ngIf="request=='ADD'" mat-raised-button matStepperNext>Next</button>
+          <button *ngIf="request=='UPDATE'" mat-raised-button (click)="save()"
+                  [disabled]="!projectForm.valid">UPDATE</button>
+
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="teamForm" label="Add teams">
+    <mat-step  *ngIf="request=='ADD'" [stepControl]="teamForm" label="Add teams">
         <form [formGroup]="teamForm">
           <div class="button one-button">
             <button mat-raised-button (click)="addTeam()" [disabled]="!teamForm.valid">Add team</button>

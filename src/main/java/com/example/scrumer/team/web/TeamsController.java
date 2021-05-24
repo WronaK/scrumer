@@ -5,7 +5,9 @@ import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
+import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
 import com.example.scrumer.team.domain.Team;
+import com.example.scrumer.team.request.TeamRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -16,16 +18,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/teams")
 @AllArgsConstructor
 public class TeamsController {
     private final TeamsUseCase teams;
+    private final TeamToTeamRequestConverter teamConverter;
 
     @GetMapping
     public List<Team> getAll() {
         return teams.findByUser(this.getUserEmail());
+    }
+
+    @GetMapping("/{id}/project")
+    public List<TeamRequest> getTeamByProjectId(@PathVariable Long id) {
+        return teams.findByProjectId(id).stream()
+                .map(teamConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

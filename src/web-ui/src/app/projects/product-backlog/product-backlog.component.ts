@@ -33,12 +33,10 @@ export class ProductBacklogComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   ngOnInit(): void {
     this.productBacklogService.productBacklog();
     this.productBacklogService.getProductBacklog().subscribe(productBacklog =>  { this.productBacklog=productBacklog;
     this.dataSource.data = this.productBacklog});
-
   }
 
 }

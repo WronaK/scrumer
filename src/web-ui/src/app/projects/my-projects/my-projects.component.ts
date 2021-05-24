@@ -29,7 +29,10 @@ export class MyProjectsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    this.dialog.open(AddProjectComponent, dialogConfig)
+    dialogConfig.data = {
+      request: "ADD"
+    };
+      this.dialog.open(AddProjectComponent, dialogConfig)
       .afterClosed()
       .pipe(
         switchMap(() => this.getProjects())

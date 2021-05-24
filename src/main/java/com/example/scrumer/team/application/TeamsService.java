@@ -76,6 +76,11 @@ public class TeamsService implements TeamsUseCase {
         return repository.findByUser(userEmail);
     }
 
+    @Override
+    public List<Team> findByProjectId(Long id) {
+        return repository.findByProjectId(id);
+    }
+
     private Set<User> fetchUserByEmail(Set<MemberCommand> members) {
         return members.stream()
                 .map(member -> userRepository.findByEmail(member.getEmail())

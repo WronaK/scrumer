@@ -20,4 +20,11 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
                     " m.email LIKE :email "
     )
     List<Team> findByUser(@Param("email") String email);
+
+    @Query(
+            " SELECT t from Team t JOIN t.projects p " +
+                    " WHERE " +
+                    " p.id = :idProject "
+    )
+    List<Team> findByProjectId(@Param("idProject") Long id);
 }
