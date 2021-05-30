@@ -71,4 +71,8 @@ public class Team {
         projects.add(project);
         project.getTeams().add(this);
     }
+
+    public void addTaskToSprintBacklog(Task task) {
+        sprintBoard.add(task);
+    }
 }

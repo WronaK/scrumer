@@ -2,4 +2,6 @@
   <button mat-button (click)="addTask()">Add task</button>
   <button mat-button (click)="updateTask()" [disabled]="!select()" >Update task</button>
   <button mat-button (click)="deleteTask()" [disabled]="!select()">Delete task</button>
+  <button mat-button (click)="moveTask()" [disabled]="!select()">Move task to realize</button>
+
 </mat-toolbar>

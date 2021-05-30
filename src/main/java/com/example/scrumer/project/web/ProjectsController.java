@@ -7,10 +7,13 @@ import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
 import com.example.scrumer.project.domain.Project;
 
 import com.example.scrumer.project.request.ProjectRequest;
+import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
 import com.example.scrumer.task.request.TaskRequest;
+import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.request.TeamRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -30,11 +33,26 @@ public class ProjectsController {
     private final ProjectsService projects;
     private final ProjectToProjectRequestConverter projectConverter;
     private final TaskToTaskRequestConverter taskConverter;
+    private final TeamToTeamRequestConverter teamConverter;
 
     @GetMapping
     public List<ProjectRequest> getAll() {
         return projects.findAll().stream()
                 .map(projectConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+//    @GetMapping("/{id}/team")
+//    public List<ProjectShortcutRequest> getProjectByTeamId(@PathVariable Long id) {
+//        return projects.findByTeamId(id).stream()
+//                .map(projectConverter::toDtoShortcut)
+//                .collect(Collectors.toList());
+//    }
+
+    @GetMapping("/{id}/teams")
+    public List<TeamRequest> getTeams(@PathVariable Long id) {
+        return projects.findTeamsByProjectId(id).stream()
+                .map(teamConverter::toDto)
                 .collect(Collectors.toList());
     }
 

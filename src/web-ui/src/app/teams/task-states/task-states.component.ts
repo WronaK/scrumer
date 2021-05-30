@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import { Task } from '../../mock/task';
+import {Component, Input } from '@angular/core';
+import { Task } from '../../model/task';
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {ShareService} from "../../share.service";
 
@@ -8,14 +8,11 @@ import {ShareService} from "../../share.service";
   templateUrl: './task-states.component.html',
   styleUrls: ['./task-states.component.scss']
 })
-export class TaskStatesComponent implements OnInit {
+export class TaskStatesComponent {
   @Input() title!: string;
   @Input() tasks!: Task[];
 
   constructor(private shareService: ShareService) { }
-
-  ngOnInit(): void {
-  }
 
   onDrop(event: CdkDragDrop<Task[]>) {
     this.shareService.drop(event);

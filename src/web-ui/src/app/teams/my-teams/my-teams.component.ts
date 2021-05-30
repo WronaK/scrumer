@@ -30,6 +30,9 @@ export class MyTeamsComponent implements OnInit {
     const dialogConfig= new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      request: "ADD"
+    };
     this.dialog.open(AddTeamComponent, dialogConfig)
       .afterClosed()
       .pipe(
@@ -46,7 +49,7 @@ export class MyTeamsComponent implements OnInit {
   }
 
   goToTeam(id: number) {
-    this.router.navigate(['sprint-backlog/' + id]);
+    this.router.navigate(['team/' + id]);
   }
 
   scrollLeft(){

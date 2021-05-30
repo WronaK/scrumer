@@ -2,6 +2,8 @@ package com.example.scrumer.team.application;
 
 import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
+import com.example.scrumer.task.db.TaskJpaRepository;
+import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.db.TeamJpaRepository;
 import com.example.scrumer.team.domain.Team;
@@ -21,6 +23,7 @@ public class TeamsService implements TeamsUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
     private final ProjectJpaRepository projectRepository;
+    private final TaskJpaRepository tasksRepository;
 
     @Override
     public List<Team> findAll() {
@@ -79,6 +82,33 @@ public class TeamsService implements TeamsUseCase {
     @Override
     public List<Team> findByProjectId(Long id) {
         return repository.findByProjectId(id);
+    }
+
+    @Override
+    public void addTask(Long id, Long idTask) {
+        repository.findById(id)
+                .ifPresent(team -> {
+                    tasksRepository.findById(idTask)
+                            .ifPresent(task -> {
+                                team.addTaskToSprintBacklog(task);
+                                repository.save(team);
+                            });
+                });
+    }
+
+    @Override
+    public List<Task> getSprintBacklog(Long id) {
+        return repository.getSprintBacklog(id);
+    }
+
+    @Override
+    public List<User> findMembersById(Long id) {
+        return repository.findMembers(id);
+    }
+
+    @Override
+    public List<Project> findProjectsById(Long id) {
+        return repository.findProjects(id);
     }
 
     private Set<User> fetchUserByEmail(Set<MemberCommand> members) {

@@ -48,7 +48,7 @@ export class ProjectsService {
   }
 
   getTeamsWorkProject(id: number): Observable<Team[]> {
-    return this.http.get<Team[]>('api/teams/' + id + "/project");
+    return this.http.get<Team[]>(this.url + id + "/teams");
   }
 
   joinTeamsToProject(id: number, teams: JoinTeams) {

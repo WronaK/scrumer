@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Task} from "../../mock/task";
+import {Task} from "../../model/task";
+import {ActivatedRoute} from "@angular/router";
+import {TeamsDetailsService} from "../teams-details.service";
 
 @Component({
   selector: 'app-sprint-backlog',
@@ -8,18 +10,10 @@ import {Task} from "../../mock/task";
 })
 export class SprintBacklogComponent implements OnInit {
 
-  tasksBacklog: Task[] = [
-    {id: 9, title: "Lorem ipsum1", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20},
-    {id: 10, title: "Lorem ipsum2", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20}];
-  tasksPBI: Task[]  = [
-    {id: 11, title: "Lorem ipsum11", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20},
-    {id: 12, title: "Lorem ipsum12", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20}];
-  tasksInProgress: Task[]  = [
-    {id: 13, title: "Lorem ipsum13", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20},
-    {id: 14, title: "Lorem ipsum14", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20}];
-  tasksMergeRequest: Task[]  = [
-    {id: 15, title: "Lorem ipsum15", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20},
-    {id: 16, title: "Lorem ipsum16", userStory: "Utworzyć autoryzacje", priority: 1, storyPoint: 20}];
+  tasksBacklog: Task[] = [];
+  tasksPBI: Task[]  = [];
+  tasksInProgress: Task[]  = [];
+  tasksMergeRequest: Task[]  = [];
   tasksDone: Task[] = [];
 
   backlog = 'BACKLOG';
@@ -28,8 +22,15 @@ export class SprintBacklogComponent implements OnInit {
   mergeRequest = 'MERGE REQUEST';
   done = 'DONE';
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private teamsDetailsService: TeamsDetailsService
+  ) {}
 
   ngOnInit(): void {
+    this.teamsDetailsService.loadsSprintBacklog();
+    this.teamsDetailsService.getSprintBacklog().subscribe(
+      sprintBacklog => this.tasksBacklog=sprintBacklog
+    )
   }
 }

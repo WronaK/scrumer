@@ -42,7 +42,6 @@ export class ProjectDetailsService {
 
   uploadTeams() {
     this.projectService.getTeamsWorkProject(this.idProject)
-      .pipe(tap(teams => { this.setTeam(teams);
-      console.log(teams)}) ).subscribe();
+      .pipe(tap(teams => this.setTeam(teams))).subscribe();
   }
 }

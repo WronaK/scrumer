@@ -32,7 +32,7 @@ export class HomePageComponent implements OnInit {
   }
 
   goToTeam(id: number): void {
-    this.router.navigate(['sprint-backlog/' + id]);
+    this.router.navigate(['team/' + id]);
   }
 
   goToMyProject() {

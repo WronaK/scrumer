@@ -14,6 +14,8 @@ import { InformationProjectComponent } from './information-project/information-p
 import { MenuProjectComponent } from './menu-project/menu-project.component';
 import { TeamsComponent } from './teams/teams.component';
 import { AddTeamsComponent } from './add-teams/add-teams.component';
+import { MoveTaskComponent } from './move-task/move-task.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -29,11 +31,13 @@ import { AddTeamsComponent } from './add-teams/add-teams.component';
     MenuProjectComponent,
     TeamsComponent,
     AddTeamsComponent,
+    MoveTaskComponent,
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatRadioModule,
   ],
 
   entryComponents: [

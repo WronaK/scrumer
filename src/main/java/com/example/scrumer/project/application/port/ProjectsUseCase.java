@@ -4,8 +4,10 @@ import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
+import com.example.scrumer.team.domain.Team;
 import lombok.Value;
 
+import java.util.BitSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +25,10 @@ public interface ProjectsUseCase {
     void updateProject(UpdateProjectRequest project);
 
     void removeTeamWithProject(Long id, Long idTeam);
+
+    List<Project> findByTeamId(Long id);
+
+    List<Team> findTeamsByProjectId(Long id);
 
     @Value
     class CreateProjectCommand {

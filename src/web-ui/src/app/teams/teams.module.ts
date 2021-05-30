@@ -8,13 +8,23 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import { MyTeamsComponent } from './my-teams/my-teams.component';
 import { AddTeamComponent } from './add-team/add-team.component';
 import {MatCardModule} from "@angular/material/card";
+import { TeamComponent } from './team/team.component';
+import { InformationTeamComponent } from './information-team/information-team.component';
+import { MenuTeamComponent } from './menu-team/menu-team.component';
+import { MembersComponent } from './members/members.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
   declarations: [
     SprintBacklogComponent,
     TaskStatesComponent,
     MyTeamsComponent,
-    AddTeamComponent
+    AddTeamComponent,
+    TeamComponent,
+    InformationTeamComponent,
+    MenuTeamComponent,
+    MembersComponent,
+    ProjectsComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +34,7 @@ import {MatCardModule} from "@angular/material/card";
     MatCardModule,
   ],
   exports: [
-    SprintBacklogComponent,
+    TeamComponent,
     MyTeamsComponent
   ]
 })

@@ -7,6 +7,7 @@ import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
+import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.user.db.UserJpaRepository;
 import com.example.scrumer.team.db.TeamJpaRepository;
 import lombok.AllArgsConstructor;
@@ -100,6 +101,16 @@ public class ProjectsService implements ProjectsUseCase {
                             project.removeTeam(team);
                             repository.save(project);
                         }));
+    }
+
+    @Override
+    public List<Project> findByTeamId(Long id) {
+        return repository.findByTeamId(id);
+    }
+
+    @Override
+    public List<Team> findTeamsByProjectId(Long id) {
+        return repository.findTeamsByProjectId(id);
     }
 
     private void updateFields(UpdateProjectRequest project, Project savedProject) {

@@ -24,4 +24,9 @@ export class TaskService {
   removeTask(id: number) {
     return this.http.delete(this.url + id);
   }
+
+  addTaskToTeam(id: number, idTask: number) {
+    return this.http.patch("api/teams/" + id + "/task/" + idTask, null);
+  }
+
 }

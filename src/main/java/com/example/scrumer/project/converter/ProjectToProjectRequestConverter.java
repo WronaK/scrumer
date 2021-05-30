@@ -2,6 +2,7 @@ package com.example.scrumer.project.converter;
 
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.project.request.ProjectRequest;
+import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,13 @@ public class ProjectToProjectRequestConverter {
                 .accessCode(project.getAccessCode())
                 .productOwner(project.getProductOwner()!= null ? project.getProductOwner().getEmail() : "")
                 .scrumMaster(project.getScrumMaster()!= null ? project.getScrumMaster().getEmail(): "")
+                .build();
+    }
+
+    public ProjectShortcutRequest toDtoShortcut(Project project) {
+        return ProjectShortcutRequest.builder()
+                .id(project.getId())
+                .name(project.getName())
                 .build();
     }
 }

@@ -1,0 +1,19 @@
+<mat-card class="team">
+  <mat-card-header class="header">
+    <mat-card-title class="title">Team {{teamId}}</mat-card-title>
+  </mat-card-header>
+  <form class="team-details">
+    <mat-form-field>
+      <mat-label>Name team</mat-label>
+      <input [formControl]="teamNameFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Access code</mat-label>
+      <input [formControl]="passwordFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Creator</mat-label>
+      <input [formControl]="creatorFC" matInput required>
+    </mat-form-field>
+  </form>
+</mat-card>

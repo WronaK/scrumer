@@ -1,5 +1,6 @@
 <div mat-dialog-title class="dialog-title">
-  <h2>Create team</h2>
+  <h2 *ngIf="request=='ADD'">Create team</h2>
+  <h2 *ngIf="request=='UPDATE'">Update team: {{idTeam}}</h2>
   <button mat-icon-button aria-label="close dialog" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
@@ -17,11 +18,14 @@
           <input [formControl]="passwordFC" matInput required>
         </mat-form-field>
         <div class="button one-button">
-          <button mat-raised-button matStepperNext>Next</button>
+          <button *ngIf="request=='ADD'" mat-raised-button matStepperNext>Next</button>
+          <button *ngIf="request=='UPDATE'" mat-raised-button (click)="save()"
+                  [disabled]="!teamForm.valid">UPDATE</button>
+
         </div>
       </form>
     </mat-step>
-    <mat-step [stepControl]="membersForm" label="Add members">
+    <mat-step *ngIf="request=='ADD'" [stepControl]="membersForm" label="Add members">
       <form [formGroup]="membersForm">
         <div class="button one-button">
           <button mat-raised-button (click)="addMember()" [disabled]="!membersForm.valid">Add member</button>
@@ -33,7 +37,7 @@
         <mat-list *ngIf="members.length > 0">
           Add members:
           <mat-list-item *ngFor="let member of members">
-            <span>Email: {{member}}</span>
+            <span>Email: {{member.email}}</span>
           </mat-list-item>
         </mat-list>
         <div class="button">

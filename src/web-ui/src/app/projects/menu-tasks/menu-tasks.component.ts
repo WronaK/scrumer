@@ -4,6 +4,7 @@ import {AddTaskToProductBacklogComponent} from "../add-task-to-product-backlog/a
 import {tap} from "rxjs/operators";
 import {ProductBacklogService} from "../product-backlog.service";
 import {RemoveTaskComponent} from "../remove-task/remove-task.component";
+import {MoveTaskComponent} from "../move-task/move-task.component";
 
 @Component({
   selector: 'app-menu-tasks',
@@ -65,6 +66,21 @@ export class MenuTasksComponent {
       tap(() => {
         this.productBacklogService.productBacklog();
         this.productBacklogService.setSelectTask(null);
+      })
+    ).subscribe();
+  }
+
+  moveTask() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      id: this.productBacklogService.idSelectTask,
+    };
+    this.dialog.open(MoveTaskComponent, dialogConfig)
+      .afterClosed().pipe(
+      tap(() => {
+        this.productBacklogService.productBacklog();
       })
     ).subscribe();
   }
