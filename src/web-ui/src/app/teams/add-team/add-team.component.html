@@ -1,12 +1,7 @@
-<div mat-dialog-title class="dialog-title">
-  <h2 *ngIf="request=='ADD'">Create team</h2>
-  <h2 *ngIf="request=='UPDATE'">Update team: {{idTeam}}</h2>
-  <button mat-icon-button aria-label="close dialog" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
-<div mat-dialog-content>
-  <mat-horizontal-stepper [linear]="true">
+<app-simple-dialog>
+  <h2 *ngIf="request=='ADD'" title>Create team</h2>
+  <h2 *ngIf="request=='UPDATE'" title>Update team: {{idTeam}}</h2>
+  <mat-horizontal-stepper content [linear]="true">
     <mat-step [stepControl]="teamForm" label="Basic information">
       <form [formGroup]="teamForm">
         <mat-form-field>
@@ -21,7 +16,6 @@
           <button *ngIf="request=='ADD'" mat-raised-button matStepperNext>Next</button>
           <button *ngIf="request=='UPDATE'" mat-raised-button (click)="save()"
                   [disabled]="!teamForm.valid">UPDATE</button>
-
         </div>
       </form>
     </mat-step>
@@ -47,4 +41,4 @@
       </form>
     </mat-step>
   </mat-horizontal-stepper>
-</div>
+</app-simple-dialog>

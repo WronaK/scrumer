@@ -13,6 +13,7 @@ import { InformationTeamComponent } from './information-team/information-team.co
 import { MenuTeamComponent } from './menu-team/menu-team.component';
 import { MembersComponent } from './members/members.component';
 import { ProjectsComponent } from './projects/projects.component';
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ProjectsComponent } from './projects/projects.component';
     ReactiveFormsModule,
     DragDropModule,
     MatCardModule,
+    SharedModule,
   ],
   exports: [
     TeamComponent,

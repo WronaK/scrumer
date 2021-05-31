@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "_main-styles";
+@import "main-styles";
 
 
 .mat-dialog-container {
@@ -24,4 +24,12 @@
       background-color: $green;
     }
   }
+}
+
+mat-horizontal-stepper {
+  background-color: $dark-brown !important;
+}
+
+.mat-step-label {
+  color: $green !important;
 }
