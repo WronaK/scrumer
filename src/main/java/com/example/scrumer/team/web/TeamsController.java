@@ -41,13 +41,6 @@ public class TeamsController {
         return teams.findByUser(this.getUserEmail());
     }
 
-//    @GetMapping("/{id}/project")
-//    public List<TeamRequest> getTeamByProjectId(@PathVariable Long id) {
-//        return teams.findByProjectId(id).stream()
-//                .map(teamConverter::toDto)
-//                .collect(Collectors.toList());
-//    }
-
     @GetMapping("/{id}/projects")
     public List<ProjectShortcutRequest> getProjects(@PathVariable Long id) {
         return teams.findProjectsById(id).stream()
@@ -81,10 +74,16 @@ public class TeamsController {
         return ResponseEntity.created(createdTeamUri(team)).build();
     }
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateTeam(@RequestBody RestUpdateTeamCommand command) {
+        teams.updateTeam(command.toCommand());
+    }
+
     @PutMapping("/{id}/members")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMemberCommand command) {
-        teams.addMember(id, command.toCommand());
+    public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMembersCommand command) {
+        teams.addMember(id, command.toCommands());
     }
 
     @PutMapping("/{id}/projects")
@@ -111,6 +110,18 @@ public class TeamsController {
     private URI createdTeamUri(Team team) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + team.getId().toString()).build().toUri();
     }
+
+    @Data
+    private static class RestUpdateTeamCommand {
+        Long id;
+        String name;
+        String accessCode;
+
+        TeamsUseCase.UpdateTeamCommand toCommand() {
+            return new TeamsUseCase.UpdateTeamCommand(id, name, accessCode);
+        }
+    }
+
     @Data
     private static class RestCreateTeamCommand {
         String name;
@@ -124,6 +135,19 @@ public class TeamsController {
         Set<MemberCommand> toCommands(Set<RestMemberCommand> members) {
             Set<MemberCommand> listMembers = new HashSet<>();
             for(RestMemberCommand member: members) {
+                listMembers.add(member.toCommand());
+            }
+            return listMembers;
+        }
+    }
+
+    @Data
+    private static class RestMembersCommand {
+        Set<RestMemberCommand> members;
+
+        Set<MemberCommand> toCommands() {
+            Set<MemberCommand> listMembers = new HashSet<>();
+            for(RestMemberCommand member: this.members) {
                 listMembers.add(member.toCommand());
             }
             return listMembers;

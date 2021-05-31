@@ -20,7 +20,7 @@ public interface TeamsUseCase {
 
     void deleteById(Long id);
 
-    void addMember(Long id, MemberCommand command);
+    void addMember(Long id, Set<MemberCommand> command);
 
     void addProjectToTeam(Long id, ProjectCommand command);
 
@@ -36,11 +36,20 @@ public interface TeamsUseCase {
 
     List<Project> findProjectsById(Long id);
 
+    void updateTeam(UpdateTeamCommand toCommand);
+
     @Value
     class CreateTeamCommand {
         String name;
         String accessCode;
         Set<MemberCommand> members;
+    }
+
+    @Value
+    class UpdateTeamCommand {
+        Long id;
+        String name;
+        String accessCode;
     }
     
     @Value

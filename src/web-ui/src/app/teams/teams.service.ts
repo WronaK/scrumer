@@ -8,6 +8,8 @@ import {Task} from "../model/task";
 import {User} from "../model/user";
 import {Project} from "./model/project";
 import {UpdateTeam} from "./model/update-team";
+import {Members} from "../model/member";
+import {JoinProject} from "../model/join-project";
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +45,13 @@ export class TeamsService {
 
   updateTeam(team: UpdateTeam) {
     return this.http.put<UpdateTeam>(this.url, team);
+  }
+
+  addMembers(id: number, members: Members) {
+    return this.http.put<Members>(this.url + id + '/members', members);
+  }
+
+  joinProject(id: number, projects: JoinProject) {
+    return this.http.put<JoinProject>(this.url + id + '/projects', projects);
   }
 }

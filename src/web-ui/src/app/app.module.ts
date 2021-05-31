@@ -10,7 +10,6 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./shared/auth.interceptor";
 import {ProjectsModule} from "./projects/projects.module";
-import {TasksModule} from "./tasks/tasks.module";
 import {TeamsModule} from "./teams/teams.module";
 import {UsersModule} from "./users/users.module";
 
@@ -27,7 +26,6 @@ import {UsersModule} from "./users/users.module";
     ReactiveFormsModule,
     HttpClientModule,
     ProjectsModule,
-    TasksModule,
     TeamsModule,
     UsersModule
   ],

@@ -1,3 +1,7 @@
 export interface Member {
-  email: String
+  email: string
+}
+
+export interface Members {
+  members: Member[]
 }

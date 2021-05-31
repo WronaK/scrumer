@@ -54,11 +54,9 @@ public class TeamsService implements TeamsUseCase {
     }
 
     @Override
-    public void addMember(Long id, MemberCommand command) {
+    public void addMember(Long id, Set<MemberCommand> command) {
         repository.findById(id).ifPresent(team -> {
-            userRepository.findByEmail(command.getEmail()).ifPresent(
-                    team::addMember
-            );
+            team.addMembers(this.fetchUserByEmail(command));
             repository.save(team);
         });
     }
@@ -111,10 +109,30 @@ public class TeamsService implements TeamsUseCase {
         return repository.findProjects(id);
     }
 
+    @Override
+    public void updateTeam(UpdateTeamCommand toCommand) {
+        repository.findById(toCommand.getId())
+                .map(team -> {
+                    this.updateFields(toCommand, team);
+                    return repository.save(team);
+                });
+    }
+
+    private void updateFields(UpdateTeamCommand toCommand, Team team) {
+        if(toCommand.getName() != null) {
+            team.setName(toCommand.getName());
+        }
+
+        if(toCommand.getAccessCode() != null) {
+            team.setAccessCode(toCommand.getAccessCode());
+        }
+    }
+
     private Set<User> fetchUserByEmail(Set<MemberCommand> members) {
         return members.stream()
                 .map(member -> userRepository.findByEmail(member.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("Not found user by email: " + member.getEmail()))
                 ).collect(Collectors.toSet());
     }
+
 }

@@ -14,6 +14,8 @@ import { MenuTeamComponent } from './menu-team/menu-team.component';
 import { MembersComponent } from './members/members.component';
 import { ProjectsComponent } from './projects/projects.component';
 import {SharedModule} from "../shared/shared.module";
+import { JoinProjectComponent } from './join-project/join-project.component';
+import { AddMembersComponent } from './add-members/add-members.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import {SharedModule} from "../shared/shared.module";
     InformationTeamComponent,
     MenuTeamComponent,
     MembersComponent,
-    ProjectsComponent
+    ProjectsComponent,
+    JoinProjectComponent,
+    AddMembersComponent
   ],
   imports: [
     CommonModule,
