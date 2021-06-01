@@ -13,8 +13,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,14 +46,28 @@ public class TasksController {
 
     @PutMapping("/{id}/subtasks")
     public void addSubtask(@PathVariable Long id,
-                           @RequestBody RestSubtaskCommand command) {
-        tasks.addSubtask(id, command.toCreateCommand());
+                           @RequestBody RestSubtasksCommand command) {
+        tasks.addSubtask(id, command.toCommands());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         tasks.deleteById(id);
+    }
+
+
+    @Data
+    private static class RestSubtasksCommand {
+        Set<RestSubtaskCommand> tasks;
+
+        Set<CreateTaskCommand> toCommands() {
+            Set<CreateTaskCommand> listTasks = new HashSet<>();
+            for (RestSubtaskCommand task: this.tasks) {
+                listTasks.add(task.toCreateCommand());
+            }
+            return listTasks;
+        }
     }
 
     @Data

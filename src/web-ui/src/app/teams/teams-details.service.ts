@@ -4,8 +4,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {Project} from "./model/project";
 import {User} from "../model/user";
 import {tap} from "rxjs/operators";
-import {Task} from "../model/task";
 import {Team} from "./model/team";
+import {SprintBacklog} from "../model/sprint.backlog";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import {Team} from "./model/team";
 export class TeamsDetailsService {
 
   idTeam!: number;
-  private sprintBacklog$: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  private sprintBacklog$: BehaviorSubject<SprintBacklog | null> = new BehaviorSubject<SprintBacklog | null>(null);
 
   private team$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
   private projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
@@ -25,11 +25,11 @@ export class TeamsDetailsService {
     this.idTeam = id;
   }
 
-  getSprintBacklog(): Observable<Task[]> {
+  getSprintBacklog(): Observable<SprintBacklog | null> {
     return this.sprintBacklog$.asObservable();
   }
 
-  setSprintBacklog(sprintBacklog: Task[]) {
+  setSprintBacklog(sprintBacklog: SprintBacklog) {
     this.sprintBacklog$.next(sprintBacklog);
   }
 
@@ -59,7 +59,8 @@ export class TeamsDetailsService {
 
   loadsSprintBacklog() {
     this.teamService.getTasksSprintBacklog(this.idTeam).pipe(
-      tap(sprintBacklog => this.setSprintBacklog(sprintBacklog))
+      tap(sprintBacklog => { this.setSprintBacklog(sprintBacklog);
+      console.log(sprintBacklog)})
     ).subscribe();
   }
 

@@ -3,3 +3,7 @@ export interface CreateTask {
   description: string;
   priority: number;
 }
+
+export interface Subtasks {
+  tasks: CreateTask[];
+}

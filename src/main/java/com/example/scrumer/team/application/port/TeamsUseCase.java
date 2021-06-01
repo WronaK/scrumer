@@ -6,7 +6,6 @@ import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.user.domain.User;
 import lombok.Value;
 
-import java.util.BitSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

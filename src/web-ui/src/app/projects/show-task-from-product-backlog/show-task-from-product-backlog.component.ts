@@ -19,6 +19,7 @@ export class ShowTaskFromProductBacklogComponent implements OnInit {
   priorityFC: FormControl;
   storyPointFC: FormControl;
   disabled=true;
+  statusFC: FormControl;
 
   constructor(private projectService: ProjectsService,
   private  productBacklogService: ProductBacklogService) {
@@ -26,11 +27,14 @@ export class ShowTaskFromProductBacklogComponent implements OnInit {
     this.descriptionFC = new FormControl({ value: '', disabled: this.disabled });
     this.priorityFC = new FormControl({ value: '', disabled: this.disabled });
     this.storyPointFC = new FormControl({ value: '', disabled: this.disabled });
+    this.statusFC = new FormControl({ value: '', disabled: this.disabled });
+
     this.taskFG = new FormGroup({
       taskTitleFC: this.taskTitleFC,
       descriptionFC: this.descriptionFC,
       priorityFC: this.priorityFC,
-      storyPointFC: this.storyPointFC
+      storyPointFC: this.storyPointFC,
+      statusFC: this.statusFC
     })
 
   }
@@ -45,6 +49,7 @@ export class ShowTaskFromProductBacklogComponent implements OnInit {
       this.descriptionFC.setValue(task.description);
       this.priorityFC.setValue(task.priority);
       this.storyPointFC.setValue(task.storyPoints);
+      this.statusFC.setValue(task.status);
   }
 
 }

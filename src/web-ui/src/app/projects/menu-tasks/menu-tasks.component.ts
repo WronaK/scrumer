@@ -81,6 +81,7 @@ export class MenuTasksComponent {
       .afterClosed().pipe(
       tap(() => {
         this.productBacklogService.productBacklog();
+        this.productBacklogService.selectedTask();
       })
     ).subscribe();
   }

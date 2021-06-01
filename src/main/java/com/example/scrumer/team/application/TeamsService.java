@@ -3,6 +3,7 @@ package com.example.scrumer.team.application;
 import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.task.db.TaskJpaRepository;
+import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.db.TeamJpaRepository;
@@ -88,6 +89,7 @@ public class TeamsService implements TeamsUseCase {
                 .ifPresent(team -> {
                     tasksRepository.findById(idTask)
                             .ifPresent(task -> {
+                                task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
                                 team.addTaskToSprintBacklog(task);
                                 repository.save(team);
                             });

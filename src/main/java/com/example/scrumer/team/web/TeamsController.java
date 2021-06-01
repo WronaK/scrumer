@@ -3,6 +3,8 @@ package com.example.scrumer.team.web;
 import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
 import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.domain.Subtask;
+import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.request.TaskRequest;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
@@ -11,11 +13,12 @@ import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
 import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.team.request.TeamDetails;
-import com.example.scrumer.team.request.TeamRequest;
 import com.example.scrumer.user.converter.UserToUserRequestConverter;
 import com.example.scrumer.user.request.UserRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,10 +64,8 @@ public class TeamsController {
     }
 
     @GetMapping("/{id}/sprint_backlog")
-    public List<TaskRequest> getSprintBacklogById(@PathVariable Long id) {
-        return teams.getSprintBacklog(id).stream()
-                .map(taskConverter::toDto)
-                .collect(Collectors.toList());
+    public RestSprintBacklog getSprintBacklogById(@PathVariable Long id) {
+        return new RestSprintBacklog(taskConverter, teams.getSprintBacklog(id));
     }
 
     @PostMapping
@@ -170,6 +171,44 @@ public class TeamsController {
 
         ProjectCommand toCommand() {
             return new ProjectCommand(name, accessCode);
+        }
+    }
+
+    @Data
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    private static class RestSprintBacklog {
+        private List<TaskRequest> tasksPBI = new ArrayList<>();
+        private List<TaskRequest> tasksTasks = new ArrayList<>();
+        private List<TaskRequest> tasksInProgress = new ArrayList<>();
+        private List<TaskRequest> tasksMergeRequest = new ArrayList<>();
+        private List<TaskRequest> tasksDone = new ArrayList<>();
+
+        public RestSprintBacklog(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+            this.sort(tasksConverter, sprintBacklog);
+        }
+
+        private void sort(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+            for(Task task: sprintBacklog) {
+                tasksPBI.add(tasksConverter.toDto(task));
+                for(Subtask subtask: task.getSubtasks()) {
+                    switch (subtask.getStatusTask()) {
+                        case NEW_TASK:
+                            tasksTasks.add(tasksConverter.toDto(subtask));
+                            break;
+                        case IN_PROGRESS:
+                            tasksInProgress.add(tasksConverter.toDto(subtask));
+                            break;
+                        case MERGE_REQUEST:
+                            tasksMergeRequest.add(tasksConverter.toDto(subtask));
+                            break;
+                        case DONE:
+                            tasksDone.add(tasksConverter.toDto(subtask));
+                            break;
+                    }
+                }
+            }
         }
     }
 }

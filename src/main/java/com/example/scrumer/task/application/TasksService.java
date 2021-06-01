@@ -4,6 +4,7 @@ import com.example.scrumer.task.application.port.TasksUseCase;
 import com.example.scrumer.task.db.SubtaskJpaRepository;
 import com.example.scrumer.task.db.TaskDetailsJpaRepository;
 import com.example.scrumer.task.db.TaskJpaRepository;
+import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -35,20 +37,27 @@ public class TasksService implements TasksUseCase {
     }
 
     @Override
-    public void addSubtask(Long id, CreateTaskCommand command) {
+    public void addSubtask(Long id, Set<CreateTaskCommand> command) {
         repository.findById(id)
                 .ifPresent(task -> {
-                    Subtask subtask = Subtask.builder()
-                            .taskDetails(TaskDetails
-                                    .builder()
-                                    .title(command.getTitle())
-                                    .description(command.getDescription())
-                                    .priority(command.getPriority())
-                                    .build())
-                            .build();
-                    task.addSubtask(subtask);
+                    for(CreateTaskCommand command1: command) {
+                        this.addSubtask(task, command1);
+                    }
                     repository.save(task);
                 });
+    }
+
+    private void addSubtask(Task task, CreateTaskCommand command) {
+        Subtask subtask = Subtask.builder()
+                .taskDetails(TaskDetails
+                        .builder()
+                        .title(command.getTitle())
+                        .description(command.getDescription())
+                        .priority(command.getPriority())
+                        .build())
+                .statusTask(StatusTask.NEW_TASK)
+                .build();
+        task.addSubtask(subtask);
     }
 
     @Override

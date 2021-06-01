@@ -4,12 +4,12 @@ import {Team} from "../model/team";
 import {Team as TTeam} from "./model/team";
 import {HttpClient} from "@angular/common/http";
 import {CreateTeam} from "../model/create.team";
-import {Task} from "../model/task";
 import {User} from "../model/user";
 import {Project} from "./model/project";
 import {UpdateTeam} from "./model/update-team";
 import {Members} from "../model/member";
 import {JoinProject} from "../model/join-project";
+import {SprintBacklog} from "../model/sprint.backlog";
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +31,8 @@ export class TeamsService {
     return this.http.get<Team[]>(this.url);
   }
 
-  getTasksSprintBacklog(id: number): Observable<Task[]> {
-    return this.http.get<Task[]>(this.url + id + '/sprint_backlog');
+  getTasksSprintBacklog(id: number): Observable<SprintBacklog> {
+    return this.http.get<SprintBacklog>(this.url + id + '/sprint_backlog');
   }
 
   getProjectsById(id: number): Observable<any> {

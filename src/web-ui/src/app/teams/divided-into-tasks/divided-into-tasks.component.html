@@ -1,0 +1,45 @@
+<app-dialog>
+  <h2 title>Division into tasks</h2>
+  <div class="container" content>
+    <form class="taskForm" [formGroup]="taskGroup">
+      <mat-form-field>
+        <mat-label>Enter a title for the task</mat-label>
+        <input [formControl]="titleFC" matInput required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Enter a task description</mat-label>
+        <textarea [formControl]="descriptionFC"
+                  matInput
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="5"></textarea>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Give priority</mat-label>
+        <input [formControl]="priorityFC" matInput required>
+      </mat-form-field>
+      <button mat-raised-button (click)="addTask()" [disabled]="!taskGroup.valid">Add task</button>
+    </form>
+
+    <div>
+      <div>Podzielone na: </div>
+    <mat-expansion-panel *ngFor="let task of tasks">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{task.title}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <p>{{task.description}}</p>
+    </mat-expansion-panel>
+    </div>
+<!--    <mat-list *ngIf="tasks.length > 0">-->
+<!--      Tasks:-->
+<!--      <mat-list-item *ngFor="let task of tasks">-->
+<!--        <span>Title: {{task.title}}</span>-->
+<!--        <span>Description: {{task.description}}</span>-->
+<!--        <span>Priority: {{task.priority}}</span>-->
+<!--      </mat-list-item>-->
+<!--    </mat-list>-->
+  </div>
+
+  <button action mat-raised-button (click)="save()" >SAVE</button>
+</app-dialog>

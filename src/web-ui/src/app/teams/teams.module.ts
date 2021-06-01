@@ -16,6 +16,8 @@ import { ProjectsComponent } from './projects/projects.component';
 import {SharedModule} from "../shared/shared.module";
 import { JoinProjectComponent } from './join-project/join-project.component';
 import { AddMembersComponent } from './add-members/add-members.component';
+import {ShowTaskFromSprintBacklogComponent} from "./show-task-from-sprint-backlog/show-task-from-sprint-backlog.component";
+import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tasks.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { AddMembersComponent } from './add-members/add-members.component';
     MembersComponent,
     ProjectsComponent,
     JoinProjectComponent,
-    AddMembersComponent
+    AddMembersComponent,
+    ShowTaskFromSprintBacklogComponent,
+    DividedIntoTasksComponent
   ],
   imports: [
     CommonModule,

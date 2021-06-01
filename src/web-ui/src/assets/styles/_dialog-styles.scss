@@ -19,3 +19,7 @@ button {
   display: flex;
   justify-content: flex-end;
 }
+
+.mat-input-element:disabled {
+  color: $yellow !important;
+}

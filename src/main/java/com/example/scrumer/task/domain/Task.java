@@ -25,7 +25,7 @@ public class Task {
     private TaskDetails taskDetails;
 
     @Enumerated(value = EnumType.STRING)
-    private StatusTask statusTask = StatusTask.NEW;
+    private StatusTask statusTask;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")

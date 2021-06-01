@@ -5,6 +5,7 @@ import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
+import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
 import com.example.scrumer.team.domain.Team;
@@ -73,6 +74,7 @@ public class ProjectsService implements ProjectsUseCase {
                                     .description(command.getDescription())
                                     .priority(command.getPriority())
                                     .build())
+                            .statusTask(StatusTask.NEW)
                             .build();
                     project.addTaskToProductBacklog(task);
                     repository.save(project);

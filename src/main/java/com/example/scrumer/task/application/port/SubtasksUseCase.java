@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface SubtasksUseCase {
     Optional<Subtask> findById(Long id);
+
+    void changeStatus(Long id);
 }

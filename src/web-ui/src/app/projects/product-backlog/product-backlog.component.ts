@@ -10,7 +10,7 @@ import {ProductBacklogService} from "../product-backlog.service";
   styleUrls: ['./product-backlog.component.scss']
 })
 export class ProductBacklogComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'title', 'priority', 'storyPoints'];
+  displayedColumns: string[] = ['id', 'title', 'priority', 'storyPoints', 'status'];
 
   productBacklog: Task[] = [];
 

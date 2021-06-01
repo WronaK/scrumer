@@ -19,5 +19,5 @@ public class Subtask {
     private TaskDetails taskDetails;
 
     @Enumerated(value = EnumType.STRING)
-    private StatusTask statusTask = StatusTask.PBI;
+    private StatusTask statusTask;
 }
