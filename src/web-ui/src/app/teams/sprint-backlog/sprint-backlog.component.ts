@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {TeamsDetailsService} from "../teams-details.service";
-import {SprintBacklog} from "../../model/sprint.backlog";
+import { Task } from 'src/app/model/task';
 
 @Component({
   selector: 'app-sprint-backlog',
@@ -10,13 +10,11 @@ import {SprintBacklog} from "../../model/sprint.backlog";
 })
 export class SprintBacklogComponent implements OnInit {
 
-  // tasksPBI: Task[]  = [];
-  // tasksTasks: Task[] = [];
-  // tasksInProgress: Task[]  = [];
-  // tasksMergeRequest: Task[]  = [];
-  // tasksDone: Task[] = [];
-
-  sprintBacklog!: SprintBacklog;
+  tasksPBI: Task[]  = [];
+  tasksTasks: Task[] = [];
+  tasksInProgress: Task[]  = [];
+  tasksMergeRequest: Task[]  = [];
+  tasksDone: Task[] = [];
 
   pbi = 'PBI';
   tasks = 'TASKS';
@@ -32,7 +30,15 @@ export class SprintBacklogComponent implements OnInit {
   ngOnInit(): void {
     this.teamsDetailsService.loadsSprintBacklog();
     this.teamsDetailsService.getSprintBacklog().subscribe(
-      sprintBacklog => {if(sprintBacklog !=null) this.sprintBacklog=sprintBacklog}
+      sprintBacklog => {
+        if (sprintBacklog != null) {
+          this.tasksPBI = sprintBacklog.tasksPBI;
+          this.tasksTasks = sprintBacklog.tasksTasks;
+          this.tasksInProgress = sprintBacklog.tasksInProgress;
+          this.tasksMergeRequest = sprintBacklog.tasksMergeRequest;
+          this.tasksDone = sprintBacklog.tasksDone
+        }
+      }
     )
   }
 }
