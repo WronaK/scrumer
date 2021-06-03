@@ -5,7 +5,6 @@ import {SprintBacklogComponent} from "./sprint-backlog/sprint-backlog.component"
 import {TaskStatesComponent} from "./task-states/task-states.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { MyTeamsComponent } from './my-teams/my-teams.component';
 import { AddTeamComponent } from './add-team/add-team.component';
 import {MatCardModule} from "@angular/material/card";
 import { TeamComponent } from './team/team.component';
@@ -23,7 +22,6 @@ import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tas
   declarations: [
     SprintBacklogComponent,
     TaskStatesComponent,
-    MyTeamsComponent,
     AddTeamComponent,
     TeamComponent,
     InformationTeamComponent,
@@ -44,8 +42,7 @@ import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tas
     SharedModule,
   ],
   exports: [
-    TeamComponent,
-    MyTeamsComponent
+    TeamComponent
   ]
 })
 export class TeamsModule { }

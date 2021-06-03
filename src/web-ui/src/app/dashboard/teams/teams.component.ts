@@ -1,18 +1,19 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Team} from "../../model/team";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AddTeamComponent} from "../add-team/add-team.component";
+import {TeamsService} from "../../teams/teams.service";
+import {Router} from "@angular/router";
+import {AddTeamComponent} from "../../teams/add-team/add-team.component";
 import {switchMap, tap} from "rxjs/operators";
 import {Observable} from "rxjs";
-import {TeamsService} from "../teams.service";
-import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-my-teams',
-  templateUrl: './my-teams.component.html',
-  styleUrls: ['./my-teams.component.scss']
+  selector: 'app-teams',
+  templateUrl: './teams.component.html',
+  styleUrls: ['./teams.component.scss']
 })
-export class MyTeamsComponent implements OnInit {
+export class TeamsComponent implements OnInit {
+
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   teams: Team[] = [];
 
@@ -53,10 +54,12 @@ export class MyTeamsComponent implements OnInit {
   }
 
   scrollLeft(){
-    this.widgetsContent.nativeElement.scrollLeft -= 150;
+    this.widgetsContent.nativeElement.scrollLeft -= 250;
   }
 
   scrollRight(){
-    this.widgetsContent.nativeElement.scrollLeft += 150;
+    this.widgetsContent.nativeElement.scrollLeft += 250;
   }
+
+
 }

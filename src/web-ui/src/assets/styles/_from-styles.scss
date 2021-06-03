@@ -21,7 +21,7 @@
     @include centerElements;
     font-size: 2em;
     font-weight: bold;
-    text-shadow: 3px -21px 14px white;
+    text-shadow: 3px -21px 14px $secondary-color;
 
     &:hover {
       cursor: pointer;

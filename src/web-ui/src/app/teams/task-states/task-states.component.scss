@@ -10,7 +10,7 @@
   }
 
   .status-name {
-    background: $green;
+    background: $detail-color;
     font-size: 1.2em;
     line-height: 1.2em;
     min-height: 60px;
@@ -23,7 +23,7 @@
 
   mat-expansion-panel {
     margin-top: 1em;
-    background: $yellow;
+    background: $second-spot-color;
     box-shadow: 0 3px 6px black;
     border-radius: 10px;
 
@@ -41,7 +41,7 @@
 }
 
 mat-icon:hover {
-  color: #49D593;
+  color: $detail-color;
 }
 
 .cdk-drop-dragging .cdk-drag {
@@ -58,7 +58,7 @@ mat-icon:hover {
 
 .cdk-drag-preview {
   opacity: 0.5;
-  background: $yellow;
+  background: $second-spot-color;
   box-shadow: 0 3px 6px black;
   border-radius: 10px;
   mat-panel-title {

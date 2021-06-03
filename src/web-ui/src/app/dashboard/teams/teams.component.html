@@ -1,0 +1,25 @@
+
+<div class="container">
+  <div class="projects-header">
+    <h3>Your teams</h3>
+  </div>
+
+  <div class="content">
+    <div class="side">
+      <mat-icon (click)="scrollLeft()">
+        keyboard_arrow_left
+      </mat-icon>
+    </div>
+    <div #widgetsContent class="middle" >
+      <div class="team" *ngFor="let team of teams" (click)="goToTeam(team.id)">
+        <div>{{team.name}}</div>
+      </div>
+    </div>
+    <div class="side">
+      <mat-icon (click)="scrollRight()">
+        keyboard_arrow_right
+      </mat-icon>
+    </div>
+
+  </div>
+</div>

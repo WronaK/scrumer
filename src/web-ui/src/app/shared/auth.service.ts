@@ -28,8 +28,8 @@ export class AuthService {
         response => {
           const token = response.headers.get('authorization');
           if(token !== null) {
-            localStorage.setItem('access_token', token.replace('Bearer ', ''))
-            this.router.navigate(['home']);
+            localStorage.setItem('access_token', token.replace('Bearer ', ''));
+            this.router.navigate(['dashboard']);
           }
         }
       )
@@ -53,5 +53,9 @@ export class AuthService {
     if(removeToken === null) {
       this.router.navigate(['login']);
     }
+  }
+
+  getUserData() {
+    return this.http.get<User>('api/users');
   }
 }

@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
-$dark-brown: #100E0F;
-$brown: #312C2D;
-$green: #49D593;
-$grey: #6E6E6E;
-$yellow: #DDE1D3;
+$secondary-color: #FBF9F9;
+$primary-color: #1F1525;
+$detail-color: #87B73B;
+$spot-color: #858E8C;
+$second-spot-color: #7B7A80;
 $purple: #AEABF5;
 $pink: #ECC0F5;
 
@@ -14,7 +14,7 @@ html, body {
   overflow: hidden !important;
   margin: 0;
   padding: 0;
-  background: $brown;
+  background: $primary-color;
   font-family: 'Roboto Mono', monospace;
 }
 
@@ -31,8 +31,8 @@ html, body {
 }
 
 @mixin headerContent() {
-  background: $dark-brown;
-  box-shadow: 0 3px 6px black;
+  background: $primary-color;
+  box-shadow: 0 3px 6px $primary-color;
 
   display: flex;
   justify-content: space-between;
@@ -42,7 +42,7 @@ html, body {
 
 @mixin fontHeader() {
   font-size: 1.5em;
-  color: $green;
+  color: $detail-color;
 
   display: flex;
   justify-content: flex-start;
@@ -62,13 +62,13 @@ html, body {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: $grey;
+      color: $primary-color;
       font-size: 1.2em;
-      background: $brown;
+      background: $spot-color;
     }
     button {
       width: 20%;
-      background: $green;
+      background: $detail-color;
       border: none;
       border-radius: 0 0 10px 0 ;
 
@@ -91,16 +91,16 @@ html, body {
     @include centerElements;
     flex-direction: column;
 
-    background: $dark-brown;
+    background: $primary-color;
     border-radius: 0 10px 0 0;
 
     mat-form-field {
       width: 80%;
-      color: $green;
+      color: $detail-color;
       font-size: 1.5em;
 
       mat-label {
-        color: $grey;
+        color: $spot-color;
       }
     }
   }

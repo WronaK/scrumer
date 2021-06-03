@@ -1,0 +1,64 @@
+@import "../../../main-styles";
+
+
+.container {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  h3 {
+    color: $detail-color;
+  }
+
+  .content {
+    display: flex;
+    width: 100%;
+    height: 90%;
+
+    .side {
+      width: 5%;
+      height: 100%;
+      @include centerElements;
+
+      mat-icon:hover {
+        cursor: pointer;
+        color: $detail-color;
+      }
+
+    }
+    .middle {
+      overflow: hidden;
+      scroll-behavior: smooth;
+      height: 100%;
+      width: 90%;
+      white-space: nowrap;
+
+      .team {
+        width: 30%;
+        height: 100%;
+        margin: 0 15px;
+        display: inline-block;
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: $secondary-color;
+          width: 100%;
+          height: 100%;
+          border-radius: 5px;
+        }
+
+        div:hover {
+          background-color: $spot-color;
+        }
+      }
+    }
+  }
+
+}
+
+
+

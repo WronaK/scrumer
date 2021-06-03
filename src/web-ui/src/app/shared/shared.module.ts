@@ -12,7 +12,7 @@ import { SimpleDialogComponent } from './simple-dialog/simple-dialog.component';
   ],
   exports: [
     DialogComponent,
-    SimpleDialogComponent
+    SimpleDialogComponent,
   ]
 })
 export class SharedModule { }

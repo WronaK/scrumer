@@ -1,0 +1,12 @@
+<div class="top-bar">
+  <div class="logo">
+    <img src="assets/your-logo.png" (click)="goHome()">
+  </div>
+  <div class="menu">
+    <div class="item" (click)="addProject()">create project</div>
+    <div class="item" (click)="addTeam()">create team</div>
+    <div class="item">join team</div>
+    <div class="logout item" (click)="logout()">logout</div>
+    <div class="item user">{{user?.name + ' ' + user?.surname}}</div>
+  </div>
+</div>

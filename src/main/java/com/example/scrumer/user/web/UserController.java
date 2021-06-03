@@ -3,7 +3,9 @@ package com.example.scrumer.user.web;
 import com.example.scrumer.user.application.UserService;
 import com.example.scrumer.user.application.port.UserUseCase.CreateUserCommand;
 import com.example.scrumer.user.application.port.UserUseCase.TeamCommand;
+import com.example.scrumer.user.converter.UserToUserRequestConverter;
 import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.request.UserRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,11 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserToUserRequestConverter userConverter;
 
     @GetMapping
-    public Optional<User> getLoggedUser() {
-        return userService.findByEmail(this.getUserEmail());
+    public UserRequest getLoggedUser() {
+        return userService.findByEmail(this.getUserEmail()).map(userConverter::toDto).orElseThrow();
     }
 
     private String getUserEmail() {
