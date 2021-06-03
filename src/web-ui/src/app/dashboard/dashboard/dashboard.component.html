@@ -1,29 +1,12 @@
 <div class="main-container">
-
   <div class="home-page-container">
     <app-projects></app-projects>
     <app-teams></app-teams>
-
     <div class="tasks">
-      <div class="header">
-        My tasks
+      <div class="tasks-header">
+        <h3>Your tasks</h3>
       </div>
-      <div class="content">
-        <mat-accordion>
-          <mat-expansion-panel *ngFor="let task of tasks" hideToggle>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                {{task.title}} ({{task.storyPoints}})
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <p>{{task.description}}</p>
-            <div class="details">
-              <i class="far fa-eye"></i>
-              see details
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-      </div>
+      <app-task [tasks]="tasks"></app-task>
     </div>
   </div>
 </div>

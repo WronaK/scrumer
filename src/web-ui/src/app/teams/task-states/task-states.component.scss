@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
 
-  .mat-accordion {
+  .tasks {
     min-height: 120px;
   }
 
@@ -21,23 +21,55 @@
     min-width: 220px;
   }
 
-  mat-expansion-panel {
-    margin-top: 1em;
-    background: $second-spot-color;
-    box-shadow: 0 3px 6px black;
-    border-radius: 10px;
+  .task-card-content {
+    background-color: $secondary-color;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
 
-    mat-expansion-panel-header {
-      min-height: 60px;
-      min-width: 220px;
-      padding-right: 0;
-      mat-panel-title {
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
+    .task-card-title {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 18px;
+      color: $detail-color;
+    }
+
+    .task-card-body {
+      position: relative;
+      max-height: 70px;
+      overflow: hidden;
+      color: $primary-color;
+      pointer-events: none;
+
+      .fade-out-truncation {
+        position: absolute;
+        bottom: 0;
+        height: 50%;
+        width: 100%;
+        background: linear-gradient(to bottom, rgba($secondary-color, 0) 0%, rgba($secondary-color, 0.8) 50%, $secondary-color 100%);
+
       }
     }
   }
+
+  //mat-expansion-panel {
+  //  margin-top: 1em;
+  //  background: $second-spot-color;
+  //  box-shadow: 0 3px 6px black;
+  //  border-radius: 10px;
+  //
+  //  mat-expansion-panel-header {
+  //    min-height: 60px;
+  //    min-width: 220px;
+  //    padding-right: 0;
+  //    mat-panel-title {
+  //      font-weight: bold;
+  //      display: flex;
+  //      justify-content: space-between;
+  //    }
+  //  }
+  //}
 }
 
 mat-icon:hover {
