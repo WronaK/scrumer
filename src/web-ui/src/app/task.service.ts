@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import { Task } from './model/task';
 import {Subtasks} from "./model/create.task";
+import {RealizeTask} from "./model/realize.task";
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,13 @@ export class TaskService {
 
   changeStatusTask(id: number) {
     return this.http.patch("api/subtasks/" + id, null);
+  }
+
+  addRealizeTask(realizeTask: RealizeTask) {
+    return this.http.patch<RealizeTask>("api/subtasks/realize", realizeTask);
+  }
+
+  getSubtasks() {
+    return this.http.get<Task[]>("api/subtasks");
   }
 }

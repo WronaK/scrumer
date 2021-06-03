@@ -1,11 +1,14 @@
 package com.example.scrumer.user.domain;
 
+import com.example.scrumer.task.domain.RealizeTask;
 import com.example.scrumer.team.domain.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -38,6 +41,10 @@ public class User {
     @JsonIgnoreProperties("members")
     private Set<Team> teams = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private List<RealizeTask> realizeTasks = new ArrayList<>();
+
     public User(String email, String password, UserDetails userDetails) {
         this.email = email;
         this.password = password;
@@ -48,6 +55,5 @@ public class User {
     public void addTeam(Team team) {
         teams.add(team);
     }
-
 }
 

@@ -11,6 +11,7 @@
           <div class="icon">
             <mat-icon *ngIf="title==='PBI'" (click)="divided(task.id)">add</mat-icon>
             <mat-icon *ngIf="title!=='PBI' && title!=='DONE'" (click)="changeStatus(task.id)">forward</mat-icon>
+            <mat-icon *ngIf="title=='IN-PROGRESS' || title=='MERGE REQUEST'" (click)="addRealizeTask(task.id)">pan_tool</mat-icon>
             <mat-icon (click)="displayTask(task.id)">open_in_new</mat-icon>
           </div>
         </mat-panel-title>

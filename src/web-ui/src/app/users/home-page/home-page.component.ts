@@ -7,6 +7,7 @@ import {tap} from "rxjs/operators";
 import {Team} from "../../model/team";
 import {TeamsService} from "../../teams/teams.service";
 import {Task} from "../../model/task";
+import {TaskService} from "../../task.service";
 
 @Component({
   selector: 'app-home-page',
@@ -20,11 +21,13 @@ export class HomePageComponent implements OnInit {
 
   constructor(private router: Router,
               private projectsService: ProjectsService,
-              private teamsService: TeamsService) { }
+              private teamsService: TeamsService,
+              private tasksService: TaskService) { }
 
   ngOnInit(): void {
     this.getProjects().subscribe();
     this.getTeams().subscribe();
+    this.getSubtasks().subscribe();
   }
 
   goToProject(id: number): void {
@@ -55,6 +58,14 @@ export class HomePageComponent implements OnInit {
     return this.teamsService.getTeams().pipe(
       tap(teams => {
         this.teams = teams;
+      })
+    )
+  }
+
+  getSubtasks(): Observable<Task[]> {
+    return this.tasksService.getSubtasks().pipe(
+      tap(subtasks => {
+        this.tasks = subtasks;
       })
     )
   }

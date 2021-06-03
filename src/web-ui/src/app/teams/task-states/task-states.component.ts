@@ -61,4 +61,9 @@ export class TaskStatesComponent {
       () => this.teamDetialsService.loadsSprintBacklog()
     )
   }
+
+  addRealizeTask(id: number) {
+    status = this.title==='IN-PROGRESS'? status = 'IN_PROGRESS': status = 'MERGE_REQUEST';
+    this.tasksService.addRealizeTask({idTask: id, status: status}).subscribe();
+  }
 }

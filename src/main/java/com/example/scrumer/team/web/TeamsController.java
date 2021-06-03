@@ -13,6 +13,7 @@ import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
 import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.team.request.TeamDetails;
+import com.example.scrumer.team.request.TeamRequest;
 import com.example.scrumer.user.converter.UserToUserRequestConverter;
 import com.example.scrumer.user.request.UserRequest;
 import lombok.AllArgsConstructor;
@@ -40,8 +41,11 @@ public class TeamsController {
     private final ProjectToProjectRequestConverter projectConverter;
 
     @GetMapping
-    public List<Team> getAll() {
-        return teams.findByUser(this.getUserEmail());
+    public List<TeamRequest> getAll() {
+        return teams.findByUser(this.getUserEmail())
+                .stream()
+                .map(this.teamConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/projects")
