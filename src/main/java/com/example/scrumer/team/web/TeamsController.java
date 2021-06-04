@@ -1,6 +1,6 @@
 package com.example.scrumer.team.web;
 
-import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
+import com.example.scrumer.project.converter.ProjectToRestCommandConverter;
 import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
 import com.example.scrumer.task.domain.Subtask;
@@ -38,7 +38,7 @@ public class TeamsController {
     private final TeamToTeamRequestConverter teamConverter;
     private final TaskToTaskRequestConverter taskConverter;
     private final UserToUserRequestConverter userConverter;
-    private final ProjectToProjectRequestConverter projectConverter;
+    private final ProjectToRestCommandConverter projectConverter;
 
     @GetMapping
     public List<TeamRequest> getAll() {

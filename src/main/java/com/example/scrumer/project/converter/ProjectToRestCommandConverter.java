@@ -7,7 +7,7 @@ import com.example.scrumer.project.request.UpdateProjectRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectToProjectRequestConverter {
+public class ProjectToRestCommandConverter {
     public ProjectRequest toDto(Project project) {
         return ProjectRequest.builder()
                 .id(project.getId())

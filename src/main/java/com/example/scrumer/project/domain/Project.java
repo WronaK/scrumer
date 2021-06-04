@@ -31,6 +31,7 @@ public class Project {
 
     private String accessCode;
 
+    @Column(columnDefinition="text")
     private String description;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -66,7 +67,7 @@ public class Project {
         this.description = description;
     }
 
-    public void addTaskToProductBacklog(Task task) {
+    public void addTask(Task task) {
         productBacklog.add(task);
     }
 

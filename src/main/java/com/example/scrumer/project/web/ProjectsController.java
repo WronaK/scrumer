@@ -1,13 +1,15 @@
 package com.example.scrumer.project.web;
 
-import com.example.scrumer.project.application.ProjectsService;
+import com.example.scrumer.project.application.ProjectMembersService;
+import com.example.scrumer.project.application.port.ProductBacklogUseCase;
+import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
 import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
-import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
+import com.example.scrumer.project.application.port.ProjectsUseCase.UpdateProjectCommand;
+import com.example.scrumer.project.converter.ProjectToRestCommandConverter;
 import com.example.scrumer.project.domain.Project;
 
 import com.example.scrumer.project.request.ProjectRequest;
-import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
@@ -30,8 +32,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/projects")
 @AllArgsConstructor
 public class ProjectsController {
-    private final ProjectsService projects;
-    private final ProjectToProjectRequestConverter projectConverter;
+    private final ProjectsUseCase projects;
+    private final ProductBacklogUseCase productBacklog;
+    private final ProjectMembersService projectMembers;
+    private final ProjectToRestCommandConverter projectConverter;
     private final TaskToTaskRequestConverter taskConverter;
     private final TeamToTeamRequestConverter teamConverter;
 
@@ -42,16 +46,9 @@ public class ProjectsController {
                 .collect(Collectors.toList());
     }
 
-//    @GetMapping("/{id}/team")
-//    public List<ProjectShortcutRequest> getProjectByTeamId(@PathVariable Long id) {
-//        return projects.findByTeamId(id).stream()
-//                .map(projectConverter::toDtoShortcut)
-//                .collect(Collectors.toList());
-//    }
-
     @GetMapping("/{id}/teams")
     public List<TeamRequest> getTeams(@PathVariable Long id) {
-        return projects.findTeamsByProjectId(id).stream()
+        return projectMembers.findTeams(id).stream()
                 .map(teamConverter::toDto)
                 .collect(Collectors.toList());
     }
@@ -70,7 +67,7 @@ public class ProjectsController {
 
     @GetMapping("/{id}/product_backlog")
     public List<TaskRequest> getProductBacklogById(@PathVariable Long id) {
-        return projects.getProductBacklog(id).stream()
+        return productBacklog.findProductBacklog(id).stream()
                 .map(taskConverter::toDto)
                 .collect(Collectors.toList());
     }
@@ -84,27 +81,27 @@ public class ProjectsController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateProject(@RequestBody UpdateProjectRequest project) {
-        projects.updateProject(project);
+    public void updateProject(@RequestBody UpdateProjectCommand command) {
+        projects.updateProject(command);
     }
 
     @PutMapping("/{id}/product_backlog")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToProductBacklog(@PathVariable Long id,
                                         @RequestBody RestCreateTaskCommand command) {
-        projects.addTaskToProductBacklog(id, command.toCreateCommand());
+        productBacklog.addTask(id, command.toCreateCommand());
     }
 
     @PutMapping("/{id}/teams")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTeamToProject(@PathVariable Long id, @RequestBody RestTeamsCommand command) {
-        projects.addTeamToProject(id, command.toCommands());
+    public void addTeams(@PathVariable Long id, @RequestBody RestTeamsCommand command) {
+        projectMembers.addTeams(id, command.toCommands());
     }
 
     @PatchMapping("/{id}/teams/{idTeam}/remove")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void removeTeamWithProject(@PathVariable Long id, @PathVariable Long idTeam) {
-        projects.removeTeamWithProject(id, idTeam);
+    public void removeTeam(@PathVariable Long id, @PathVariable Long idTeam) {
+        projectMembers.removeTeam(id, idTeam);
     }
 
     @DeleteMapping("/{id}")
