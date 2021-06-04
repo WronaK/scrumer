@@ -19,21 +19,7 @@ public interface TeamsUseCase {
 
     void deleteById(Long id);
 
-    void addMember(Long id, Set<MemberCommand> command);
-
-    void addProjectToTeam(Long id, ProjectCommand command);
-
     List<Team> findByUser(String userEmail);
-
-    List<Team> findByProjectId(Long id);
-
-    void addTask(Long id, Long idTask);
-
-    List<Task> getSprintBacklog(Long id);
-
-    List<User> findMembersById(Long id);
-
-    List<Project> findProjectsById(Long id);
 
     void updateTeam(UpdateTeamCommand toCommand);
 
@@ -54,11 +40,5 @@ public interface TeamsUseCase {
     @Value
     class MemberCommand {
         String email;
-    }
-
-    @Value
-    class ProjectCommand {
-        String name;
-        String accessCode;
     }
 }

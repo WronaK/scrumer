@@ -15,7 +15,7 @@ public interface TasksUseCase {
 
     void deleteById(Long id);
 
-    void addSubtask(Long id, Set<CreateTaskCommand> toCreateCommand);
+    void addSubtasks(Long id, Set<CreateTaskCommand> toCreateCommand);
 
     void updateTask(TaskRequest task);
 

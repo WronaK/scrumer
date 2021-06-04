@@ -12,9 +12,9 @@ import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.project.request.ProjectRequest;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.request.TaskRequest;
-import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.converter.TeamToRestCommandConverter;
 import com.example.scrumer.team.request.TeamRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,8 +36,8 @@ public class ProjectsController {
     private final ProductBacklogUseCase productBacklog;
     private final ProjectMembersService projectMembers;
     private final ProjectToRestCommandConverter projectConverter;
-    private final TaskToTaskRequestConverter taskConverter;
-    private final TeamToTeamRequestConverter teamConverter;
+    private final TaskToRestCommandConverter taskConverter;
+    private final TeamToRestCommandConverter teamConverter;
 
     @GetMapping
     public List<ProjectRequest> getAll() {

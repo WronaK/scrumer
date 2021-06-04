@@ -2,15 +2,16 @@ package com.example.scrumer.team.web;
 
 import com.example.scrumer.project.converter.ProjectToRestCommandConverter;
 import com.example.scrumer.project.request.ProjectShortcutRequest;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.request.TaskRequest;
+import com.example.scrumer.team.application.port.SprintBacklogUseCase;
+import com.example.scrumer.team.application.port.TeamMembersUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
-import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
-import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.converter.TeamToRestCommandConverter;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.team.request.TeamDetails;
 import com.example.scrumer.team.request.TeamRequest;
@@ -35,8 +36,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TeamsController {
     private final TeamsUseCase teams;
-    private final TeamToTeamRequestConverter teamConverter;
-    private final TaskToTaskRequestConverter taskConverter;
+    private final TeamMembersUseCase teamMembers;
+    private final SprintBacklogUseCase sprintBacklog;
+    private final TeamToRestCommandConverter teamConverter;
+    private final TaskToRestCommandConverter taskConverter;
     private final UserToUserRequestConverter userConverter;
     private final ProjectToRestCommandConverter projectConverter;
 
@@ -50,14 +53,14 @@ public class TeamsController {
 
     @GetMapping("/{id}/projects")
     public List<ProjectShortcutRequest> getProjects(@PathVariable Long id) {
-        return teams.findProjectsById(id).stream()
+        return sprintBacklog.findProjectsById(id).stream()
                 .map(projectConverter::toDtoShortcut)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}/members")
     public List<UserRequest> getMembers(@PathVariable Long id) {
-        return teams.findMembersById(id).stream()
+        return teamMembers.findMembersById(id).stream()
                 .map(userConverter::toDto)
                 .collect(Collectors.toList());
     }
@@ -69,7 +72,7 @@ public class TeamsController {
 
     @GetMapping("/{id}/sprint_backlog")
     public RestSprintBacklog getSprintBacklogById(@PathVariable Long id) {
-        return new RestSprintBacklog(taskConverter, teams.getSprintBacklog(id));
+        return new RestSprintBacklog(taskConverter, sprintBacklog.getSprintBacklog(id));
     }
 
     @PostMapping
@@ -88,19 +91,13 @@ public class TeamsController {
     @PutMapping("/{id}/members")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMembersCommand command) {
-        teams.addMember(id, command.toCommands());
-    }
-
-    @PutMapping("/{id}/projects")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addProjectToTeam(@PathVariable Long id, @RequestBody RestProjectCommand command) {
-        teams.addProjectToTeam(id, command.toCommand());
+        teamMembers.addMember(id, command.toCommands());
     }
 
     @PatchMapping("/{id}/task/{idTask}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) {
-        teams.addTask(id, idTask);
+        sprintBacklog.addTask(id, idTask);
     }
 
     @DeleteMapping("/{id}")
@@ -169,16 +166,6 @@ public class TeamsController {
     }
 
     @Data
-    private static class RestProjectCommand {
-        String name;
-        String accessCode;
-
-        ProjectCommand toCommand() {
-            return new ProjectCommand(name, accessCode);
-        }
-    }
-
-    @Data
     @Getter
     @Setter
     @AllArgsConstructor
@@ -189,11 +176,11 @@ public class TeamsController {
         private List<TaskRequest> tasksMergeRequest = new ArrayList<>();
         private List<TaskRequest> tasksDone = new ArrayList<>();
 
-        public RestSprintBacklog(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+        public RestSprintBacklog(TaskToRestCommandConverter tasksConverter, List<Task> sprintBacklog) {
             this.sort(tasksConverter, sprintBacklog);
         }
 
-        private void sort(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+        private void sort(TaskToRestCommandConverter tasksConverter, List<Task> sprintBacklog) {
             for(Task task: sprintBacklog) {
                 tasksPBI.add(tasksConverter.toDto(task));
                 for(Subtask subtask: task.getSubtasks()) {

@@ -23,13 +23,6 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
     List<Team> findByUser(@Param("email") String email);
 
     @Query(
-            " SELECT t from Team t JOIN t.projects p " +
-                    " WHERE " +
-                    " p.id = :idProject "
-    )
-    List<Team> findByProjectId(@Param("idProject") Long id);
-
-    @Query(
             " SELECT t.sprintBoard from Team t " +
                     " WHERE t.id = :id_team "
     )
@@ -46,11 +39,4 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
                     " where t.id = :idTeam"
     )
     List<Project> findProjects(@Param("idTeam") Long id);
-
-//    @Query(
-//            " SELECT t.projects from Team t JOIN t.members m " +
-//                    " WHERE " +
-//                    " m.email LIKE :email "
-//    )
-//    List<Project> getProjectByUser(@Param("email") String email);
 }

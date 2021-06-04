@@ -2,7 +2,7 @@ package com.example.scrumer.task.application;
 
 import com.example.scrumer.task.application.port.SubtasksUseCase;
 import com.example.scrumer.task.db.RealizeTaskJpaRepository;
-import com.example.scrumer.task.db.SubtaskJpaRepository;
+import com.example.scrumer.task.db.SubtasksJpaRepository;
 import com.example.scrumer.task.domain.RealizeTask;
 import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Subtask;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SubtasksService implements SubtasksUseCase {
-    private final SubtaskJpaRepository subtasks;
+    private final SubtasksJpaRepository subtasks;
     private final UserJpaRepository userRepository;
     private final RealizeTaskJpaRepository realizeTaskRepository;
 
