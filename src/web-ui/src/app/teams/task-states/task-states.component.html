@@ -4,21 +4,35 @@
   <div class="tasks" cdkDropList
        [cdkDropListData]="tasks"
        (cdkDropListDropped)="onDrop($event)">
-    <div class="task-card-content"  *ngFor="let task of tasks"
-         hideToggle cdkDrag [cdkDragDisabled]="title==='PBI'">
-      <div class="task-card-title">
-        <div>{{task.title}}</div>
-        <div class="icon">
-          <mat-icon *ngIf="title==='PBI'" (click)="divided(task.id)">add</mat-icon>
-          <mat-icon *ngIf="title!=='PBI' && title!=='DONE'" (click)="changeStatus(task.id)">forward</mat-icon>
-          <mat-icon *ngIf="title=='IN-PROGRESS' || title=='MERGE REQUEST'" (click)="addRealizeTask(task.id)">pan_tool</mat-icon>
-          <mat-icon (click)="displayTask(task.id)">open_in_new</mat-icon>
+    <div class="content">
+      <div class="side">
+        <mat-icon (click)="scrollUp()">
+          keyboard_arrow_up
+        </mat-icon>
+      </div>
+      <div #widgetsContent class="middle" >
+        <div class="task-card-content"  *ngFor="let task of tasks"
+             hideToggle cdkDrag [cdkDragDisabled]="title==='PBI'">
+          <div class="task-card-title">
+            <div>{{task.title}}</div>
+            <div class="icon">
+              <mat-icon *ngIf="title==='PBI'" (click)="divided(task.id)">add</mat-icon>
+              <mat-icon *ngIf="title!=='PBI' && title!=='DONE'" (click)="changeStatus(task.id)">forward</mat-icon>
+              <mat-icon *ngIf="title=='IN-PROGRESS' || title=='MERGE REQUEST'" (click)="addRealizeTask(task.id)">pan_tool</mat-icon>
+              <mat-icon (click)="displayTask(task.id)">open_in_new</mat-icon>
+            </div>
+          </div>
+          <div #bodyText class="task-card-body">
+            <p>{{task.description}}</p>
+            <div #truncator class="fade-out-truncation"></div>
+          </div>
         </div>
       </div>
-      <div #bodyText class="task-card-body">
-        <p>{{task.description}}</p>
-        <div #truncator class="fade-out-truncation"></div>
+        <div class="side">
+          <mat-icon (click)="scrollDown()">
+            keyboard_arrow_down
+          </mat-icon>
+        </div>
       </div>
-    </div>
   </div>
 </div>

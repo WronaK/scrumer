@@ -15,6 +15,7 @@ import {TaskService} from "../../task.service";
   styleUrls: ['./task-states.component.scss']
 })
 export class TaskStatesComponent implements OnInit {
+  @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   @Input() title!: string;
   @Input() tasks!: Task[];
   disabled = true;
@@ -86,5 +87,13 @@ export class TaskStatesComponent implements OnInit {
   addRealizeTask(id: number) {
     status = this.title==='IN-PROGRESS'? status = 'IN_PROGRESS': status = 'MERGE_REQUEST';
     this.tasksService.addRealizeTask({idTask: id, status: status}).subscribe();
+  }
+
+  scrollUp(){
+    this.widgetsContent.nativeElement.scrollTop -= 250;
+  }
+
+  scrollDown(){
+    this.widgetsContent.nativeElement.scrollTop += 250;
   }
 }

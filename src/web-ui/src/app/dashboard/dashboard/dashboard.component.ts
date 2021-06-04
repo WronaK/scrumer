@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {tap} from "rxjs/operators";
@@ -11,6 +11,7 @@ import {TaskService} from "../../task.service";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   tasks: Task[] = [];
 
   constructor(private router: Router,
@@ -26,5 +27,13 @@ export class DashboardComponent implements OnInit {
         this.tasks = subtasks;
       })
     )
+  }
+
+  scrollTop(){
+    this.widgetsContent.nativeElement.scrollTop -= 250;
+  }
+
+  scrollDown(){
+    this.widgetsContent.nativeElement.scrollTop += 250;
   }
 }

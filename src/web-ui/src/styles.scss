@@ -33,3 +33,12 @@ mat-horizontal-stepper {
 .mat-step-label {
   color: $detail-color !important;
 }
+
+.mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.mat-tab-body-content {
+  overflow: hidden !important;
+}
+
