@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../model/user";
 import {Router} from "@angular/router";
 import {AuthService} from "../shared/auth.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddProjectComponent} from "../projects/add-project/add-project.component";
 import {AddTeamComponent} from "../teams/add-team/add-team.component";
+import {DashboardService} from "../dashboard/dashboard.service";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-header',
@@ -16,7 +18,8 @@ export class HeaderComponent implements OnInit {
   user!: User;
   constructor(private router: Router,
               private authService: AuthService,
-              private dialog: MatDialog) { }
+              private dialog: MatDialog,
+              private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.getUserData();
@@ -45,7 +48,7 @@ export class HeaderComponent implements OnInit {
     this.dialog.open(AddProjectComponent, dialogConfig)
       .afterClosed()
       .pipe(
-        // switchMap(() => this.getProjects())
+        tap(() => this.dashboardService.uploadProject())
       ).subscribe();
   }
 
@@ -59,7 +62,7 @@ export class HeaderComponent implements OnInit {
     this.dialog.open(AddTeamComponent, dialogConfig)
       .afterClosed()
       .pipe(
-        // switchMap(() => this.getTeams())
+        tap(() => this.dashboardService.uploadTeams())
       ).subscribe();
   }
 
