@@ -1,16 +1,15 @@
 package com.example.scrumer.task.web;
 
 import com.example.scrumer.task.application.TasksService;
-import com.example.scrumer.task.application.port.TasksUseCase;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/tasks")
 public class TasksController {
     private final TasksService tasks;
-    private final TaskToTaskRequestConverter tasksConverter;
+    private final TaskToRestCommandConverter tasksConverter;
 
     @GetMapping
     public List<TaskRequest> getAll() {
@@ -34,9 +33,9 @@ public class TasksController {
     }
 
     @GetMapping("/{id}")
-    public TaskRequest getById(@PathVariable Long id) {
-        Optional<Task> task = tasks.findById(id);
-        return task.map(tasksConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found task id: " + id));
+    public ResponseEntity<TaskRequest> getById(@PathVariable Long id) {
+        return tasks.findById(id).map(task -> ResponseEntity.ok(this.tasksConverter.toDto(task)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping()
@@ -45,9 +44,9 @@ public class TasksController {
     }
 
     @PutMapping("/{id}/subtasks")
-    public void addSubtask(@PathVariable Long id,
+    public void addSubtasks(@PathVariable Long id,
                            @RequestBody RestSubtasksCommand command) {
-        tasks.addSubtask(id, command.toCommands());
+        tasks.addSubtasks(id, command.toCommands());
     }
 
     @DeleteMapping("/{id}")

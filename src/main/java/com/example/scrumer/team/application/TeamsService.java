@@ -1,16 +1,16 @@
 package com.example.scrumer.team.application;
 
-import com.example.scrumer.project.db.ProjectJpaRepository;
-import com.example.scrumer.project.domain.Project;
+import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.db.TaskJpaRepository;
 import com.example.scrumer.task.domain.StatusTask;
-import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.db.TeamJpaRepository;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.user.db.UserJpaRepository;
 import com.example.scrumer.user.domain.User;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class TeamsService implements TeamsUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
-    private final ProjectJpaRepository projectRepository;
+    private final ValidatorPermission validatorPermission;
     private final TaskJpaRepository tasksRepository;
 
     @Override
@@ -32,8 +32,10 @@ public class TeamsService implements TeamsUseCase {
     }
 
     @Override
-    public Optional<Team> findById(Long id) {
-        return repository.findById(id);
+    public Optional<Team> findById(Long id) throws NotFoundException, IllegalAccessException {
+        Optional<Team> team = repository.findById(id);
+        this.validatorPermission.validateTeamPermission(team, this.getUserEmail());
+        return team;
     }
 
     @Override
@@ -55,69 +57,40 @@ public class TeamsService implements TeamsUseCase {
     }
 
     @Override
-    public void addMember(Long id, Set<MemberCommand> command) {
-        repository.findById(id).ifPresent(team -> {
-            team.addMembers(this.fetchUserByEmail(command));
-            repository.save(team);
-        });
-    }
-
-    @Override
-    public void addProjectToTeam(Long id, ProjectCommand command) {
-        repository.findById(id)
-                .ifPresent(team -> {
-                    Project project = projectRepository
-                            .findByNameAndAccessCode(command.getName(), command.getAccessCode());
-                    project.addTeam(team);
-                    repository.save(team);
-                });
-    }
-
-    @Override
     public List<Team> findByUser(String userEmail) {
         return repository.findByUser(userEmail);
     }
 
     @Override
-    public List<Team> findByProjectId(Long id) {
-        return repository.findByProjectId(id);
+    public void updateTeam(UpdateTeamCommand toCommand) throws NotFoundException, IllegalAccessException {
+        Optional<Team> team = repository.findById(toCommand.getId());
+        validatorPermission.validateTeamPermission(team, this.getUserEmail());
+
+        Team savedTeam = team.get();
+        this.updateFields(toCommand, savedTeam);
+        repository.save(savedTeam);
     }
 
     @Override
-    public void addTask(Long id, Long idTask) {
-        repository.findById(id)
-                .ifPresent(team -> {
-                    tasksRepository.findById(idTask)
-                            .ifPresent(task -> {
-                                task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
-                                team.addTaskToSprintBacklog(task);
-                                repository.save(team);
-                            });
-                });
+    public void addMember(Long id, Set<MemberCommand> command) throws NotFoundException, IllegalAccessException {
+        Optional<Team> team = repository.findById(id);
+        this.validatorPermission.validateTeamPermission(team, this.getUserEmail());
+
+        Team savedTeam = team.get();
+        savedTeam.addMembers(this.fetchUserByEmail(command));
+        repository.save(savedTeam);
     }
 
     @Override
-    public List<Task> getSprintBacklog(Long id) {
-        return repository.getSprintBacklog(id);
-    }
+    public void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException {
+        Optional<Team> team = repository.findById(id);
+        this.validatorPermission.validateTeamPermission(team, this.getUserEmail());
 
-    @Override
-    public List<User> findMembersById(Long id) {
-        return repository.findMembers(id);
-    }
-
-    @Override
-    public List<Project> findProjectsById(Long id) {
-        return repository.findProjects(id);
-    }
-
-    @Override
-    public void updateTeam(UpdateTeamCommand toCommand) {
-        repository.findById(toCommand.getId())
-                .map(team -> {
-                    this.updateFields(toCommand, team);
-                    return repository.save(team);
-                });
+        Team savedTeam = team.get();
+        tasksRepository.findById(idTask).ifPresent(task -> {
+            task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
+            repository.save(savedTeam);
+        });
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {
@@ -130,11 +103,15 @@ public class TeamsService implements TeamsUseCase {
         }
     }
 
-    private Set<User> fetchUserByEmail(Set<MemberCommand> members) {
+    private Set<User> fetchUserByEmail(Set<TeamsUseCase.MemberCommand> members) {
         return members.stream()
                 .map(member -> userRepository.findByEmail(member.getEmail())
                         .orElseThrow(() -> new IllegalArgumentException("Not found user by email: " + member.getEmail()))
                 ).collect(Collectors.toSet());
+    }
+
+    private String getUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
 }

@@ -6,7 +6,7 @@ import com.example.scrumer.team.request.TeamRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TeamToTeamRequestConverter {
+public class TeamToRestCommandConverter {
 
     public TeamRequest toDto(Team team) {
         return TeamRequest.builder()

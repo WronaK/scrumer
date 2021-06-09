@@ -4,32 +4,41 @@
 
 
 .mat-dialog-container {
-  background: $dark-brown !important;
+  background: $primary-color !important;
 
   .mat-dialog-title {
-    color: $green;
+    color: $detail-color;
   }
 
   .mat-dialog-content {
-    color: $green;
+    color: $secondary-color;
 
     .mat-form-field-label {
-      color: #DDE1D3;
+      color: $secondary-color;
     }
 
     .mat-step-text-label {
       color: white;
     }
     .mat-step-icon-selected {
-      background-color: $green;
+      background-color: $detail-color;
     }
   }
 }
 
 mat-horizontal-stepper {
-  background-color: $dark-brown !important;
+  background-color: $primary-color !important;
 }
 
 .mat-step-label {
-  color: $green !important;
+  color: $detail-color !important;
 }
+
+.mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.mat-tab-body-content {
+  overflow: hidden !important;
+}
+

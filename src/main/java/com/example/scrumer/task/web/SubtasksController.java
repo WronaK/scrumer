@@ -1,7 +1,7 @@
 package com.example.scrumer.task.web;
 
 import com.example.scrumer.task.application.port.SubtasksUseCase;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/subtasks")
 public class SubtasksController {
     private final SubtasksUseCase subtasks;
-    private final TaskToTaskRequestConverter tasksConverter;
+    private final TaskToRestCommandConverter tasksConverter;
 
     @GetMapping
     public List<TaskRequest> getSubtasks() {
@@ -29,7 +29,7 @@ public class SubtasksController {
     }
 
     @GetMapping("/{id}")
-    public TaskRequest getSubtaskById(@PathVariable Long id) {
+    public TaskRequest getSubtasksById(@PathVariable Long id) {
         Optional<Subtask> task = subtasks.findById(id);
         return task.map(tasksConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found task id: " + id));
     }

@@ -20,6 +20,10 @@ button {
   justify-content: flex-end;
 }
 
+.mat-input-element {
+  color: $secondary-color;
+}
+
 .mat-input-element:disabled {
-  color: $yellow !important;
+  color: $second-spot-color !important;
 }

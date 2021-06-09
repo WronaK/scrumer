@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ProductBacklogComponent} from "./product-backlog/product-backlog.component";
 import {ShowTaskFromProductBacklogComponent} from "./show-task-from-product-backlog/show-task-from-product-backlog.component";
-import {MyProjectsComponent} from "./my-projects/my-projects.component";
 import {AddTaskToProductBacklogComponent} from "./add-task-to-product-backlog/add-task-to-product-backlog.component";
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -23,7 +22,6 @@ import {SharedModule} from "../shared/shared.module";
     ProductBacklogComponent,
     AddTaskToProductBacklogComponent,
     ShowTaskFromProductBacklogComponent,
-    MyProjectsComponent,
     AddProjectComponent,
     ProjectComponent,
     MenuTasksComponent,
@@ -49,8 +47,7 @@ import {SharedModule} from "../shared/shared.module";
   ],
 
   exports: [
-    ProjectComponent,
-    MyProjectsComponent,
+    ProjectComponent
   ]
 })
 export class ProjectsModule { }

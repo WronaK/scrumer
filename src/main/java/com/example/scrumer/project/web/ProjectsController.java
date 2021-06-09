@@ -1,23 +1,25 @@
 package com.example.scrumer.project.web;
 
-import com.example.scrumer.project.application.ProjectsService;
+import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
 import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
-import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
+import com.example.scrumer.project.application.port.ProjectsUseCase.UpdateProjectCommand;
+import com.example.scrumer.project.converter.ProjectToRestCommandConverter;
 import com.example.scrumer.project.domain.Project;
 
 import com.example.scrumer.project.request.ProjectRequest;
-import com.example.scrumer.project.request.ProjectShortcutRequest;
 import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.request.TaskRequest;
-import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.converter.TeamToRestCommandConverter;
 import com.example.scrumer.team.request.TeamRequest;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -30,11 +32,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/projects")
 @AllArgsConstructor
 public class ProjectsController {
-    private final ProjectsService projects;
-    private final ProjectToProjectRequestConverter projectConverter;
-    private final TaskToTaskRequestConverter taskConverter;
-    private final TeamToTeamRequestConverter teamConverter;
+    private final ProjectsUseCase projects;
+    private final ProjectToRestCommandConverter projectConverter;
+    private final TaskToRestCommandConverter taskConverter;
+    private final TeamToRestCommandConverter teamConverter;
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping
     public List<ProjectRequest> getAll() {
         return projects.findAll().stream()
@@ -42,39 +45,54 @@ public class ProjectsController {
                 .collect(Collectors.toList());
     }
 
-//    @GetMapping("/{id}/team")
-//    public List<ProjectShortcutRequest> getProjectByTeamId(@PathVariable Long id) {
-//        return projects.findByTeamId(id).stream()
-//                .map(projectConverter::toDtoShortcut)
-//                .collect(Collectors.toList());
-//    }
+    @Secured({"ROLE_USER"})
+    @GetMapping("/my-projects")
+    public List<ProjectRequest> getAllByLoggerUser() {
+        return projects.findByUser(this.getUserEmail()).stream()
+                .map(projectConverter::toDto)
+                .collect(Collectors.toList());
+    }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/teams")
-    public List<TeamRequest> getTeams(@PathVariable Long id) {
-        return projects.findTeamsByProjectId(id).stream()
-                .map(teamConverter::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<TeamRequest>> getTeams(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return projects.findById(id)
+                .map(project ->
+                        ResponseEntity.ok(project.getTeams()
+                                .stream()
+                                .map(teamConverter::toDto)
+                                .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}")
-    public ProjectRequest getById(@PathVariable Long id) {
-        Optional<Project> project = projects.findById(id);
-        return project.map(projectConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found project id: " + id));
+    public ResponseEntity<ProjectRequest> getById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return projects.findById(id)
+                .map(project -> ResponseEntity.ok(projectConverter.toDto(project)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/update")
-    public UpdateProjectRequest getProjectById(@PathVariable Long id) {
-        Optional<Project> project = projects.findById(id);
-        return project.map(projectConverter::toDtoUpdate).orElseThrow(() -> new IllegalArgumentException("Not found project id: " + id));
+    public ResponseEntity<UpdateProjectRequest> getProjectById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return projects.findById(id)
+                .map(project -> ResponseEntity.ok(projectConverter.toDtoUpdate(project)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/product_backlog")
-    public List<TaskRequest> getProductBacklogById(@PathVariable Long id) {
-        return projects.getProductBacklog(id).stream()
-                .map(taskConverter::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<TaskRequest>> getProductBacklogById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return projects.findById(id)
+                .map(project -> ResponseEntity.ok(project.getProductBacklog()
+                    .stream()
+                    .map(taskConverter::toDto)
+                    .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addProject(@RequestBody RestCreateProjectCommand command) {
@@ -82,29 +100,33 @@ public class ProjectsController {
         return ResponseEntity.created(createdProjectUri(project)).build();
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateProject(@RequestBody UpdateProjectRequest project) {
-        projects.updateProject(project);
+    public void updateProject(@RequestBody UpdateProjectCommand command) throws NotFoundException, IllegalAccessException {
+        projects.updateProject(command);
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping("/{id}/product_backlog")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToProductBacklog(@PathVariable Long id,
-                                        @RequestBody RestCreateTaskCommand command) {
-        projects.addTaskToProductBacklog(id, command.toCreateCommand());
+                                        @RequestBody RestCreateTaskCommand command) throws NotFoundException, IllegalAccessException {
+        projects.addTask(id, command.toCreateCommand());
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping("/{id}/teams")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTeamToProject(@PathVariable Long id, @RequestBody RestTeamsCommand command) {
-        projects.addTeamToProject(id, command.toCommands());
+    public void addTeams(@PathVariable Long id, @RequestBody RestTeamsCommand command) throws NotFoundException, IllegalAccessException {
+        projects.addTeams(id, command.toCommands());
     }
 
+    @Secured({"ROLE_USER"})
     @PatchMapping("/{id}/teams/{idTeam}/remove")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void removeTeamWithProject(@PathVariable Long id, @PathVariable Long idTeam) {
-        projects.removeTeamWithProject(id, idTeam);
+    public void removeTeam(@PathVariable Long id, @PathVariable Long idTeam) throws NotFoundException, IllegalAccessException {
+        projects.removeTeam(id, idTeam);
     }
 
     @DeleteMapping("/{id}")

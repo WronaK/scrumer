@@ -1,8 +1,6 @@
 package com.example.scrumer.task.application;
 
 import com.example.scrumer.task.application.port.TasksUseCase;
-import com.example.scrumer.task.db.SubtaskJpaRepository;
-import com.example.scrumer.task.db.TaskDetailsJpaRepository;
 import com.example.scrumer.task.db.TaskJpaRepository;
 import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Subtask;
@@ -37,7 +35,7 @@ public class TasksService implements TasksUseCase {
     }
 
     @Override
-    public void addSubtask(Long id, Set<CreateTaskCommand> command) {
+    public void addSubtasks(Long id, Set<CreateTaskCommand> command) {
         repository.findById(id)
                 .ifPresent(task -> {
                     for(CreateTaskCommand command1: command) {

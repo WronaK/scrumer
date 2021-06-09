@@ -2,7 +2,7 @@
 
 .task {
   padding: 1em;
-  background-color: $yellow;
+  background-color: $secondary-color;
   border-radius: 0;
 
   .header {
@@ -10,7 +10,7 @@
       font-weight: bolder;
       font-size: 1.5em;
       line-height: 1.5em;
-      color: $dark-brown;
+      color: $primary-color;
     }
   }
 
@@ -19,7 +19,7 @@
     flex-direction: column;
 
     .mat-input-element:disabled {
-      color: $dark-brown !important;
+      color: $primary-color !important;
     }
   }
 }

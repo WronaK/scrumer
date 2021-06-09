@@ -2,7 +2,7 @@
 
 .table {
   .mat-paginator {
-    background-color: $yellow;
+    background-color: $secondary-color;
   }
 
   table {
@@ -15,18 +15,21 @@
     }
 
     .mat-row {
-      background-color: $yellow;
-      cursor: pointer;
+      background-color: $second-spot-color;
+      &:hover {
+        cursor: pointer;
+        background-color: $detail-color;
+      }
     }
 
     .mat-header-row {
-      background: $green;
+      background: $detail-color;
     }
 
     .mat-header-cell {
       line-height: 1.2em;
       font-size: 1.2em;
-      color: $dark-brown;
+      color: $primary-color;
     }
   }
 }

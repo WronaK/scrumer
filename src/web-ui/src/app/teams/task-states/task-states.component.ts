@@ -1,4 +1,4 @@
-import {Component, Input } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
 import { Task } from '../../model/task';
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {ShareService} from "../../share.service";
@@ -14,20 +14,42 @@ import {TaskService} from "../../task.service";
   templateUrl: './task-states.component.html',
   styleUrls: ['./task-states.component.scss']
 })
-export class TaskStatesComponent {
+export class TaskStatesComponent implements OnInit {
+  @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   @Input() title!: string;
   @Input() tasks!: Task[];
   disabled = true;
+
+  @ViewChild('truncator') truncator!: ElementRef<HTMLElement>;
+  @ViewChild('bodyText') bodyText!: ElementRef<HTMLElement>;
 
   constructor(
     private shareService: ShareService,
     private dialog: MatDialog,
     private teamDetialsService: TeamsDetailsService,
-    private tasksService: TaskService) {
+    private tasksService: TaskService,
+    private renderer: Renderer2) {
   }
 
   onDrop(event: CdkDragDrop<Task[]>) {
       this.shareService.drop(event);
+  }
+
+  ngOnInit(): void {
+    this.displayElement();
+  }
+
+  displayElement() {
+    if (this.bodyText != null && this.truncator != null) {
+      let style = window.getComputedStyle(this.bodyText.nativeElement, null);
+      let viewableHeight = parseInt(style.getPropertyValue("height"), 10);
+
+      if (this.bodyText.nativeElement.scrollHeight > viewableHeight) {
+        this.renderer.setStyle(this.truncator.nativeElement, 'display', 'block');
+      } else {
+        this.renderer.setStyle(this.truncator.nativeElement, 'display', 'none');
+      }
+    }
   }
 
   displayTask(id: number) {
@@ -65,5 +87,13 @@ export class TaskStatesComponent {
   addRealizeTask(id: number) {
     status = this.title==='IN-PROGRESS'? status = 'IN_PROGRESS': status = 'MERGE_REQUEST';
     this.tasksService.addRealizeTask({idTask: id, status: status}).subscribe();
+  }
+
+  scrollUp(){
+    this.widgetsContent.nativeElement.scrollTop -= 250;
+  }
+
+  scrollDown(){
+    this.widgetsContent.nativeElement.scrollTop += 250;
   }
 }

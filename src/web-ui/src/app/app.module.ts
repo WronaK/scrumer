@@ -12,11 +12,14 @@ import {AuthInterceptor} from "./shared/auth.interceptor";
 import {ProjectsModule} from "./projects/projects.module";
 import {TeamsModule} from "./teams/teams.module";
 import {UsersModule} from "./users/users.module";
+import { HeaderComponent } from './header/header.component';
+import {DashboardModule} from "./dashboard/dashboard.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,8 @@ import {UsersModule} from "./users/users.module";
     HttpClientModule,
     ProjectsModule,
     TeamsModule,
-    UsersModule
+    UsersModule,
+    DashboardModule
   ],
 
   providers: [

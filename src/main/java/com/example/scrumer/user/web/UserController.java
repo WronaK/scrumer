@@ -3,7 +3,9 @@ package com.example.scrumer.user.web;
 import com.example.scrumer.user.application.UserService;
 import com.example.scrumer.user.application.port.UserUseCase.CreateUserCommand;
 import com.example.scrumer.user.application.port.UserUseCase.TeamCommand;
+import com.example.scrumer.user.converter.UserToUserRequestConverter;
 import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.request.UserRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,13 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserToUserRequestConverter userConverter;
 
     @GetMapping
-    public Optional<User> getLoggedUser() {
-        return userService.findByEmail(this.getUserEmail());
+    public ResponseEntity<UserRequest> getLoggedUser() {
+        return userService.findByEmail(this.getUserEmail())
+                .map(user -> ResponseEntity.ok(this.userConverter.toDto(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private String getUserEmail() {
@@ -31,8 +36,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable Long id) {
-        return userService.findById(id);
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        return userService.findById(id).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/teams")

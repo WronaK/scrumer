@@ -1,27 +1,28 @@
 package com.example.scrumer.team.web;
 
-import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
+import com.example.scrumer.project.converter.ProjectToRestCommandConverter;
 import com.example.scrumer.project.request.ProjectShortcutRequest;
-import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.converter.TaskToRestCommandConverter;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.request.TaskRequest;
 import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.team.application.port.TeamsUseCase.CreateTeamCommand;
 import com.example.scrumer.team.application.port.TeamsUseCase.MemberCommand;
-import com.example.scrumer.team.application.port.TeamsUseCase.ProjectCommand;
-import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.converter.TeamToRestCommandConverter;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.team.request.TeamDetails;
 import com.example.scrumer.team.request.TeamRequest;
 import com.example.scrumer.user.converter.UserToUserRequestConverter;
 import com.example.scrumer.user.request.UserRequest;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,11 +36,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TeamsController {
     private final TeamsUseCase teams;
-    private final TeamToTeamRequestConverter teamConverter;
-    private final TaskToTaskRequestConverter taskConverter;
+    private final TeamToRestCommandConverter teamConverter;
+    private final TaskToRestCommandConverter taskConverter;
     private final UserToUserRequestConverter userConverter;
-    private final ProjectToProjectRequestConverter projectConverter;
+    private final ProjectToRestCommandConverter projectConverter;
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping
     public List<TeamRequest> getAll() {
         return teams.findByUser(this.getUserEmail())
@@ -48,28 +50,52 @@ public class TeamsController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}/projects")
-    public List<ProjectShortcutRequest> getProjects(@PathVariable Long id) {
-        return teams.findProjectsById(id).stream()
-                .map(projectConverter::toDtoShortcut)
+    @Secured({"ROLE_USER"})
+    @GetMapping("/my-teams")
+    public List<TeamRequest> getAllByLoggerUser() {
+        return teams.findByUser(this.getUserEmail())
+                .stream()
+                .map(this.teamConverter::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Secured({"ROLE_USER"})
+    @GetMapping("/{id}/projects")
+    public ResponseEntity<List<ProjectShortcutRequest>> getProjects(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
+        return teams.findById(id)
+                .map(team ->
+                        ResponseEntity.ok(team.getProjects()
+                        .stream()
+                        .map(projectConverter::toDtoShortcut)
+                        .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/members")
-    public List<UserRequest> getMembers(@PathVariable Long id) {
-        return teams.findMembersById(id).stream()
-                .map(userConverter::toDto)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<UserRequest>> getMembers(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
+        return teams.findById(id)
+                .map(team ->
+                        ResponseEntity.ok(team.getMembers()
+                        .stream()
+                        .map(userConverter::toDto)
+                        .collect(Collectors.toList())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}")
-    public TeamDetails getTeamById(@PathVariable Long id) {
-        return teams.findById(id).map(teamConverter::toDtoDetails).orElseThrow(() -> new IllegalArgumentException("Not found team id: " + id));
+    public ResponseEntity<TeamDetails> getTeamById(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
+        return teams.findById(id)
+                .map(team -> ResponseEntity.ok(teamConverter.toDtoDetails(team)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/sprint_backlog")
-    public RestSprintBacklog getSprintBacklogById(@PathVariable Long id) {
-        return new RestSprintBacklog(taskConverter, teams.getSprintBacklog(id));
+    public ResponseEntity<RestSprintBacklog> getSprintBacklogById(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
+        return teams.findById(id)
+                .map(team -> ResponseEntity.ok(new RestSprintBacklog(taskConverter, team.getSprintBoard())))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -79,27 +105,23 @@ public class TeamsController {
         return ResponseEntity.created(createdTeamUri(team)).build();
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void updateTeam(@RequestBody RestUpdateTeamCommand command) {
+    public void updateTeam(@RequestBody RestUpdateTeamCommand command) throws NotFoundException, IllegalAccessException {
         teams.updateTeam(command.toCommand());
     }
 
+    @Secured({"ROLE_USER"})
     @PutMapping("/{id}/members")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMembersCommand command) {
+    public void addMemberToTeam(@PathVariable Long id, @RequestBody RestMembersCommand command) throws NotFoundException, IllegalAccessException {
         teams.addMember(id, command.toCommands());
-    }
-
-    @PutMapping("/{id}/projects")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addProjectToTeam(@PathVariable Long id, @RequestBody RestProjectCommand command) {
-        teams.addProjectToTeam(id, command.toCommand());
     }
 
     @PatchMapping("/{id}/task/{idTask}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) {
+    public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) throws NotFoundException, IllegalAccessException {
         teams.addTask(id, idTask);
     }
 
@@ -169,16 +191,6 @@ public class TeamsController {
     }
 
     @Data
-    private static class RestProjectCommand {
-        String name;
-        String accessCode;
-
-        ProjectCommand toCommand() {
-            return new ProjectCommand(name, accessCode);
-        }
-    }
-
-    @Data
     @Getter
     @Setter
     @AllArgsConstructor
@@ -189,11 +201,11 @@ public class TeamsController {
         private List<TaskRequest> tasksMergeRequest = new ArrayList<>();
         private List<TaskRequest> tasksDone = new ArrayList<>();
 
-        public RestSprintBacklog(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+        public RestSprintBacklog(TaskToRestCommandConverter tasksConverter, List<Task> sprintBacklog) {
             this.sort(tasksConverter, sprintBacklog);
         }
 
-        private void sort(TaskToTaskRequestConverter tasksConverter, List<Task> sprintBacklog) {
+        private void sort(TaskToRestCommandConverter tasksConverter, List<Task> sprintBacklog) {
             for(Task task: sprintBacklog) {
                 tasksPBI.add(tasksConverter.toDto(task));
                 for(Subtask subtask: task.getSubtasks()) {

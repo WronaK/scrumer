@@ -3,18 +3,18 @@ package com.example.scrumer.project.application;
 import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
-import com.example.scrumer.project.request.UpdateProjectRequest;
+import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
 import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
-import com.example.scrumer.team.domain.Team;
-import com.example.scrumer.user.db.UserJpaRepository;
 import com.example.scrumer.team.db.TeamJpaRepository;
+import com.example.scrumer.user.db.UserJpaRepository;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,11 +24,14 @@ import java.util.Set;
 public class ProjectsService implements ProjectsUseCase {
     private final ProjectJpaRepository repository;
     private final UserJpaRepository userRepository;
-    private final TeamJpaRepository teamRepository;
+    private final ValidatorPermission validatorPermission;
+    private final TeamJpaRepository teamsRepository;
 
     @Override
-    public Optional<Project> findById(Long id) {
-        return repository.findById(id);
+    public Optional<Project> findById(Long id) throws IllegalAccessException, NotFoundException {
+        Optional<Project> project = repository.findById(id);
+        this.validatorPermission.validateProjectPermission(project, this.getUserEmail());
+        return project;
     }
 
     @Override
@@ -46,14 +49,6 @@ public class ProjectsService implements ProjectsUseCase {
     }
 
     @Override
-    public void addTeamToProject(Long id, Set<TeamCommand> command) {
-        repository.findById(id).ifPresent(project -> {
-           this.addTeams(project, command);
-           repository.save(project);
-        });
-    }
-
-    @Override
     public void removeById(Long id) {
         repository.deleteById(id);
     }
@@ -64,79 +59,60 @@ public class ProjectsService implements ProjectsUseCase {
     }
 
     @Override
-    public void addTaskToProductBacklog(Long id, CreateTaskCommand command) {
-        repository.findById(id)
-                .ifPresent(project -> {
-                    Task task = Task.builder()
-                            .taskDetails(TaskDetails
-                                    .builder()
-                                    .title(command.getTitle())
-                                    .description(command.getDescription())
-                                    .priority(command.getPriority())
-                                    .build())
-                            .statusTask(StatusTask.NEW)
-                            .build();
-                    project.addTaskToProductBacklog(task);
-                    repository.save(project);
-                });
+    public void updateProject(UpdateProjectCommand command) throws NotFoundException, IllegalAccessException {
+        Optional<Project> project = repository.findById(command.getId());
+        validatorPermission.validateModifyProjectPermission(project, this.getUserEmail());
+
+        Project savedProject = project.get();
+        this.updateFields(command, savedProject);
+        repository.save(savedProject);
+
     }
 
     @Override
-    public List<Task> getProductBacklog(Long id) {
-        return repository.getProductBacklog(id);
+    public List<Project> findByUser(String userEmail) {
+        return repository.findProjectByUser(userEmail);
     }
 
     @Override
-    public void updateProject(UpdateProjectRequest project) {
-        repository.findById(project.getId())
-                .map(savedProject -> {
-                    this.updateFields(project, savedProject);
-                    return repository.save(savedProject);
-                });
+    public void addTask(Long id, CreateTaskCommand command) throws NotFoundException, IllegalAccessException {
+        Optional<Project> project = repository.findById(id);
+        validatorPermission.validateModifyProjectPermission(project, this.getUserEmail());
+
+        Project savedProject = project.get();
+        Task task = Task.builder()
+                .taskDetails(TaskDetails
+                        .builder()
+                        .title(command.getTitle())
+                        .description(command.getDescription())
+                        .priority(command.getPriority())
+                        .build())
+                .statusTask(StatusTask.NEW)
+                .build();
+        savedProject.addTask(task);
+        repository.save(savedProject);
     }
 
     @Override
-    public void removeTeamWithProject(Long id, Long idTeam) {
-        repository.findById(id).ifPresent(project ->
-                teamRepository.findById(idTeam)
-                        .ifPresent(team -> {
-                            project.removeTeam(team);
-                            repository.save(project);
-                        }));
+    public void addTeams(Long id, Set<TeamCommand> command) throws NotFoundException, IllegalAccessException {
+        Optional<Project> project = repository.findById(id);
+        this.validatorPermission.validateModifyProjectPermission(project, this.getUserEmail());
+
+        Project savedProject = project.get();
+        this.addTeams(savedProject, command);
+        repository.save(savedProject);
     }
 
     @Override
-    public List<Project> findByTeamId(Long id) {
-        return repository.findByTeamId(id);
-    }
+    public void removeTeam(Long id, Long idTeam) throws NotFoundException, IllegalAccessException {
+        Optional<Project> project = repository.findById(id);
+        this.validatorPermission.validateModifyProjectPermission(project, this.getUserEmail());
 
-    @Override
-    public List<Team> findTeamsByProjectId(Long id) {
-        return repository.findTeamsByProjectId(id);
-    }
-
-    private void updateFields(UpdateProjectRequest project, Project savedProject) {
-        if(project.getName() != null) {
-            savedProject.setName(project.getName());
-        }
-
-        if(project.getDescription() != null) {
-            savedProject.setDescription(project.getDescription());
-        }
-
-        if(project.getAccessCode() != null) {
-            savedProject.setAccessCode(project.getAccessCode());
-        }
-
-        if(project.getScrumMaster() != null) {
-            userRepository.findByEmail(project.getScrumMaster())
-                    .ifPresent(savedProject::setScrumMaster);
-        }
-
-        if(project.getProductOwner() != null) {
-            userRepository.findByEmail(project.getProductOwner())
-                    .ifPresent(savedProject::setProductOwner);
-        }
+        Project savedProject = project.get();
+        this.teamsRepository.findById(idTeam).ifPresent(team -> {
+            savedProject.removeTeam(team);
+            repository.save(savedProject);
+        });
     }
 
     private void addTeams(Project project, Set<TeamCommand> commands) {
@@ -146,8 +122,37 @@ public class ProjectsService implements ProjectsUseCase {
     }
 
     private void addTeam(Project project, TeamCommand command) {
-        teamRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
+        teamsRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
                 .ifPresent(project::addTeam);
     }
+
+    private void updateFields(UpdateProjectCommand command, Project project) {
+        if(command.getName() != null) {
+            project.setName(command.getName());
+        }
+
+        if(command.getDescription() != null) {
+            project.setDescription(command.getDescription());
+        }
+
+        if(command.getAccessCode() != null) {
+            project.setAccessCode(command.getAccessCode());
+        }
+
+        if(command.getScrumMaster() != null) {
+            userRepository.findByEmail(command.getScrumMaster())
+                    .ifPresent(project::setScrumMaster);
+        }
+
+        if(command.getProductOwner() != null) {
+            userRepository.findByEmail(command.getProductOwner())
+                    .ifPresent(project::setProductOwner);
+        }
+    }
+
+    private String getUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
+
 }
 

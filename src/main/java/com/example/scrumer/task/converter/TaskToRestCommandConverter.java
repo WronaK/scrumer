@@ -6,7 +6,7 @@ import com.example.scrumer.task.request.TaskRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TaskToTaskRequestConverter {
+public class TaskToRestCommandConverter {
     public TaskRequest toDto(Task task) {
         return TaskRequest.builder()
                 .id(task.getId())
