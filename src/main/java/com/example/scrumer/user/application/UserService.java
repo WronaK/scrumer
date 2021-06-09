@@ -59,11 +59,19 @@ public class UserService implements UserUseCase {
         repository.findById(id)
                 .ifPresent(user ->
                 {
-                    Team team = teamRepository.findByNameAndAccessCode(command.getName(), command.getAccessCode());
-                    team.addMember(user);
-                    teamRepository.save(team);
-                    user.addTeam(team);
-                    repository.save(user);
+                    teamRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode()).ifPresent(
+                            team -> {
+                                team.addMember(user);
+                                teamRepository.save(team);
+                                user.addTeam(team);
+                                repository.save(user);
+                            }
+                    );
                 });
+    }
+
+    @Override
+    public Optional<User> findByEmail(String userEmail) {
+        return repository.findByEmail(userEmail);
     }
 }

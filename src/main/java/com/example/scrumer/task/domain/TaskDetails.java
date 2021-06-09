@@ -26,10 +26,4 @@ public class TaskDetails {
     private Integer priority;
 
     private Integer storyPoints;
-
-    public TaskDetails(String title, String description, Integer priority) {
-        this.title = title;
-        this.description = description;
-        this.priority = priority;
-    }
 }

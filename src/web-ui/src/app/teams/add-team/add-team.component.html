@@ -1,0 +1,44 @@
+<app-simple-dialog>
+  <h2 *ngIf="request=='ADD'" title>Create team</h2>
+  <h2 *ngIf="request=='UPDATE'" title>Update team: {{idTeam}}</h2>
+  <mat-horizontal-stepper content [linear]="true">
+    <mat-step [stepControl]="teamForm" label="Basic information">
+      <form [formGroup]="teamForm">
+        <mat-form-field>
+          <mat-label>Enter a title for the team</mat-label>
+          <input [formControl]="teamNameFC" matInput required>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Enter a password for the team</mat-label>
+          <input [formControl]="passwordFC" matInput required>
+        </mat-form-field>
+        <div class="button one-button">
+          <button *ngIf="request=='ADD'" mat-raised-button matStepperNext>Next</button>
+          <button *ngIf="request=='UPDATE'" mat-raised-button (click)="save()"
+                  [disabled]="!teamForm.valid">UPDATE</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step *ngIf="request=='ADD'" [stepControl]="membersForm" label="Add members">
+      <form [formGroup]="membersForm">
+        <div class="button one-button">
+          <button mat-raised-button (click)="addMember()" [disabled]="!membersForm.valid">Add member</button>
+        </div>
+        <mat-form-field>
+          <mat-label>Enter email: </mat-label>
+          <input [formControl]="emailMembersFC" matInput />
+        </mat-form-field>
+        <mat-list *ngIf="members.length > 0">
+          Add members:
+          <mat-list-item *ngFor="let member of members">
+            <span>Email: {{member.email}}</span>
+          </mat-list-item>
+        </mat-list>
+        <div class="button">
+          <button mat-raised-button matStepperPrevious>Back</button>
+          <button mat-raised-button (click)="save()" [disabled]="!teamForm.valid">Add</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+</app-simple-dialog>

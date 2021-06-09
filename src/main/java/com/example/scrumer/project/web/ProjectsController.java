@@ -1,13 +1,19 @@
 package com.example.scrumer.project.web;
 
 import com.example.scrumer.project.application.ProjectsService;
-import com.example.scrumer.project.application.port.ProjectsUseCase;
 import com.example.scrumer.project.application.port.ProjectsUseCase.CreateProjectCommand;
 import com.example.scrumer.project.application.port.ProjectsUseCase.TeamCommand;
+import com.example.scrumer.project.converter.ProjectToProjectRequestConverter;
 import com.example.scrumer.project.domain.Project;
 
+import com.example.scrumer.project.request.ProjectRequest;
+import com.example.scrumer.project.request.ProjectShortcutRequest;
+import com.example.scrumer.project.request.UpdateProjectRequest;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
-import com.example.scrumer.task.domain.Task;
+import com.example.scrumer.task.converter.TaskToTaskRequestConverter;
+import com.example.scrumer.task.request.TaskRequest;
+import com.example.scrumer.team.converter.TeamToTeamRequestConverter;
+import com.example.scrumer.team.request.TeamRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -17,50 +23,88 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
 @AllArgsConstructor
 public class ProjectsController {
     private final ProjectsService projects;
+    private final ProjectToProjectRequestConverter projectConverter;
+    private final TaskToTaskRequestConverter taskConverter;
+    private final TeamToTeamRequestConverter teamConverter;
 
     @GetMapping
-    public List<Project> getAll() {
-        return projects.findAll();
+    public List<ProjectRequest> getAll() {
+        return projects.findAll().stream()
+                .map(projectConverter::toDto)
+                .collect(Collectors.toList());
+    }
+
+//    @GetMapping("/{id}/team")
+//    public List<ProjectShortcutRequest> getProjectByTeamId(@PathVariable Long id) {
+//        return projects.findByTeamId(id).stream()
+//                .map(projectConverter::toDtoShortcut)
+//                .collect(Collectors.toList());
+//    }
+
+    @GetMapping("/{id}/teams")
+    public List<TeamRequest> getTeams(@PathVariable Long id) {
+        return projects.findTeamsByProjectId(id).stream()
+                .map(teamConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Optional<Project> getById(@PathVariable Long id) {
-        return projects.findById(id);
+    public ProjectRequest getById(@PathVariable Long id) {
+        Optional<Project> project = projects.findById(id);
+        return project.map(projectConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found project id: " + id));
+    }
+
+    @GetMapping("/{id}/update")
+    public UpdateProjectRequest getProjectById(@PathVariable Long id) {
+        Optional<Project> project = projects.findById(id);
+        return project.map(projectConverter::toDtoUpdate).orElseThrow(() -> new IllegalArgumentException("Not found project id: " + id));
     }
 
     @GetMapping("/{id}/product_backlog")
-    public List<Task> getProductBacklogById(@PathVariable Long id) {
-        return projects.getProductBacklog(id);
+    public List<TaskRequest> getProductBacklogById(@PathVariable Long id) {
+        return projects.getProductBacklog(id).stream()
+                .map(taskConverter::toDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addProject(@RequestBody RestCreateProjectCommand command) {
-        System.out.println("Project");
         Project project = projects.addProject(command.toCreateCommand(), getUserEmail());
         return ResponseEntity.created(createdProjectUri(project)).build();
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateProject(@RequestBody UpdateProjectRequest project) {
+        projects.updateProject(project);
     }
 
     @PutMapping("/{id}/product_backlog")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToProductBacklog(@PathVariable Long id,
                                         @RequestBody RestCreateTaskCommand command) {
-        System.out.println("Add " + id);
         projects.addTaskToProductBacklog(id, command.toCreateCommand());
     }
 
     @PutMapping("/{id}/teams")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTeamToProject(@PathVariable Long id, @RequestBody RestTeamCommand command) {
-        projects.addTeamToProject(id, command.toCommand());
+    public void addTeamToProject(@PathVariable Long id, @RequestBody RestTeamsCommand command) {
+        projects.addTeamToProject(id, command.toCommands());
+    }
+
+    @PatchMapping("/{id}/teams/{idTeam}/remove")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeTeamWithProject(@PathVariable Long id, @PathVariable Long idTeam) {
+        projects.removeTeamWithProject(id, idTeam);
     }
 
     @DeleteMapping("/{id}")
@@ -81,9 +125,20 @@ public class ProjectsController {
         private String name;
         private String accessCode;
         private String description;
+        private String productOwner;
+        private String scrumMaster;
+        private Set<RestTeamCommand> teams;
 
         CreateProjectCommand toCreateCommand() {
-            return new CreateProjectCommand(name, accessCode, description);
+            return new CreateProjectCommand(name, accessCode, description, productOwner, scrumMaster, toCommands(teams));
+        }
+
+        Set<TeamCommand> toCommands(Set<RestTeamCommand> teams) {
+            Set<TeamCommand> listTeam = new HashSet<>();
+            for (RestTeamCommand team: teams) {
+                listTeam.add(team.toCommand());
+            }
+            return listTeam;
         }
     }
 
@@ -99,6 +154,19 @@ public class ProjectsController {
     }
 
     @Data
+    private static class RestTeamsCommand {
+        private Set<RestTeamCommand> teams;
+
+        Set<TeamCommand> toCommands() {
+            Set<TeamCommand> listTeam = new HashSet<>();
+            for (RestTeamCommand team: this.teams) {
+                listTeam.add(team.toCommand());
+            }
+            return listTeam;
+        }
+    }
+
+    @Data
     private static class RestTeamCommand {
         private String name;
         private String accessCode;
@@ -106,5 +174,6 @@ public class ProjectsController {
         TeamCommand toCommand() {
             return new TeamCommand(name, accessCode);
         }
+
     }
 }

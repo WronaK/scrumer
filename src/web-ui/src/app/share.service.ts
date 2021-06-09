@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import { Task } from './mock/task';
+import { Task } from './model/task';
 
 @Injectable({
   providedIn: 'root'

@@ -1,0 +1,14 @@
+<app-dialog>
+  <h2 title>Join Project</h2>
+  <form content [formGroup]="projectForm">
+    <mat-form-field>
+      <mat-label>Enter a name Project: </mat-label>
+      <input [formControl]="projectNameFC" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a access code: </mat-label>
+      <input [formControl]="accessCodeFC" matInput />
+    </mat-form-field>
+  </form>
+  <button action mat-raised-button (click)="save()">SAVE</button>
+</app-dialog>

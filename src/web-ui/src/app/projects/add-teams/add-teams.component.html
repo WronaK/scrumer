@@ -1,0 +1,24 @@
+<app-dialog>
+  <h2 title>Add teams to Project: {{idProject}}</h2>
+  <form content [formGroup]="teamForm">
+    <div class="one-button">
+      <button mat-raised-button (click)="addTeam()" [disabled]="!teamForm.valid">Add team</button>
+    </div>
+    <mat-form-field>
+      <mat-label>Enter a name team: </mat-label>
+      <input [formControl]="teamNameFC" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a access code: </mat-label>
+      <input [formControl]="accessCodeFC" matInput />
+    </mat-form-field>
+    <mat-list *ngIf="teams.length > 0">
+      Add teams:
+      <mat-list-item *ngFor="let team of teams">
+        <span>Team name: {{team.name}}</span>
+        <span>Team accessCode: {{team.accessCode}}</span>
+      </mat-list-item>
+    </mat-list>
+  </form>
+  <button action mat-raised-button (click)="save()">SAVE</button>
+</app-dialog>

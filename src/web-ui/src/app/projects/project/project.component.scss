@@ -1,0 +1,42 @@
+@import "../../../main-styles";
+
+:host {
+  @include fullPage;
+}
+
+
+.main-container {
+  height: 95%;
+  width: 95%;
+
+  mat-tab-group {
+    height: 100%;
+    width: 100%;
+  }
+
+  .product-backlog {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    grid-template-rows: 56px auto;
+    grid-gap: 1.2em;
+
+    app-product-backlog {
+      grid-row-start: 1;
+      grid-row-end: 3;
+    }
+  }
+
+  .project-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 56px auto;
+    grid-gap: 1.2em;
+
+    app-information-project {
+      grid-row-start: 1;
+      grid-row-end: 3;
+    }
+  }
+
+}
+

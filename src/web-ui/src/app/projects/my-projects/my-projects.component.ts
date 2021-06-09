@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Project} from "../../model/project";
 import {ProjectsService} from "../projects.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
@@ -8,13 +8,12 @@ import {Observable} from "rxjs";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-projects',
+  selector: 'app-my-projects',
   templateUrl: './my-projects.component.html',
   styleUrls: ['./my-projects.component.scss']
 })
 export class MyProjectsComponent implements OnInit {
-
-  displayedColumns: string[] = ['ID', 'NAME', 'CREATOR'];
+  @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   projects: Project[] = [];
 
   constructor(
@@ -30,7 +29,10 @@ export class MyProjectsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    this.dialog.open(AddProjectComponent, dialogConfig)
+    dialogConfig.data = {
+      request: "ADD"
+    };
+      this.dialog.open(AddProjectComponent, dialogConfig)
       .afterClosed()
       .pipe(
         switchMap(() => this.getProjects())
@@ -46,6 +48,14 @@ export class MyProjectsComponent implements OnInit {
   }
 
   goToProject(id: number): void {
-    this.router.navigate(['product-backlog/' + id]);
+    this.router.navigate(['project/' + id]);
+  }
+
+  scrollLeft(){
+    this.widgetsContent.nativeElement.scrollLeft -= 250;
+  }
+
+  scrollRight(){
+    this.widgetsContent.nativeElement.scrollLeft += 250;
   }
 }

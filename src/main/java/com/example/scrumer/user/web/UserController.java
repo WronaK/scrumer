@@ -1,7 +1,6 @@
 package com.example.scrumer.user.web;
 
 import com.example.scrumer.user.application.UserService;
-import com.example.scrumer.user.application.port.UserUseCase;
 import com.example.scrumer.user.application.port.UserUseCase.CreateUserCommand;
 import com.example.scrumer.user.application.port.UserUseCase.TeamCommand;
 import com.example.scrumer.user.domain.User;
@@ -11,19 +10,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserService users;
+    private final UserService userService;
+
+    @GetMapping
+    public Optional<User> getLoggedUser() {
+        return userService.findByEmail(this.getUserEmail());
+    }
+
+    private String getUserEmail() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
 
     @GetMapping("/{id}")
     public Optional<User> getById(@PathVariable Long id) {
-        System.out.println("chce pobrać");
         return userService.findById(id);
     }
 

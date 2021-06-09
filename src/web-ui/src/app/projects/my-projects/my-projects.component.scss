@@ -18,34 +18,60 @@
 
     .projects-content {
       display: flex;
-      flex-direction: column;
+      width: 100%;
+      height: 90%;
 
-      .row {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 6fr 2fr 2fr;
-        text-align: center;
-        font-size: 1.1em;
-        line-height: 1.1em;
-        min-height: 50px;
-        background: $yellow;
-        margin-top: 10px;
-        border-radius: 10px;
+      .side {
+        width: 5%;
+        height: 100%;
+        @include centerElements;
 
-        &:hover {
-          background: $green;
-          cursor: pointer;
-        }
-
-        div {
-          @include centerElements;
-        }
       }
+      .middle {
+        overflow: hidden;
+        scroll-behavior: smooth;
+        height: 100%;
+        width: 90%;
+        white-space: nowrap;
 
-      .headRow {
-        font-size: 1.5em;
-        line-height: 1.5em;
-        background: $green;
+        .project {
+          width: 30%;
+          height: 100%;
+          margin: 20px;
+          background-color: #DDE1D3;
+          display: inline-block;
+          padding: 1em 0;
+
+          img {
+            width: 100%;
+            height: 35%;
+          }
+
+          mat-card-content {
+            margin: 1em;
+            text-align: center;
+
+            .name {
+              color: $green;
+              font-size: 1.5em;
+              font-weight: bolder;
+            }
+
+            .label {
+              color: $dark-brown;
+              font-size: 0.8em;
+              border-top: 1px solid $dark-brown;
+            }
+
+            div {
+              min-height: 1.3em;
+            }
+
+            .description {
+              text-align: left;
+            }
+          }
+        }
       }
     }
 

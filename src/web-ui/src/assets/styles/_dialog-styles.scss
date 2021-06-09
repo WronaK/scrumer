@@ -1,0 +1,25 @@
+@import "src/main-styles";
+
+form {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+button {
+  min-width: 150px;
+}
+
+.button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.one-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mat-input-element:disabled {
+  color: $yellow !important;
+}

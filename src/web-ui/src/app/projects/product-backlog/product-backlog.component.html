@@ -1,23 +1,32 @@
-<div class="main-container">
+<div class="table">
+    <mat-paginator [pageSizeOptions]="[5, 8, 10]" showFirstLastButtons></mat-paginator>
+    <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
 
-  <div class="product-backlog-container">
-    <mat-toolbar class="product-backlog-header">
-      <span class="header">PRODUCT BACKLOG</span>
-      <button mat-button (click)="addTask()">Add task</button>
-    </mat-toolbar>
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> TITLE TASK </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
 
-    <div class="product-backlog-content">
-       <div class="row headRow">
-         <div *ngFor="let element of displayedColumns">
-         {{element}}
-         </div>
-        </div>
-        <div class="row" *ngFor="let task of productBacklog" (click)="showTask(task)">
-          <div>{{task.id}}</div>
-          <div>{{task.taskDetails.title}}</div>
-          <div>{{task.taskDetails.priority}}</div>
-          <div>{{task.taskDetails.storyPoint}}</div>
-        </div>
-    </div>
-  </div>
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef> PRIORITY </th>
+      <td mat-cell *matCellDef="let element"> {{element.priority}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="storyPoints">
+      <th mat-header-cell *matHeaderCellDef> STORY POINT(S) </th>
+      <td mat-cell *matCellDef="let element"> {{element.storyPoints}} </td>
+    </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> STATUS </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onSelect(row.id)"></tr>
+  </table>
 </div>

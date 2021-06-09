@@ -1,6 +1,7 @@
-<h1 mat-dialog-title>Add a task</h1>
-<div mat-dialog-content>
-  <form [formGroup]="taskGroup">
+<app-dialog>
+  <h2 *ngIf="request=='ADD'" title>Add a task</h2>
+  <h2 *ngIf="request=='UPDATE'" title>Update a task</h2>
+  <form [formGroup]="taskGroup" content>
     <mat-form-field>
       <mat-label>Enter a title for the task</mat-label>
       <input [formControl]="titleFC" matInput required>
@@ -16,9 +17,10 @@
       <mat-label>Give priority</mat-label>
       <input [formControl]="priorityFC" matInput required>
     </mat-form-field>
+    <mat-form-field *ngIf="request=='UPDATE'">
+      <mat-label>Give storyPoints</mat-label>
+      <input [formControl]="storyPointFC" matInput>
+    </mat-form-field>
   </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-raised-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button (click)="save()" [disabled]="!taskGroup.valid">Add</button>
-</div>
+  <button action mat-raised-button (click)="save()" [disabled]="!taskGroup.valid">SAVE</button>
+</app-dialog>

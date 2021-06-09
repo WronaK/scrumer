@@ -1,14 +1,18 @@
 package com.example.scrumer.user.domain;
 
+import com.example.scrumer.task.domain.RealizeTask;
 import com.example.scrumer.team.domain.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -17,8 +21,6 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-//    private String name;
-//    private String surname;
     private String email;
     private String password;
 
@@ -34,20 +36,20 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable
     @JsonIgnoreProperties("members")
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private List<RealizeTask> realizeTasks = new ArrayList<>();
 
     public User(String email, String password, UserDetails userDetails) {
         this.email = email;
         this.password = password;
         this.roles = Set.of("ROLE_USER");
         this.userDetails = userDetails;
-    }
-
-    public void addTeam(Team team) {
-        teams.add(team);
     }
 
     public void addTeam(Team team) {

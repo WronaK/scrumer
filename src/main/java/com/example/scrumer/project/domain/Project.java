@@ -11,10 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -30,14 +33,23 @@ public class Project {
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties("teams")
     private User creator;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties("teams")
+    private User productOwner;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnoreProperties("teams")
+    private User scrumMaster;
+
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private List<Task> productBacklog;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable
     @JsonIgnoreProperties("projects")
     private Set<Team> teams;
@@ -54,15 +66,20 @@ public class Project {
         this.description = description;
     }
 
-    public void addCreator(User creator) {
-        this.creator = creator;
-    }
-
     public void addTaskToProductBacklog(Task task) {
         productBacklog.add(task);
     }
 
     public void addTeam(Team team) {
+        if(this.teams == null){
+            this.teams = new HashSet<>();
+        }
         teams.add(team);
+        team.getProjects().add(this);
+    }
+
+    public void removeTeam(Team team) {
+        teams.remove(team);
+        team.getProjects().remove(this);
     }
 }

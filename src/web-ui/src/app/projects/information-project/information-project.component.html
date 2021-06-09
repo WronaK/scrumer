@@ -1,0 +1,36 @@
+<mat-card class="project" >
+  <mat-card-header class="header">
+    <mat-card-title class="title">Project {{projectId}}</mat-card-title>
+  </mat-card-header>
+  <form class="project-details">
+    <mat-form-field >
+      <mat-label>Title for the project</mat-label>
+      <input [formControl]="projectNameFC" matInput>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea [formControl]="descriptionFC"
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="5"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Access code for the project</mat-label>
+      <input [formControl]="passwordFC" matInput>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Creator: </mat-label>
+      <input [formControl]="creatorFC" matInput/>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Product Owner: </mat-label>
+      <input [formControl]="productOwnerFC" matInput/>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Scrum Master: </mat-label>
+      <input [formControl]="scrumMasterFC" matInput/>
+    </mat-form-field>
+  </form>
+</mat-card>
+
+

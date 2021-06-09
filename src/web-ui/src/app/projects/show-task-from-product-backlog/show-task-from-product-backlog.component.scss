@@ -1,17 +1,27 @@
 @import "../../../main-styles";
 
-.mat-dialog-content {
-  form {
+.task {
+  padding: 1em;
+  background-color: $yellow;
+  border-radius: 0;
+
+  .header {
+    .title {
+      font-weight: bolder;
+      font-size: 1.5em;
+      line-height: 1.5em;
+      color: $dark-brown;
+    }
+  }
+
+  .task-details {
     display: flex;
     flex-direction: column;
-    min-width: 500px;
+
+    .mat-input-element:disabled {
+      color: $dark-brown !important;
+    }
   }
 }
 
-.mat-dialog-actions {
-  @include centerElements;
 
-  button {
-    min-width: 150px;
-  }
-}

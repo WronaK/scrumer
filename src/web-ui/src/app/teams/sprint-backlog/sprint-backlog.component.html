@@ -1,17 +1,7 @@
-<div class="main-container">
-
-  <div class="sprint-backlog-container">
-    <mat-toolbar class="sprint-backlog-header">
-      <span class="header">SPRINT BACKLOG</span>
-    </mat-toolbar>
-
-    <div class="sprint-backlog-content" cdkDropListGroup>
-      <app-task-states [title]="backlog" [tasks]="tasksBacklog"></app-task-states>
-      <app-task-states [title]="pbi" [tasks]="tasksPBI"></app-task-states>
-      <app-task-states [title]="inProgress" [tasks]="tasksInProgress"></app-task-states>
-      <app-task-states [title]="mergeRequest" [tasks]="tasksMergeRequest"></app-task-states>
-      <app-task-states [title]="done" [tasks]="tasksDone"></app-task-states>
-    </div>
-  </div>
-
+<div class="sprint-backlog" cdkDropListGroup>
+  <app-task-states [title]="pbi" [tasks]="tasksPBI"></app-task-states>
+  <app-task-states [title]="tasks" [tasks]="tasksTasks"></app-task-states>
+  <app-task-states [title]="inProgress" [tasks]="tasksInProgress"></app-task-states>
+  <app-task-states [title]="mergeRequest" [tasks]="tasksMergeRequest"></app-task-states>
+  <app-task-states [title]="done" [tasks]="tasksDone"></app-task-states>
 </div>

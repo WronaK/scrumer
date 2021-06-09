@@ -1,7 +1,9 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup } from "@angular/forms";
 import { Task } from '../../model/task';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {ProjectsService} from "../projects.service";
+
+import {ProductBacklogService} from "../product-backlog.service";
 
 @Component({
   selector: 'app-show-task-from-product-backlog',
@@ -9,48 +11,45 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
   styleUrls: ['./show-task-from-product-backlog.component.scss']
 })
 export class ShowTaskFromProductBacklogComponent implements OnInit {
+
   taskId!: number;
-  taskGroup: FormGroup;
-  titleFC: FormControl;
+  taskFG: FormGroup;
+  taskTitleFC: FormControl;
   descriptionFC: FormControl;
   priorityFC: FormControl;
   storyPointFC: FormControl;
+  disabled=true;
+  statusFC: FormControl;
 
-  constructor(
-    private dialogRef: MatDialogRef<ShowTaskFromProductBacklogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: Task
-  ) {
-    this.titleFC = new FormControl('', Validators.required);
-    this.descriptionFC = new FormControl('', Validators.required);
-    this.priorityFC = new FormControl('', Validators.required);
-    this.storyPointFC = new FormControl('', Validators.required);
+  constructor(private projectService: ProjectsService,
+  private  productBacklogService: ProductBacklogService) {
+    this.taskTitleFC = new FormControl({ value: '', disabled: this.disabled });
+    this.descriptionFC = new FormControl({ value: '', disabled: this.disabled });
+    this.priorityFC = new FormControl({ value: '', disabled: this.disabled });
+    this.storyPointFC = new FormControl({ value: '', disabled: this.disabled });
+    this.statusFC = new FormControl({ value: '', disabled: this.disabled });
 
-    this.setValue(data);
-    this.taskGroup = new FormGroup({
-      titleFC: this.titleFC,
+    this.taskFG = new FormGroup({
+      taskTitleFC: this.taskTitleFC,
       descriptionFC: this.descriptionFC,
       priorityFC: this.priorityFC,
       storyPointFC: this.storyPointFC,
-    });
-  }
-
-  ngOnInit(): void {
-  }
-
-  onNoClick() {
-    this.dialogRef.close();
-  }
-
-  save() {
+      statusFC: this.statusFC
+    })
 
   }
 
-  setValue(data: Task): void {
-    console.log(data);
-    this.taskId = data.id;
-    this.titleFC.setValue(data.taskDetails.title);
-    this.descriptionFC.setValue(data.taskDetails.description);
-    this.priorityFC.setValue(data.taskDetails.priority);
-    this.storyPointFC.setValue(data.taskDetails.storyPoint);
+  ngOnInit() {
+    this.productBacklogService.getSelectedTask().subscribe(selectedTask => {if(selectedTask != null) this.setData(selectedTask)})
   }
+
+  setData(task: Task): void {
+      this.taskId = task.id;
+      this.taskTitleFC.setValue(task.title);
+      this.descriptionFC.setValue(task.description);
+      this.priorityFC.setValue(task.priority);
+      this.storyPointFC.setValue(task.storyPoints);
+      this.statusFC.setValue(task.status);
+  }
+
 }

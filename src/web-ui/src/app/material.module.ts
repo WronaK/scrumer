@@ -11,6 +11,11 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatSelectModule } from "@angular/material/select";
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatListModule} from "@angular/material/list";
+import {MatIconModule} from "@angular/material/icon";
+import {MatCardModule} from "@angular/material/card";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   imports: [
@@ -24,7 +29,13 @@ import { MatSelectModule } from "@angular/material/select";
     MatTabsModule,
     MatExpansionModule,
     MatMenuModule,
-    MatSelectModule
+    MatSelectModule,
+    MatStepperModule,
+    MatListModule,
+    MatIconModule,
+    MatCardModule,
+    MatButtonToggleModule,
+
   ],
   exports: [
     MatButtonModule,
@@ -38,6 +49,12 @@ import { MatSelectModule } from "@angular/material/select";
     MatExpansionModule,
     MatMenuModule,
     MatSelectModule,
+    MatStepperModule,
+    MatListModule,
+    MatIconModule,
+    MatCardModule,
+    MatButtonToggleModule,
+
   ]
 })
 export class MaterialModule {}

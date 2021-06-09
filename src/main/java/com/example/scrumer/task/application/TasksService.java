@@ -4,21 +4,22 @@ import com.example.scrumer.task.application.port.TasksUseCase;
 import com.example.scrumer.task.db.SubtaskJpaRepository;
 import com.example.scrumer.task.db.TaskDetailsJpaRepository;
 import com.example.scrumer.task.db.TaskJpaRepository;
+import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
+import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class TasksService implements TasksUseCase {
     private final TaskJpaRepository repository;
-    private final SubtaskJpaRepository subtasksRepository;
-    private final TaskDetailsJpaRepository taskDetailsRepository;
 
     @Override
     public Optional<Task> findById(Long id) {
@@ -36,23 +37,54 @@ public class TasksService implements TasksUseCase {
     }
 
     @Override
-    public void addSubtask(Long id, CreateTaskCommand command) {
+    public void addSubtask(Long id, Set<CreateTaskCommand> command) {
         repository.findById(id)
                 .ifPresent(task -> {
-                    TaskDetails taskDetails = taskDetailsRepository
-                            .save(TaskDetails.builder()
-                                    .title(command.getTitle())
-                                    .description( command.getDescription())
-                                    .priority(command.getPriority())
-                                    .build());
-                    Subtask subtask = subtasksRepository
-                            .save(Subtask.builder()
-                                    .taskDetails(taskDetails)
-                                    .build());
-                    task.addSubtask(subtask);
+                    for(CreateTaskCommand command1: command) {
+                        this.addSubtask(task, command1);
+                    }
                     repository.save(task);
                 });
+    }
 
+    private void addSubtask(Task task, CreateTaskCommand command) {
+        Subtask subtask = Subtask.builder()
+                .taskDetails(TaskDetails
+                        .builder()
+                        .title(command.getTitle())
+                        .description(command.getDescription())
+                        .priority(command.getPriority())
+                        .build())
+                .statusTask(StatusTask.NEW_TASK)
+                .build();
+        task.addSubtask(subtask);
+    }
+
+    @Override
+    public void updateTask(TaskRequest task) {
+        repository.findById(task.getId())
+                .map(savedTask -> {
+                    this.updateFields(task, savedTask);
+                    return repository.save(savedTask);
+                });
+    }
+
+    private void updateFields(TaskRequest task, Task savedTask) {
+        if(task.getTitle() != null) {
+            savedTask.getTaskDetails().setTitle(task.getTitle());
+        }
+
+        if(task.getDescription() != null) {
+            savedTask.getTaskDetails().setDescription(task.getDescription());
+        }
+
+        if(task.getPriority() != null) {
+            savedTask.getTaskDetails().setPriority(task.getPriority());
+        }
+
+        if(task.getStoryPoints() != null) {
+            savedTask.getTaskDetails().setStoryPoints(task.getStoryPoints());
+        }
     }
 }
 

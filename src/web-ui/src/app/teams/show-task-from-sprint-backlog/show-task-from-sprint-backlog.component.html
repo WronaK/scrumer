@@ -1,0 +1,24 @@
+<app-simple-dialog>
+  <h2 title>Task</h2>
+  <form content>
+    <mat-form-field>
+      <mat-label>Title task</mat-label>
+      <input [formControl]="titleFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description task</mat-label>
+      <textarea [formControl]="descriptionFC"
+                matInput
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="5"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Priority</mat-label>
+      <input [formControl]="priorityFC" matInput required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Story Points</mat-label>
+      <input [formControl]="storyPointFC" matInput>
+    </mat-form-field>
+  </form>
+</app-simple-dialog>

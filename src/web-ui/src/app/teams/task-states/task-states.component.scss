@@ -30,11 +30,18 @@
     mat-expansion-panel-header {
       min-height: 60px;
       min-width: 220px;
+      padding-right: 0;
       mat-panel-title {
         font-weight: bold;
+        display: flex;
+        justify-content: space-between;
       }
     }
   }
+}
+
+mat-icon:hover {
+  color: #49D593;
 }
 
 .cdk-drop-dragging .cdk-drag {

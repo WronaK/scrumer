@@ -1,0 +1,32 @@
+<div class="main-container">
+
+  <div class="teams-container">
+    <mat-toolbar class="teams-header">
+      <span class="header">MY TEAMS</span>
+      <button mat-button (click)="addTeam()">Add Team</button>
+    </mat-toolbar>
+
+    <div class="teams-content">
+      <div class="side">
+        <mat-icon (click)="scrollLeft()">
+          keyboard_arrow_left
+        </mat-icon>
+      </div>
+        <div #widgetsContent class="middle" >
+          <mat-card class="team" *ngFor="let team of teams" (click)="goToTeam(team.id)">
+            <mat-card-header>
+              <mat-card-title>{{team.name}}</mat-card-title>
+            </mat-card-header>
+            <img src="./assets/team.jpg">
+            <mat-card-content>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      <div class="side">
+        <mat-icon (click)="scrollRight()">
+          keyboard_arrow_right
+        </mat-icon>
+      </div>
+    </div>
+  </div>
+</div>

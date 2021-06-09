@@ -1,68 +1,42 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AddTaskToProductBacklogComponent} from "../add-task-to-product-backlog/add-task-to-product-backlog.component";
+import {AfterViewInit, Component, ViewChild, OnInit} from '@angular/core';
 import { Task } from '../../model/task';
-import {ShowTaskFromProductBacklogComponent} from "../show-task-from-product-backlog/show-task-from-product-backlog.component";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
-import {ProjectsService} from "../projects.service";
-import {switchMap, tap} from "rxjs/operators";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {ProductBacklogService} from "../product-backlog.service";
 
 @Component({
   selector: 'app-product-backlog',
   templateUrl: './product-backlog.component.html',
   styleUrls: ['./product-backlog.component.scss']
 })
-export class ProductBacklogComponent implements OnInit {
-  displayedColumns: string[] = ['ID', 'TITLE TASK', 'PRIORITY', 'STORY POINT(S)'];
-  productBacklog: Task[] = [];
-  id!: number;
+export class ProductBacklogComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['id', 'title', 'priority', 'storyPoints', 'status'];
 
-  constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private projectService: ProjectsService) {
-    route.params.subscribe(params => this.id = parseInt(params['id']));
-    console.log(this.id);
+  productBacklog: Task[] = [];
+
+  dataSource!: MatTableDataSource<Task>;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private productBacklogService: ProductBacklogService) {
+    this.dataSource = new MatTableDataSource<Task>();
+    this.dataSource.data = this.productBacklog;
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  onSelect(idTask: number): void {
+    if(idTask != this.productBacklogService.idSelectTask) {
+      this.productBacklogService.setSelectTask(idTask);
+    }
   }
 
   ngOnInit(): void {
-    this.getProductBacklog().subscribe();
+    this.productBacklogService.productBacklog();
+    this.productBacklogService.getProductBacklog().subscribe(productBacklog =>  { this.productBacklog=productBacklog;
+    this.dataSource.data = this.productBacklog});
   }
 
-  addTask(): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: this.id
-    };
-    this.dialog.open(AddTaskToProductBacklogComponent, dialogConfig)
-      .afterClosed()
-      .pipe(
-        switchMap(() => this.getProductBacklog())
-      ).subscribe();  }
-
-  showTask(task: Task): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      id: task.id,
-      taskDetails: {
-        title: task.taskDetails.title,
-        description: task.taskDetails.description,
-        priority: task.taskDetails.priority,
-        storyPoint: task.taskDetails.storyPoint
-      }
-      };
-    this.dialog.open(ShowTaskFromProductBacklogComponent, dialogConfig);
-  }
-
-  getProductBacklog(): Observable<Task[]> {
-    return this.projectService.getTasksToProductBacklog(this.id)
-      .pipe(tap(productBacklog =>  {this.productBacklog=productBacklog;
-      console.log(productBacklog)}
-      ));
-  }
 }

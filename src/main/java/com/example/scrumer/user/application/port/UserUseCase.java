@@ -2,10 +2,7 @@ package com.example.scrumer.user.application.port;
 
 import com.example.scrumer.user.domain.User;
 import lombok.Value;
-import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,18 +17,14 @@ public interface UserUseCase {
 
     void joinTeam(Long id, TeamCommand command);
 
+    Optional<User> findByEmail(String userEmail);
+
     @Value
     class CreateUserCommand {
         String name;
         String surname;
         String email;
         String password;
-    }
-
-    @Value
-    class TeamCommand {
-        String name;
-        String accessCode;
     }
 
     @Value

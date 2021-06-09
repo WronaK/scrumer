@@ -7,6 +7,16 @@ import {AddTaskToProductBacklogComponent} from "./add-task-to-product-backlog/ad
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import { AddProjectComponent } from './add-project/add-project.component';
+import { ProjectComponent } from './project/project.component';
+import { MenuTasksComponent } from './menu-tasks/menu-tasks.component';
+import { RemoveTaskComponent } from './remove-task/remove-task.component';
+import { InformationProjectComponent } from './information-project/information-project.component';
+import { MenuProjectComponent } from './menu-project/menu-project.component';
+import { TeamsComponent } from './teams/teams.component';
+import { AddTeamsComponent } from './add-teams/add-teams.component';
+import { MoveTaskComponent } from './move-task/move-task.component';
+import {MatRadioModule} from "@angular/material/radio";
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -15,21 +25,31 @@ import { AddProjectComponent } from './add-project/add-project.component';
     ShowTaskFromProductBacklogComponent,
     MyProjectsComponent,
     AddProjectComponent,
+    ProjectComponent,
+    MenuTasksComponent,
+    RemoveTaskComponent,
+    InformationProjectComponent,
+    MenuProjectComponent,
+    TeamsComponent,
+    AddTeamsComponent,
+    MoveTaskComponent,
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatRadioModule,
+    SharedModule,
   ],
 
   entryComponents: [
     AddTaskToProductBacklogComponent,
-    ShowTaskFromProductBacklogComponent,
-    AddProjectComponent
+    AddProjectComponent,
+    RemoveTaskComponent
   ],
 
   exports: [
-    ProductBacklogComponent,
+    ProjectComponent,
     MyProjectsComponent,
   ]
 })
