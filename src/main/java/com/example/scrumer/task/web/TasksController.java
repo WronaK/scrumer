@@ -8,6 +8,8 @@ import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -31,9 +33,9 @@ public class TasksController {
     }
 
     @GetMapping("/{id}")
-    public TaskRequest getById(@PathVariable Long id) {
-        Optional<Task> task = tasks.findById(id);
-        return task.map(tasksConverter::toDto).orElseThrow(() -> new IllegalArgumentException("Not found task id: " + id));
+    public ResponseEntity<TaskRequest> getById(@PathVariable Long id) {
+        return tasks.findById(id).map(task -> ResponseEntity.ok(this.tasksConverter.toDto(task)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping()

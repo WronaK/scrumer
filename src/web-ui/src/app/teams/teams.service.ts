@@ -28,7 +28,7 @@ export class TeamsService {
   }
 
   getTeams(): Observable<any> {
-    return this.http.get<Team[]>(this.url);
+    return this.http.get<Team[]>(this.url + '/my-teams');
   }
 
   getTasksSprintBacklog(id: number): Observable<SprintBacklog> {

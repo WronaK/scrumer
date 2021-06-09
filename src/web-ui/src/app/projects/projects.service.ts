@@ -36,7 +36,7 @@ export class ProjectsService {
   }
 
   getProjects(): Observable<any>  {
-    return this.http.get<Project[]>(this.url);
+    return this.http.get<Project[]>(this.url + "my-projects");
   }
 
   getTasksToProductBacklog(id: number): Observable<Task[]> {

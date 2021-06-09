@@ -25,8 +25,10 @@ public class UserController {
     private final UserToUserRequestConverter userConverter;
 
     @GetMapping
-    public UserRequest getLoggedUser() {
-        return userService.findByEmail(this.getUserEmail()).map(userConverter::toDto).orElseThrow();
+    public ResponseEntity<UserRequest> getLoggedUser() {
+        return userService.findByEmail(this.getUserEmail())
+                .map(user -> ResponseEntity.ok(this.userConverter.toDto(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private String getUserEmail() {
@@ -34,8 +36,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getById(@PathVariable Long id) {
-        return userService.findById(id);
+    public ResponseEntity<User> getById(@PathVariable Long id) {
+        return userService.findById(id).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/teams")
