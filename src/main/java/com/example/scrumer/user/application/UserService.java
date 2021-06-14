@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +30,9 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public User register(CreateUserCommand command) {
+    public User register(CreateUserCommand command) throws ValidationException {
         if(repository.findByEmail(command.getEmail()).isPresent()) {
-            return null;
+            throw new ValidationException("Error: Email is already in use!");
         }
 
         UserDetails userDetails = userDetailsRepository.save(new UserDetails(command.getName(), command.getSurname()));
@@ -55,14 +56,28 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public void joinTeam(Long id, TeamCommand command) {
+    public void joinTeam(String userEmail, TeamCommand command) {
+        Optional<User> user = repository.findByEmail(userEmail);
+
+        if(user.isPresent()) {
+            User savedUser = user.get();
+            teamRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
+                    .ifPresent(team -> {
+                        savedUser.addTeam(team);
+                        repository.save(savedUser);
+                    });
+        }
+    }
+
+    @Override
+    public void addTeam(Long id, TeamCommand command) {
         repository.findById(id)
                 .ifPresent(user ->
                 {
                     teamRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode()).ifPresent(
                             team -> {
-                                team.addMember(user);
-                                teamRepository.save(team);
+//                                team.addMember(user);
+//                                teamRepository.save(team);
                                 user.addTeam(team);
                                 repository.save(user);
                             }

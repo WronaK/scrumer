@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {TeamsService} from "../teams.service";
-import {Member} from "../../model/member";
+import {Member} from "../../model/user/member";
 
 @Component({
   selector: 'app-add-members',

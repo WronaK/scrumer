@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../../shared/auth.service";
@@ -8,7 +8,7 @@ import {AuthService} from "../../shared/auth.service";
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
   loginForm: FormGroup;
   emailFC: FormControl;
   passwordFC: FormControl;
@@ -21,9 +21,6 @@ export class LoginPageComponent implements OnInit {
       loginFC: this.emailFC,
       passwordFC: this.passwordFC,
     });
-  }
-
-  ngOnInit(): void {
   }
 
   signIn() {

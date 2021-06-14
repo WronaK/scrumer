@@ -43,6 +43,22 @@ public class ValidatorPermission {
         return false;
     }
 
+    public void validateModifyTeamPermission(Optional<Team> team, String email) throws IllegalAccessException, NotFoundException {
+        if(team.isPresent()) {
+            Team myTeam = team.get();
+            if(email.equals(myTeam.getCreator().getEmail())) {
+                return;
+            }
+
+            if(this.isScrumMaster(myTeam.getProjects(), email)) {
+                return;
+            }
+
+            throw new IllegalAccessException("Illegal team permission exception");
+        }
+        throw new NotFoundException("Not found team.");
+    }
+
     public void validateTeamPermission(Optional<Team> team, String email) throws IllegalAccessException, NotFoundException {
         if(team.isPresent()) {
             Team myTeam = team.get();

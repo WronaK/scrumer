@@ -3,21 +3,24 @@ package com.example.scrumer.user.application.port;
 import com.example.scrumer.user.domain.User;
 import lombok.Value;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserUseCase {
     Optional<User> findById(Long id);
 
-    User register(CreateUserCommand command);
+    User register(CreateUserCommand command) throws ValidationException;
 
     void removeById(Long id);
 
     List<User> findAll();
 
-    void joinTeam(Long id, TeamCommand command);
+    void joinTeam(String userEmail, TeamCommand command);
 
     Optional<User> findByEmail(String userEmail);
+
+    void addTeam(Long id, TeamCommand command);
 
     @Value
     class CreateUserCommand {

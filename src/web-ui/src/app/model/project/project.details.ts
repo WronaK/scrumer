@@ -1,6 +1,6 @@
-export interface Project {
-  id: number;
-  name: string;
+import {Project} from "./project";
+
+export interface ProjectDetails extends Project {
   accessCode: string;
   description: string;
   creatorName: string;

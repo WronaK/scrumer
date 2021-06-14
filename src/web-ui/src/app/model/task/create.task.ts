@@ -1,7 +1,7 @@
 export interface CreateTask {
   title: string;
   description: string;
-  priority: number;
+  priority: string;
 }
 
 export interface Subtasks {

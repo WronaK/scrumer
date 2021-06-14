@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup } from "@angular/forms";
-import { Task } from '../../model/task';
+import { Task } from '../../model/task/task';
 import {ProjectsService} from "../projects.service";
 
 import {ProductBacklogService} from "../product-backlog.service";
+import {PriorityStatus} from "../../model/task/priority.status";
 
 @Component({
   selector: 'app-show-task-from-product-backlog',
@@ -20,9 +21,12 @@ export class ShowTaskFromProductBacklogComponent implements OnInit {
   storyPointFC: FormControl;
   disabled=true;
   statusFC: FormControl;
+  keys: any[] = [];
+  priority = PriorityStatus;
 
   constructor(private projectService: ProjectsService,
   private  productBacklogService: ProductBacklogService) {
+    this.keys = Object.keys(this.priority).filter(f => !isNaN(Number(f)));
     this.taskTitleFC = new FormControl({ value: '', disabled: this.disabled });
     this.descriptionFC = new FormControl({ value: '', disabled: this.disabled });
     this.priorityFC = new FormControl({ value: '', disabled: this.disabled });
@@ -47,7 +51,7 @@ export class ShowTaskFromProductBacklogComponent implements OnInit {
       this.taskId = task.id;
       this.taskTitleFC.setValue(task.title);
       this.descriptionFC.setValue(task.description);
-      this.priorityFC.setValue(task.priority);
+      this.priorityFC.setValue(<keyof typeof PriorityStatus>task.priority);
       this.storyPointFC.setValue(task.storyPoints);
       this.statusFC.setValue(task.status);
   }

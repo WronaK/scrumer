@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Team} from "../../model/team";
+import {Team} from "../../model/team/team";
 import {MatDialog} from "@angular/material/dialog";
 import {TeamsService} from "../../teams/teams.service";
 import {Router} from "@angular/router";
@@ -14,6 +14,7 @@ export class TeamsComponent implements OnInit {
 
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   teams: Team[] = [];
+  isDashboard!: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -23,7 +24,12 @@ export class TeamsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.dashboardService.uploadTeams();
+    this.isDashboard = this.router.isActive('dashboard', true);
+    if(this.isDashboard) {
+      this.dashboardService.uploadTeams();
+    } else {
+      this.dashboardService.uploadAllTeams();
+    }
     this.dashboardService.getTeams().subscribe(teams => this.teams = teams);
   }
 

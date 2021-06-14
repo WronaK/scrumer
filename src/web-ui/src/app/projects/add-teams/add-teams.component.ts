@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {JoinTeam} from "../../model/join.team";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {JoinTeam} from "../../model/team/join.team";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ProjectsService} from "../projects.service";
 
@@ -22,8 +22,8 @@ export class AddTeamsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
     this.idProject = data.id;
-    this.teamNameFC = new FormControl('');
-    this.accessCodeFC = new FormControl('');
+    this.teamNameFC = new FormControl('', Validators.required);
+    this.accessCodeFC = new FormControl('', Validators.required);
 
     this.teamForm = new FormGroup({
       teamNameFC: this.teamNameFC,

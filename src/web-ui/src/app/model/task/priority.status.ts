@@ -1,0 +1,3 @@
+export enum PriorityStatus {
+  HIGH_PRIORITY, SECOND_LEVEL_PRIORITY, LOW_PRIORITY
+}

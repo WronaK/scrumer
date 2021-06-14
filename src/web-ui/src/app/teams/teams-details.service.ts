@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {TeamsService} from "./teams.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Project} from "./model/project";
-import {User} from "../model/user";
+import {Project} from "../model/project/project";
+import {User} from "../model/user/user";
 import {tap} from "rxjs/operators";
-import {Team} from "./model/team";
-import {SprintBacklog} from "../model/sprint.backlog";
+import {TeamDetails} from "../model/team/team.details";
+import {SprintBacklog} from "../model/project/sprint.backlog";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class TeamsDetailsService {
   idTeam!: number;
   private sprintBacklog$: BehaviorSubject<SprintBacklog | null> = new BehaviorSubject<SprintBacklog | null>(null);
 
-  private team$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
+  private team$: BehaviorSubject<TeamDetails | null> = new BehaviorSubject<TeamDetails | null>(null);
   private projects$: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
   private members$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
 
@@ -33,11 +33,11 @@ export class TeamsDetailsService {
     this.sprintBacklog$.next(sprintBacklog);
   }
 
-  getTeam(): Observable<Team | null> {
+  getTeam(): Observable<TeamDetails | null> {
     return this.team$.asObservable();
   }
 
-  setTeam(team: Team) {
+  setTeam(team: TeamDetails) {
     this.team$.next(team);
   }
 

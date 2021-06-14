@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Project} from "../../model/project";
+import {ProjectDetails} from "../../model/project/project.details";
 import {ProjectsService} from "../../projects/projects.service";
 import {Router} from "@angular/router";
 import {DashboardService} from "../dashboard.service";
@@ -12,7 +12,8 @@ import {DashboardService} from "../dashboard.service";
 export class ProjectsComponent implements OnInit {
 
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
-  projects: Project[] = [];
+  projects: ProjectDetails[] = [];
+  isDashboard!: boolean;
 
   constructor(
     private projectsService: ProjectsService,
@@ -20,7 +21,12 @@ export class ProjectsComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.dashboardService.uploadProject();
+    this.isDashboard = this.router.isActive('dashboard', true);
+    if(this.isDashboard) {
+      this.dashboardService.uploadProject();
+    } else {
+      this.dashboardService.uploadAllProject();
+    }
     this.dashboardService.getProjects().subscribe(projects => this.projects = projects);
   }
 

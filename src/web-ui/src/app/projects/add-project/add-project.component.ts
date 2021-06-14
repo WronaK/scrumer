@@ -1,10 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ProjectsService} from "../projects.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {CreateProject} from "../../model/create.project";
-import {JoinTeam} from "../../model/join.team";
-import {UpdateProject} from "../../model/update.project";
+import {CreateProject} from "../../model/project/create.project";
+import {JoinTeam} from "../../model/team/join.team";
+import {UpdateProject} from "../../model/project/update.project";
 import {tap} from "rxjs/operators";
 
 @Component({
@@ -12,7 +12,7 @@ import {tap} from "rxjs/operators";
   templateUrl: './add-project.component.html',
   styleUrls: ['./add-project.component.scss']
 })
-export class AddProjectComponent implements OnInit {
+export class AddProjectComponent {
   projectNameFC: FormControl;
   passwordFC: FormControl;
   projectForm: FormGroup;
@@ -69,9 +69,6 @@ export class AddProjectComponent implements OnInit {
       scrumMasterFC: this.scrumMasterFC,
     });
 
-  }
-
-  ngOnInit(): void {
   }
 
   save() {

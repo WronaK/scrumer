@@ -6,12 +6,14 @@ import {TeamsComponent} from "./teams/teams.component";
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
+import { TasksComponent } from './tasks/tasks.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     ProjectsComponent,
-    TeamsComponent
+    TeamsComponent,
+    TasksComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,7 @@ import {SharedModule} from "../shared/shared.module";
     SharedModule,
   ],
   exports: [
-    DashboardComponent
+    DashboardComponent,
   ]
 })
 export class DashboardModule { }

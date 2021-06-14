@@ -14,12 +14,13 @@ import {TeamsModule} from "./teams/teams.module";
 import {UsersModule} from "./users/users.module";
 import { HeaderComponent } from './header/header.component';
 import {DashboardModule} from "./dashboard/dashboard.module";
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +32,8 @@ import {DashboardModule} from "./dashboard/dashboard.module";
     ProjectsModule,
     TeamsModule,
     UsersModule,
-    DashboardModule
+    DashboardModule,
+    PipesModule
   ],
 
   providers: [

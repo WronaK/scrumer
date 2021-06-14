@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {Task} from "../../model/task";
+import {Task} from "../../model/task/task";
 import {Router} from "@angular/router";
 
 @Component({

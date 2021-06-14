@@ -1,17 +1,18 @@
 
 <div class="container">
   <div class="projects-header">
-    <h3>Your teams</h3>
+    <h3 *ngIf="isDashboard">Your teams</h3>
+    <h3 *ngIf="!isDashboard">All teams</h3>
   </div>
 
-  <div class="content">
+  <div class="content" *ngIf="teams.length">
     <div class="side">
       <mat-icon (click)="scrollLeft()">
         keyboard_arrow_left
       </mat-icon>
     </div>
     <div #widgetsContent class="middle" >
-      <div class="team" *ngFor="let team of teams" (click)="goToTeam(team.id)">
+      <div class="team element" *ngFor="let team of teams" (click)="isDashboard && goToTeam(team.id)">
         <div>{{team.name}}</div>
       </div>
     </div>
@@ -21,5 +22,12 @@
       </mat-icon>
     </div>
 
+  </div>
+
+  <div class="content" *ngIf="!teams.length">
+    <div class="info">
+      You aren't currently a member of any team.
+      If you want, you can create your own team or join the team. Use the button "create a team" or "join team".
+    </div>
   </div>
 </div>

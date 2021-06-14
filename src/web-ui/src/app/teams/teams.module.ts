@@ -17,6 +17,8 @@ import { JoinProjectComponent } from './join-project/join-project.component';
 import { AddMembersComponent } from './add-members/add-members.component';
 import {ShowTaskFromSprintBacklogComponent} from "./show-task-from-sprint-backlog/show-task-from-sprint-backlog.component";
 import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tasks.component';
+import {PipesModule} from "../pipes/pipes.module";
+import { JoinTeamComponent } from './join-team/join-team.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tas
     JoinProjectComponent,
     AddMembersComponent,
     ShowTaskFromSprintBacklogComponent,
-    DividedIntoTasksComponent
+    DividedIntoTasksComponent,
+    JoinTeamComponent
   ],
   imports: [
     CommonModule,
@@ -40,6 +43,7 @@ import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tas
     DragDropModule,
     MatCardModule,
     SharedModule,
+    PipesModule,
   ],
   exports: [
     TeamComponent

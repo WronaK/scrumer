@@ -1,19 +1,21 @@
 <app-dialog>
-  <h2 title>Add members to Team: {{idTeam}}</h2>
+  <h2 title>Add members</h2>
   <form content [formGroup]="membersForm">
-    <div class="button one-button">
-      <button mat-raised-button (click)="addMember()" [disabled]="!membersForm.valid">Add member</button>
-    </div>
     <mat-form-field>
       <mat-label>Enter email: </mat-label>
       <input [formControl]="emailMembersFC" matInput />
     </mat-form-field>
-    <mat-list *ngIf="members.length > 0">
-      Add members:
-      <mat-list-item *ngFor="let member of members">
-        <span>Email: {{member.email}}</span>
-      </mat-list-item>
-    </mat-list>
+    <div class="button one-button">
+      <button mat-raised-button (click)="addMember()" [disabled]="!membersForm.valid">Add member</button>
+    </div>
+    <mat-form-field>
+      <mat-label>List teams</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let member of members">
+          Email: {{member.email}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </form>
   <button action mat-raised-button (click)="save()">Add</button>
 </app-dialog>

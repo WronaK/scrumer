@@ -25,6 +25,8 @@ public interface TeamsUseCase {
 
     void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException;
 
+    void removeProject(Long id, Long idProject) throws NotFoundException, IllegalAccessException;
+
     @Value
     class CreateTeamCommand {
         String name;

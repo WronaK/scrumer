@@ -12,28 +12,28 @@
         <mat-label>Email</mat-label>
         <input [formControl]="emailFC" matInput required type="email"/>
         <mat-error>
-          Pole powino być emailem
+          The field should be an email
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input [formControl]="nameFC" matInput required type="text"/>
         <mat-error>
-          To pole jest wymagane
+          This field is required
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Surname</mat-label>
         <input [formControl]="surnameFC" matInput required type="text"/>
         <mat-error>
-          To pole jest wymagane
+          This field is required
         </mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Password</mat-label>
         <input [formControl]="passwordFC" matInput required type="password"/>
         <mat-error>
-          To pole jest wymagane
+          This field is required
         </mat-error>
       </mat-form-field>
       <mat-form-field>
@@ -42,7 +42,7 @@
                [errorStateMatcher]="errorMatcher"
                matInput required type="password"/>
         <mat-error>
-          <span *ngIf="registrationForm.hasError('isEqual')">Hasła nie są takie same</span>
+          <span *ngIf="registrationForm.hasError('isEqual')">The passwords don't match</span>
         </mat-error>
       </mat-form-field>
     </div>

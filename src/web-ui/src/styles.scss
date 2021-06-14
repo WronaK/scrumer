@@ -42,3 +42,20 @@ mat-horizontal-stepper {
   overflow: hidden !important;
 }
 
+.mat-tab-label .mat-tab-label-content {
+  color: $detail-color;
+}
+
+.mat-option {
+  background-color: $primary-color !important;
+  color: $detail-color !important;
+}
+
+.mat-select-min-line  {
+  color: $secondary-color;
+}
+
+.mat-select-disabled .mat-select-min-line   {
+  color: $second-spot-color;
+}
+

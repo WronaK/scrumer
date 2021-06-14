@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient} from '@angular/common/http';
-import {Observable} from "rxjs";
-import {User} from '../model/user';
+import {User} from '../model/user/user';
 import {Router} from "@angular/router";
+import {LoginUser} from "../model/user/login.user";
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +35,8 @@ export class AuthService {
       )
   }
 
-  signUp(user: User): Observable<string> {
-    return this.customHttpClient.post('api/users', user, {responseType: 'text'});
+  signUp(user: User) {
+    return this.customHttpClient.post('api/users', user);
   }
 
   getToken() {
@@ -56,6 +56,6 @@ export class AuthService {
   }
 
   getUserData() {
-    return this.http.get<User>('api/users');
+    return this.http.get<LoginUser>('api/users');
   }
 }

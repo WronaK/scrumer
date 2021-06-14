@@ -1,0 +1,14 @@
+<app-dialog>
+  <h2 title>Join team</h2>
+  <form content [formGroup]="teamForm">
+    <mat-form-field>
+      <mat-label>Enter a name team: </mat-label>
+      <input [formControl]="teamNameFC" matInput required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter a access code: </mat-label>
+      <input [formControl]="accessCodeFC" matInput required />
+    </mat-form-field>
+  </form>
+  <button action mat-raised-button  [disabled]="!teamForm.valid" (click)="save()">SAVE</button>
+</app-dialog>

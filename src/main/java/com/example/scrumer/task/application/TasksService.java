@@ -2,10 +2,7 @@ package com.example.scrumer.task.application;
 
 import com.example.scrumer.task.application.port.TasksUseCase;
 import com.example.scrumer.task.db.TaskJpaRepository;
-import com.example.scrumer.task.domain.StatusTask;
-import com.example.scrumer.task.domain.Subtask;
-import com.example.scrumer.task.domain.Task;
-import com.example.scrumer.task.domain.TaskDetails;
+import com.example.scrumer.task.domain.*;
 import com.example.scrumer.task.request.TaskRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +48,7 @@ public class TasksService implements TasksUseCase {
                         .builder()
                         .title(command.getTitle())
                         .description(command.getDescription())
-                        .priority(command.getPriority())
+                        .priority(PriorityStatus.valueOf(command.getPriority()))
                         .build())
                 .statusTask(StatusTask.NEW_TASK)
                 .build();
@@ -77,7 +74,7 @@ public class TasksService implements TasksUseCase {
         }
 
         if(task.getPriority() != null) {
-            savedTask.getTaskDetails().setPriority(task.getPriority());
+            savedTask.getTaskDetails().setPriority(PriorityStatus.valueOf(task.getPriority()));
         }
 
         if(task.getStoryPoints() != null) {

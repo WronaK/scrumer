@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
-import { Task } from '../../model/task';
+import { Task } from '../../model/task/task';
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {ShareService} from "../../share.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";

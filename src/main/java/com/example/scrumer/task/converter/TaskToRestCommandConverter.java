@@ -12,7 +12,7 @@ public class TaskToRestCommandConverter {
                 .id(task.getId())
                 .title(task.getTaskDetails().getTitle())
                 .description(task.getTaskDetails().getDescription())
-                .priority(task.getTaskDetails().getPriority())
+                .priority(task.getTaskDetails().getPriority().toString())
                 .storyPoints(task.getTaskDetails() != null ? task.getTaskDetails().getStoryPoints(): null)
                 .status(task.getStatusTask().toString().replace('_', ' '))
                 .build();
@@ -23,7 +23,7 @@ public class TaskToRestCommandConverter {
                 .id(task.getId())
                 .title(task.getTaskDetails().getTitle())
                 .description(task.getTaskDetails().getDescription())
-                .priority(task.getTaskDetails().getPriority())
+                .priority(task.getTaskDetails().getPriority().toString())
                 .storyPoints(task.getTaskDetails() != null ? task.getTaskDetails().getStoryPoints(): null)
                 .status(task.getStatusTask().toString().replace('_', ' '))
                 .build();

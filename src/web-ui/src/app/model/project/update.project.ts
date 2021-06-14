@@ -1,7 +1,6 @@
+import {Project} from "./project";
 
-export interface UpdateProject {
-  id: number
-  name: string;
+export interface UpdateProject extends Project {
   accessCode: string;
   description: string;
   productOwner: string;
