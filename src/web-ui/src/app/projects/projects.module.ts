@@ -16,6 +16,7 @@ import { AddTeamsComponent } from './add-teams/add-teams.component';
 import { MoveTaskComponent } from './move-task/move-task.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {SharedModule} from "../shared/shared.module";
+import {PipesModule} from "../pipes/pipes.module";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import {SharedModule} from "../shared/shared.module";
     ReactiveFormsModule,
     MatRadioModule,
     SharedModule,
+    PipesModule
   ],
 
   entryComponents: [

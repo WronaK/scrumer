@@ -1,10 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import { Task } from 'src/app/model/task';
+import { Task } from 'src/app/model/task/task';
 import {TaskService} from "../../task.service";
 import {TeamsService} from "../teams.service";
-import {CreateTask} from "../../model/create.task";
+import {CreateTask} from "../../model/task/create.task";
+import {PriorityStatus} from "../../model/task/priority.status";
 
 @Component({
   selector: 'app-divided-into-tasks',
@@ -21,6 +22,8 @@ export class DividedIntoTasksComponent implements OnInit {
   idPBI!: number;
   disabled=true;
   tasks: CreateTask[] = [];
+  keys: any[] = [];
+  priority = PriorityStatus;
 
   constructor(
     private dialogRef: MatDialogRef<DividedIntoTasksComponent>,
@@ -28,6 +31,7 @@ export class DividedIntoTasksComponent implements OnInit {
     private tasksService: TaskService,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
+    this.keys = Object.keys(this.priority).filter(f => !isNaN(Number(f)));
     this.idPBI = data.id;
     this.titleFC = new FormControl('', Validators.required);
     this.descriptionFC = new FormControl('', Validators.required);
@@ -60,7 +64,7 @@ export class DividedIntoTasksComponent implements OnInit {
     return {
       title: this.titleFC.value,
       description: this.descriptionFC.value,
-      priority: this.priorityFC.value
+      priority: this.priorityFC.value,
     }
   }
 

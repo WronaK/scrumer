@@ -1,9 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Project} from "../../model/project";
+import {ProjectDetails} from "../../model/project/project.details";
 import {ProjectsService} from "../../projects/projects.service";
 import {Router} from "@angular/router";
-import {tap} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {DashboardService} from "../dashboard.service";
 
 @Component({
   selector: 'app-projects',
@@ -13,23 +12,22 @@ import {Observable} from "rxjs";
 export class ProjectsComponent implements OnInit {
 
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
-  projects: Project[] = [];
+  projects: ProjectDetails[] = [];
+  isDashboard!: boolean;
 
   constructor(
     private projectsService: ProjectsService,
+    private dashboardService: DashboardService,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.getProjects().subscribe();
-  }
-
-
-  getProjects(): Observable<Project[]> {
-    return this.projectsService.getProjects().pipe(
-      tap(projects => {
-        this.projects = projects;
-      })
-    )
+    this.isDashboard = this.router.isActive('dashboard', true);
+    if(this.isDashboard) {
+      this.dashboardService.uploadProject();
+    } else {
+      this.dashboardService.uploadAllProject();
+    }
+    this.dashboardService.getProjects().subscribe(projects => this.projects = projects);
   }
 
   goToProject(id: number): void {

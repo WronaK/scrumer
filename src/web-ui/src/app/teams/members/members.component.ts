@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {User} from "../../model/user";
+import {User} from "../../model/user/user";
 import {MatPaginator} from "@angular/material/paginator";
 import {TeamsDetailsService} from "../teams-details.service";
 
@@ -9,7 +9,7 @@ import {TeamsDetailsService} from "../teams-details.service";
   templateUrl: './members.component.html',
   styleUrls: ['./members.component.scss']
 })
-export class MembersComponent implements OnInit {
+export class MembersComponent implements OnInit, AfterViewInit {
   dataSource!: MatTableDataSource<User>;
   displayedColumns: string[] = ['name', 'surname', 'email', 'event'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;

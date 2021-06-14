@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {ProjectDetailsService} from "../project-details.service";
-import {Project} from "../../model/project";
+import {ProjectDetails} from "../../model/project/project.details";
 
 @Component({
   selector: 'app-information-project',
@@ -32,7 +32,7 @@ export class InformationProjectComponent implements OnInit {
     this.projectDetailsService.getProject().subscribe(project => {if(project != null) this.setData(project)});
   }
 
-  setData(project: Project): void {
+  setData(project: ProjectDetails): void {
     this.projectId = project.id;
     this.projectNameFC.setValue(project.name);
     this.descriptionFC.setValue(project.description);

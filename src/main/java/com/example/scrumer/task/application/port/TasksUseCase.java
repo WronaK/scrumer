@@ -23,6 +23,6 @@ public interface TasksUseCase {
     class CreateTaskCommand {
         String title;
         String description;
-        Integer priority;
+        String priority;
     }
 }

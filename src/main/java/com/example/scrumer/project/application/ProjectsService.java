@@ -5,6 +5,7 @@ import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.application.port.TasksUseCase.CreateTaskCommand;
+import com.example.scrumer.task.domain.PriorityStatus;
 import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
@@ -85,7 +86,7 @@ public class ProjectsService implements ProjectsUseCase {
                         .builder()
                         .title(command.getTitle())
                         .description(command.getDescription())
-                        .priority(command.getPriority())
+                        .priority(PriorityStatus.valueOf(command.getPriority()))
                         .build())
                 .statusTask(StatusTask.NEW)
                 .build();

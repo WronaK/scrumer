@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {TeamsDetailsService} from "../teams-details.service";
-import { Task } from 'src/app/model/task';
+import { Task } from 'src/app/model/task/task';
 
 @Component({
   selector: 'app-sprint-backlog',

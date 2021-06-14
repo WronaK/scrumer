@@ -73,7 +73,7 @@ public class TasksController {
     private static class RestSubtaskCommand {
         private String title;
         private String description;
-        private Integer priority;
+        private String priority;
 
         CreateTaskCommand toCreateCommand() {
             return new CreateTaskCommand(title, description, priority);

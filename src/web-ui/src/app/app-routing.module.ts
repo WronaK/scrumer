@@ -7,12 +7,16 @@ import {LoginPageComponent} from "./users/login-page/login-page.component";
 import {RegistrationPageComponent} from "./users/registration-page/registration-page.component";
 import {ProjectComponent} from "./projects/project/project.component";
 import {TeamComponent} from "./teams/team/team.component";
+import {ProjectsComponent} from "./dashboard/projects/projects.component";
+import {TeamsComponent} from "./dashboard/teams/teams.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
       { path: 'project/:id', component: ProjectComponent, canActivate: [AuthGuard] },
       { path: 'team/:id', component: TeamComponent, canActivate: [AuthGuard]},
-      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]}
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+      { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
+      { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent}

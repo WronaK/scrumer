@@ -16,7 +16,11 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>Priority</mat-label>
-      <input [formControl]="priorityFC" matInput>
+      <mat-select [formControl]="priorityFC" >
+        <mat-option *ngFor="let p of keys" [value]="priority[p]">
+          {{priority[p] | removeUnderscores}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Story point</mat-label>

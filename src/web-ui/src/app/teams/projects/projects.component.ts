@@ -1,21 +1,23 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {Project} from "../model/project";
+import {Project} from "../../model/project/project";
 import {MatPaginator} from "@angular/material/paginator";
 import {TeamsDetailsService} from "../teams-details.service";
+import {TeamsService} from "../teams.service";
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.scss']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, AfterViewInit {
   dataSource!: MatTableDataSource<Project>;
   displayedColumns: string[] = ['id', 'name', 'event'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   projects: Project[] = [];
 
   constructor(
+    private teamsService: TeamsService,
     private teamsDetailsService: TeamsDetailsService
   ) {
     this.dataSource = new MatTableDataSource<Project>();
@@ -37,6 +39,8 @@ export class ProjectsComponent implements OnInit {
   }
 
   remove(id: number) {
-    //todo
+    this.teamsService.removeProjectWithTeam(this.teamsDetailsService.idTeam, id).subscribe(
+      () => this.teamsDetailsService.loadsProjects()
+    );
   }
 }

@@ -1,0 +1,27 @@
+<div class="tasks">
+  <div class="tasks-header">
+    <h3>Your tasks</h3>
+  </div>
+
+  <div class="content" *ngIf="tasks.length">
+    <div class="side">
+      <mat-icon (click)="scrollTop()">
+        keyboard_arrow_up
+      </mat-icon>
+    </div>
+    <div #widgetsContent class="middle" >
+      <app-task [tasks]="tasks"></app-task>
+    </div>
+    <div class="side">
+      <mat-icon (click)="scrollDown()">
+        keyboard_arrow_down
+      </mat-icon>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="!tasks.length">
+    <div class="info">
+      You currently have no tasks assigned to you.
+    </div>
+  </div>
+</div>

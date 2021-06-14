@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
-import {Team} from "../model/team";
-import {Team as TTeam} from "./model/team";
+import {Team} from "../model/team/team";
+import {TeamDetails as TTeam} from "../model/team/team.details";
 import {HttpClient} from "@angular/common/http";
-import {CreateTeam} from "../model/create.team";
-import {User} from "../model/user";
-import {Project} from "./model/project";
-import {UpdateTeam} from "./model/update-team";
-import {Members} from "../model/member";
-import {JoinProject} from "../model/join-project";
-import {SprintBacklog} from "../model/sprint.backlog";
+import {CreateTeam} from "../model/team/create.team";
+import {User} from "../model/user/user";
+import {Project} from "../model/project/project";
+import {UpdateTeam} from "../model/team/update.team";
+import {Members} from "../model/user/member";
+import {JoinProject} from "../model/project/join.project";
+import {SprintBacklog} from "../model/project/sprint.backlog";
+import {JoinTeam} from "../model/team/join.team";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,12 @@ export class TeamsService {
     return this.http.get<TTeam>(this.url + id);
   }
 
+  getAllTeams(): Observable<any> {
+    return this.http.get<Team[]>(this.url);
+  }
+
   getTeams(): Observable<any> {
-    return this.http.get<Team[]>(this.url + '/my-teams');
+    return this.http.get<Team[]>(this.url + 'my-teams');
   }
 
   getTasksSprintBacklog(id: number): Observable<SprintBacklog> {
@@ -53,5 +58,13 @@ export class TeamsService {
 
   joinProject(id: number, projects: JoinProject) {
     return this.http.put<JoinProject>(this.url + id + '/projects', projects);
+  }
+
+  joinTeam(team: JoinTeam) {
+    return this.http.put<JoinTeam>('api/users/join', team);
+  }
+
+  removeProjectWithTeam(id: number, idProject: number) {
+    return this.http.patch(this.url + id + "/projects/" + idProject + "/remove", null);
   }
 }

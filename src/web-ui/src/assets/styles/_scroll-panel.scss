@@ -1,0 +1,65 @@
+@import "../../main-styles";
+
+.container {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+h3 {
+  margin-left: 10px;
+  color: $detail-color;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  height: 90%;
+
+  .side {
+    @include centerElements;
+
+    mat-icon:hover {
+      cursor: pointer;
+      color: $detail-color;
+    }
+  }
+
+  .middle {
+    overflow: hidden;
+    scroll-behavior: smooth;
+
+    .element {
+      width: 30%;
+      height: 100%;
+      margin: 0 15px;
+      display: inline-block;
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $secondary-color;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+
+        &:hover {
+          background-color: $spot-color;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.info {
+  background-color: $second-spot-color;
+  color: $primary-color;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  padding: 10px;
+}

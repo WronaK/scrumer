@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {TeamsDetailsService} from "../teams-details.service";
-import {Team} from "../model/team";
+import {TeamDetails} from "../../model/team/team.details";
 
 
 @Component({
@@ -31,7 +31,7 @@ export class InformationTeamComponent implements OnInit {
     );
   }
 
-  setData(team: Team): void {
+  setData(team: TeamDetails): void {
     this.teamId = team.id;
     this.teamNameFC.setValue(team.name);
     this.passwordFC.setValue(team.accessCode);

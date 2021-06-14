@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
-import {Project} from "../model/project";
+import {ProjectDetails} from "../model/project/project.details";
 import {ProjectsService} from "./projects.service";
 import {tap} from "rxjs/operators";
-import {Team} from "../model/team";
+import {Team} from "../model/team/team";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import {Team} from "../model/team";
 export class ProjectDetailsService {
 
   idProject!: number;
-  private project$: BehaviorSubject<Project | null> = new BehaviorSubject<Project | null>(null);
+  private project$: BehaviorSubject<ProjectDetails | null> = new BehaviorSubject<ProjectDetails | null>(null);
   private teams$: BehaviorSubject<Team[]> = new BehaviorSubject<Team[]>([]);
 
   constructor(private projectService: ProjectsService) { }
@@ -20,11 +20,11 @@ export class ProjectDetailsService {
     this.idProject = id;
   }
 
-  getProject(): Observable<Project | null> {
+  getProject(): Observable<ProjectDetails | null> {
     return this.project$.asObservable();
   }
 
-  setProject(project: Project) {
+  setProject(project: ProjectDetails) {
     this.project$.next(project);
   }
 

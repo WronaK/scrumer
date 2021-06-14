@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import { Team } from 'src/app/model/team';
+import { Team } from 'src/app/model/team/team';
 import {ProjectsService} from "../projects.service";
 import {ProjectDetailsService} from "../project-details.service";
 import {TaskService} from "../../task.service";

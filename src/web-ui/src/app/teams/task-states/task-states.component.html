@@ -15,12 +15,23 @@
              hideToggle cdkDrag [cdkDragDisabled]="title==='PBI'">
           <div class="task-card-title">
             <div>{{task.title}}</div>
-            <div class="icon">
-              <mat-icon *ngIf="title==='PBI'" (click)="divided(task.id)">add</mat-icon>
-              <mat-icon *ngIf="title!=='PBI' && title!=='DONE'" (click)="changeStatus(task.id)">forward</mat-icon>
-              <mat-icon *ngIf="title=='IN-PROGRESS' || title=='MERGE REQUEST'" (click)="addRealizeTask(task.id)">pan_tool</mat-icon>
-              <mat-icon (click)="displayTask(task.id)">open_in_new</mat-icon>
-            </div>
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="displayTask(task.id)">
+                <span>Display task</span>
+              </button>
+              <button mat-menu-item  *ngIf="title==='PBI'" (click)="divided(task.id)">
+                <span>Divided into task</span>
+              </button>
+              <button mat-menu-item *ngIf="title!=='PBI' && title!=='DONE'" (click)="changeStatus(task.id)">
+                <span>Move task</span>
+              </button>
+              <button mat-menu-item *ngIf="title=='IN-PROGRESS' || title=='MERGE REQUEST'" (click)="addRealizeTask(task.id)">
+                <span>Join the task</span>
+              </button>
+            </mat-menu>
           </div>
           <div #bodyText class="task-card-body">
             <p>{{task.description}}</p>
@@ -36,3 +47,4 @@
       </div>
   </div>
 </div>
+

@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +22,8 @@ public class TaskDetails {
     @Column(columnDefinition="text")
     private String description;
 
-    private Integer priority;
+    @Enumerated(value = EnumType.STRING)
+    private PriorityStatus priority;
 
     private Integer storyPoints;
 }

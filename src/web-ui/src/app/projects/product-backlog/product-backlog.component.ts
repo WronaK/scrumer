@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild, OnInit} from '@angular/core';
-import { Task } from '../../model/task';
+import { Task } from '../../model/task/task';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {ProductBacklogService} from "../product-backlog.service";

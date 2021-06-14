@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -13,4 +15,5 @@ public class UserRequest {
     private String email;
     private String name;
     private String surname;
+    private Set<String> roles;
 }

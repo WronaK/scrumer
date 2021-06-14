@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ProjectsService} from "./projects.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import { Task } from '../model/task';
+import { Task } from '../model/task/task';
 import {tap} from "rxjs/operators";
 import {TaskService} from "../task.service";
 

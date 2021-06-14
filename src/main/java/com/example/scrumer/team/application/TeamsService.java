@@ -1,5 +1,6 @@
 package com.example.scrumer.team.application;
 
+import com.example.scrumer.project.db.ProjectJpaRepository;
 import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.db.TaskJpaRepository;
 import com.example.scrumer.task.domain.StatusTask;
@@ -25,6 +26,7 @@ public class TeamsService implements TeamsUseCase {
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
     private final TaskJpaRepository tasksRepository;
+    private final ProjectJpaRepository projectRepository;
 
     @Override
     public List<Team> findAll() {
@@ -89,6 +91,19 @@ public class TeamsService implements TeamsUseCase {
         Team savedTeam = team.get();
         tasksRepository.findById(idTask).ifPresent(task -> {
             task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
+            savedTeam.addTaskToSprintBacklog(task);
+            repository.save(savedTeam);
+        });
+    }
+
+    @Override
+    public void removeProject(Long id, Long idProject) throws NotFoundException, IllegalAccessException {
+        Optional<Team> team = repository.findById(id);
+        this.validatorPermission.validateModifyTeamPermission(team, this.getUserEmail());
+
+        Team savedTeam = team.get();
+        this.projectRepository.findById(idProject).ifPresent(project -> {
+            savedTeam.removeProject(project);
             repository.save(savedTeam);
         });
     }

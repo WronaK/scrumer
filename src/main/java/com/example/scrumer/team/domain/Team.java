@@ -2,7 +2,6 @@ package com.example.scrumer.team.domain;
 
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.task.domain.Task;
-import com.example.scrumer.team.application.port.TeamsUseCase;
 import com.example.scrumer.user.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -74,5 +73,10 @@ public class Team {
 
     public void addTaskToSprintBacklog(Task task) {
         sprintBoard.add(task);
+    }
+
+    public void removeProject(Project project) {
+        projects.remove(project);
+        project.getTeams().remove(this);
     }
 }

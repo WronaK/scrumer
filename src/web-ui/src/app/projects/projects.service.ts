@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Project} from "../model/project";
+import {ProjectDetails} from "../model/project/project.details";
 import {Observable} from "rxjs";
-import {CreateProject} from "../model/create.project";
-import {CreateTask} from "../model/create.task";
-import { Task } from '../model/task';
-import {Team} from "../model/team";
-import {UpdateProject} from "../model/update.project";
-import {JoinTeams} from "../model/join.team";
+import {CreateProject} from "../model/project/create.project";
+import {CreateTask} from "../model/task/create.task";
+import { Task } from '../model/task/task';
+import {Team} from "../model/team/team";
+import {UpdateProject} from "../model/project/update.project";
+import {JoinTeams} from "../model/team/join.team";
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +23,8 @@ export class ProjectsService {
     return this.http.post(this.url, project);
   }
 
-  getProjectById(id: number): Observable<Project> {
-    return this.http.get<Project>(this.url + id);
+  getProjectById(id: number): Observable<ProjectDetails> {
+    return this.http.get<ProjectDetails>(this.url + id);
   }
 
   getProjectByIdUpdate(id: number): Observable<UpdateProject> {
@@ -36,7 +36,11 @@ export class ProjectsService {
   }
 
   getProjects(): Observable<any>  {
-    return this.http.get<Project[]>(this.url + "my-projects");
+    return this.http.get<ProjectDetails[]>(this.url + "my-projects");
+  }
+
+  getAllProjects(): Observable<any> {
+    return this.http.get<ProjectDetails[]>(this.url);
   }
 
   getTasksToProductBacklog(id: number): Observable<Task[]> {

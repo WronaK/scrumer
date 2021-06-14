@@ -119,10 +119,18 @@ public class TeamsController {
         teams.addMember(id, command.toCommands());
     }
 
+    @Secured({"ROLE_USER"})
     @PatchMapping("/{id}/task/{idTask}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) throws NotFoundException, IllegalAccessException {
         teams.addTask(id, idTask);
+    }
+
+    @Secured({"ROLE_USER"})
+    @PatchMapping("/{id}/projects/{idProject}/remove")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void removeProject(@PathVariable Long id, @PathVariable Long idProject) throws NotFoundException, IllegalAccessException {
+        teams.removeProject(id, idProject);
     }
 
     @DeleteMapping("/{id}")

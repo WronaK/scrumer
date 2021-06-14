@@ -1,11 +1,11 @@
 import {Component, Inject } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {CreateTeam} from "../../model/create.team";
+import {CreateTeam} from "../../model/team/create.team";
 import {TeamsService} from "../teams.service";
-import {Member} from "../../model/member";
+import {Member} from "../../model/user/member";
 import {tap} from "rxjs/operators";
-import {Team} from "../model/team";
+import {TeamDetails} from "../../model/team/team.details";
 
 @Component({
   selector: 'app-add-team',
@@ -21,7 +21,7 @@ export class AddTeamComponent {
   emailMembersFC!: FormControl;
   request: string;
   idTeam!: number;
-  team!: Team;
+  team!: TeamDetails;
 
   members: Member[] = [];
 

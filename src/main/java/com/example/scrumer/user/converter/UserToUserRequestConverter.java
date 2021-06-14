@@ -12,6 +12,7 @@ public class UserToUserRequestConverter {
                 .email(user.getEmail())
                 .name(user.getUserDetails().getName())
                 .surname(user.getUserDetails().getSurname())
+                .roles(user.getRoles())
                 .build();
     }
 }

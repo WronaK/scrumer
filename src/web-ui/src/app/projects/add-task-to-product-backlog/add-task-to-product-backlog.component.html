@@ -11,11 +11,16 @@
       <textarea [formControl]="descriptionFC"
                 matInput
                 cdkTextareaAutosize
-                cdkAutosizeMinRows="5"></textarea>
+                cdkAutosizeMinRows="5"
+                required></textarea>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Give priority</mat-label>
-      <input [formControl]="priorityFC" matInput required>
+      <mat-select [formControl]="priorityFC" required >
+        <mat-option *ngFor="let p of keys" [value]="priority[p]">
+          {{priority[p] | removeUnderscores}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field *ngIf="request=='UPDATE'">
       <mat-label>Give storyPoints</mat-label>

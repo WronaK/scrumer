@@ -15,6 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.bind.ValidationException;
 import java.util.Optional;
 
 @RestController
@@ -43,18 +44,21 @@ public class UserController {
 
     @PutMapping("/{id}/teams")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void joinTeam(@PathVariable Long id,
+    public void addTeam(@PathVariable Long id,
                          @RequestBody RestTeamCommand command) {
-        userService.joinTeam(id, command.toCommand());
+        userService.addTeam(id, command.toCommand());
+    }
+
+    @PutMapping("/join")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void joinTeam(@RequestBody RestTeamCommand command) {
+        userService.joinTeam(this.getUserEmail(), command.toCommand());
     }
 
     @PostMapping()
-    public ResponseEntity<?> register(@RequestBody RegisterCommand command) {
-        User user = userService.register(command.toCreateCommand());
-        if(user == null) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
-        }
-        return ResponseEntity.ok().body("User registered successfully!");
+    public ResponseEntity<?> register(@RequestBody RegisterCommand command) throws ValidationException {
+        userService.register(command.toCreateCommand());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

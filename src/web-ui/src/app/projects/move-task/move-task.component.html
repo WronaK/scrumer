@@ -1,17 +1,20 @@
 <div mat-dialog-title class="dialog-title">
-  <h2>Move task: {{idTask}} to realize</h2>
+  <h2>Move task</h2>
   <button mat-icon-button aria-label="close dialog" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
 </div>
 <div mat-dialog-content>
   <form>
-      <mat-label>Select team to realize task:</mat-label>
+    <h4>Select a team that is to accomplish this task {{idTask}}</h4>
+    <mat-form-field>
+      <mat-label>Select a team</mat-label>
       <mat-select [(value)] ="selected">
         <mat-option *ngFor="let team of teams" [value]="team.id">
           {{team.name}}
         </mat-option>
       </mat-select>
+    </mat-form-field>
   </form>
 
 </div>

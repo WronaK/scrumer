@@ -13,7 +13,8 @@
           <textarea [formControl]="descriptionFC"
                     matInput
                     cdkTextareaAutosize
-                    cdkAutosizeMinRows="5"></textarea>
+                    cdkAutosizeMinRows="5"
+                    required></textarea>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Enter a password for the project</mat-label>
@@ -51,9 +52,6 @@
     </mat-step>
     <mat-step  *ngIf="request=='ADD'" [stepControl]="teamForm" label="Add teams">
       <form [formGroup]="teamForm">
-        <div class="button one-button">
-          <button mat-raised-button (click)="addTeam()" [disabled]="!teamForm.valid">Add team</button>
-        </div>
         <mat-form-field>
           <mat-label>Enter a name team: </mat-label>
           <input [formControl]="teamNameFC" matInput />
@@ -62,13 +60,17 @@
           <mat-label>Enter a access code: </mat-label>
           <input [formControl]="accessCodeFC" matInput />
         </mat-form-field>
-        <mat-list *ngIf="teams.length > 0">
-          Add teams:
-          <mat-list-item *ngFor="let team of teams">
-            <span>Team name: {{team.name}}</span>
-            <span>Team accessCode: {{team.accessCode}}</span>
-          </mat-list-item>
-        </mat-list>
+        <mat-form-field>
+          <mat-label>List add members</mat-label>
+          <mat-select>
+            <mat-option *ngFor="let team of teams">
+              Name: {{team.name}} Access Code: {{team.accessCode}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div class="button one-button">
+          <button mat-raised-button (click)="addTeam()" [disabled]="!teamForm.valid">Add team</button>
+        </div>
         <div class="button">
           <button mat-raised-button matStepperPrevious>Back</button>
           <button mat-raised-button (click)="save()" [disabled]="!projectForm.valid">Add</button>

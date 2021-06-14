@@ -53,7 +53,12 @@ public class User {
     }
 
     public void addTeam(Team team) {
+        if(this.teams == null){
+            this.teams = new HashSet<>();
+        }
+
         teams.add(team);
+        team.getMembers().add(this);
     }
 }
 

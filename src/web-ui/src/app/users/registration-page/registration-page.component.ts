@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../../shared/auth.service";
-import {User} from "../../model/user";
+import {User} from "../../model/user/user";
 import {PasswordValidator} from "../../password.validator";
 import {FormGroupErrorMatcher} from "../../form.group.error.matcher";
 
@@ -11,7 +11,7 @@ import {FormGroupErrorMatcher} from "../../form.group.error.matcher";
   templateUrl: './registration-page.component.html',
   styleUrls: ['./registration-page.component.scss']
 })
-export class RegistrationPageComponent implements OnInit {
+export class RegistrationPageComponent {
   emailFC: FormControl;
   nameFC: FormControl;
   surnameFC: FormControl;
@@ -40,9 +40,6 @@ export class RegistrationPageComponent implements OnInit {
     )])
   }
 
-  ngOnInit(): void {
-  }
-
   signUp() {
     this.authService.signUp({
       name: this.nameFC.value,
@@ -50,11 +47,8 @@ export class RegistrationPageComponent implements OnInit {
       email: this.emailFC.value,
       password: this.passwordFC.value,
     } as User).subscribe(
-      response => {
-        this.error = response;
-        this.registrationForm.reset();
-      },
-    );
+      () => this.goToLogin(), (err) =>
+      { this.error = err.error, this.passwordFC.reset(), this.repeatPasswordFC.reset()});
   }
 
   goToLogin() {
