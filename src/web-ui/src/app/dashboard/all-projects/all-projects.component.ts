@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ProjectDetails} from "../../model/project/project.details";
 import {ProjectsService} from "../../projects/projects.service";
 import {Router} from "@angular/router";
-import {DashboardService} from "../dashboard.service";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-projects',
@@ -17,17 +17,15 @@ export class AllProjectsComponent implements OnInit {
 
   constructor(
     private projectsService: ProjectsService,
-    private dashboardService: DashboardService,
     private router: Router) { }
 
   ngOnInit(): void {
     this.isDashboard = this.router.isActive('dashboard', true);
     if(this.isDashboard) {
-      this.dashboardService.uploadProject();
+      this.projectsService.getProjects().pipe(tap(projects => this.projects = projects)).subscribe();
     } else {
-      this.dashboardService.uploadAllProject();
+      this.projectsService.getAllProjects().pipe(tap(projects => this.projects = projects)).subscribe();
     }
-    this.dashboardService.getProjects().subscribe(projects => this.projects = projects);
   }
 
   goToProject(id: number): void {

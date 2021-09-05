@@ -4,6 +4,7 @@ import {tap} from "rxjs/operators";
 import {Project} from "../../model/project/project";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddProjectComponent} from "../add-project/add-project.component";
+import {ProjectsSubscribeService} from "../projects-subscribe.service";
 
 @Component({
   selector: 'app-projects',
@@ -15,16 +16,16 @@ export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
   constructor(
     private projectsService: ProjectsService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private projectsSubscribeService: ProjectsSubscribeService) { }
 
   ngOnInit(): void {
     this.getProjects();
   }
 
   getProjects() {
-    this.projectsService.getProjects()
-      .pipe(tap(projects => this.projects = projects))
-      .subscribe();
+    this.projectsSubscribeService.uploadProject();
+    this.projectsSubscribeService.getProjects().pipe(tap(projects => this.projects = projects)).subscribe();
   }
 
   addProject() {
@@ -34,6 +35,12 @@ export class ProjectsComponent implements OnInit {
     dialogConfig.data = {
       request: "ADD"
     };
-    this.dialog.open(AddProjectComponent, dialogConfig);
+    this.dialog.open(AddProjectComponent, dialogConfig)
+      .afterClosed()
+      .pipe(
+        tap(() => {
+          this.projectsSubscribeService.uploadProject()
+        })
+      ).subscribe();
   }
 }

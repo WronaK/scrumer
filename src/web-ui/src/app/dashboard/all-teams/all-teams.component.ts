@@ -3,7 +3,7 @@ import {Team} from "../../model/team/team";
 import {MatDialog} from "@angular/material/dialog";
 import {TeamsService} from "../../teams/teams.service";
 import {Router} from "@angular/router";
-import {DashboardService} from "../dashboard.service";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-teams',
@@ -19,18 +19,16 @@ export class AllTeamsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private teamsService: TeamsService,
-    private dashboardService: DashboardService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.isDashboard = this.router.isActive('dashboard', true);
     if(this.isDashboard) {
-      this.dashboardService.uploadTeams();
+      this.teamsService.getTeams().pipe(tap(teams => this.teams = teams)).subscribe();
     } else {
-      this.dashboardService.uploadAllTeams();
+      this.teamsService.getAllTeams().pipe(tap(teams => this.teams = teams)).subscribe();
     }
-    this.dashboardService.getTeams().subscribe(teams => this.teams = teams);
   }
 
   goToTeam(id: number) {

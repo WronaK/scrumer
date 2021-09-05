@@ -5,6 +5,7 @@ import {tap} from "rxjs/operators";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddTeamComponent} from "../add-team/add-team.component";
 import {JoinTeamComponent} from "../join-team/join-team.component";
+import {TeamsSubscribeService} from "../teams-subscribe.service";
 
 @Component({
   selector: 'app-teams',
@@ -16,15 +17,16 @@ export class TeamsComponent implements OnInit {
   teams: Team[] = [];
   constructor(
     private teamsService: TeamsService,
+    private teasSubscribeService: TeamsSubscribeService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.uploadTeams();
+    this.getTeams();
   }
 
-  uploadTeams() {
-    this.teamsService.getTeams().
-    pipe(tap(teams => this.teams = teams)).subscribe()
+  getTeams() {
+    this.teasSubscribeService.uploadTeams();
+    this.teasSubscribeService.getTeams().pipe(tap(teams => this.teams = teams)).subscribe();
   }
 
   addTeam() {
@@ -34,7 +36,13 @@ export class TeamsComponent implements OnInit {
     dialogConfig.data = {
       request: "ADD"
     };
-    this.dialog.open(AddTeamComponent, dialogConfig);
+    this.dialog.open(AddTeamComponent, dialogConfig)
+      .afterClosed()
+      .pipe(
+        tap( () => {
+            this.teasSubscribeService.uploadTeams()
+          }
+        )).subscribe();
   }
 
   joinTeam() {
@@ -44,6 +52,12 @@ export class TeamsComponent implements OnInit {
     dialogConfig.data = {
       request: "ADD"
     };
-    this.dialog.open(JoinTeamComponent, dialogConfig);
+    this.dialog.open(JoinTeamComponent, dialogConfig)
+      .afterClosed()
+      .pipe(
+        tap( () => {
+          this.teasSubscribeService.uploadTeams()
+        }
+      )).subscribe();
   }
 }
