@@ -3,11 +3,9 @@ import {Router} from "@angular/router";
 import {AuthService} from "../shared/auth.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddProjectComponent} from "../projects/add-project/add-project.component";
-import {AddTeamComponent} from "../teams/add-team/add-team.component";
 import {DashboardService} from "../dashboard/dashboard.service";
 import {tap} from "rxjs/operators";
 import {LoginUser} from "../model/user/login.user";
-import {JoinTeamComponent} from "../teams/join-team/join-team.component";
 
 @Component({
   selector: 'app-header',
@@ -57,42 +55,15 @@ export class HeaderComponent implements OnInit {
       ).subscribe();
   }
 
-  addTeam() {
-    const dialogConfig= new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      request: "ADD"
-    };
-    this.dialog.open(AddTeamComponent, dialogConfig)
-      .afterClosed()
-      .pipe(
-        tap(() => this.dashboardService.uploadTeams())
-      ).subscribe();
-  }
-
-  joinTeam() {
-    const dialogConfig= new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      request: "ADD"
-    };
-    this.dialog.open(JoinTeamComponent, dialogConfig)
-      .afterClosed()
-      .pipe(
-        tap(() =>  {
-          this.dashboardService.uploadTeams();
-          this.dashboardService.uploadProject()
-        })
-      ).subscribe();
-  }
-
   toProjects() {
     this.router.navigate(['projects']);
   }
 
   toTeams() {
     this.router.navigate(['teams']);
+  }
+
+  toYourTeams() {
+    this.router.navigate(['your-teams']);
   }
 }

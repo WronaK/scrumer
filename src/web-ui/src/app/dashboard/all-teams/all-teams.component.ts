@@ -7,10 +7,10 @@ import {DashboardService} from "../dashboard.service";
 
 @Component({
   selector: 'app-teams',
-  templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.scss']
+  templateUrl: './all-teams.component.html',
+  styleUrls: ['./all-teams.component.scss']
 })
-export class TeamsComponent implements OnInit {
+export class AllTeamsComponent implements OnInit {
 
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   teams: Team[] = [];

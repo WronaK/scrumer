@@ -19,6 +19,8 @@ import {ShowTaskFromSprintBacklogComponent} from "./show-task-from-sprint-backlo
 import { DividedIntoTasksComponent } from './divided-into-tasks/divided-into-tasks.component';
 import {PipesModule} from "../pipes/pipes.module";
 import { JoinTeamComponent } from './join-team/join-team.component';
+import {TeamsComponent} from "./teams/teams.component";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { JoinTeamComponent } from './join-team/join-team.component';
     AddMembersComponent,
     ShowTaskFromSprintBacklogComponent,
     DividedIntoTasksComponent,
-    JoinTeamComponent
+    JoinTeamComponent,
+    TeamsComponent
   ],
   imports: [
     CommonModule,
@@ -44,9 +47,11 @@ import { JoinTeamComponent } from './join-team/join-team.component';
     MatCardModule,
     SharedModule,
     PipesModule,
+    MatGridListModule,
   ],
   exports: [
-    TeamComponent
+    TeamComponent,
+    TeamsComponent
   ]
 })
 export class TeamsModule { }

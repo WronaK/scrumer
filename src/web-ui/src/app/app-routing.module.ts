@@ -8,7 +8,8 @@ import {RegistrationPageComponent} from "./users/registration-page/registration-
 import {ProjectComponent} from "./projects/project/project.component";
 import {TeamComponent} from "./teams/team/team.component";
 import {ProjectsComponent} from "./dashboard/projects/projects.component";
-import {TeamsComponent} from "./dashboard/teams/teams.component";
+import {AllTeamsComponent} from "./dashboard/all-teams/all-teams.component";
+import {TeamsComponent} from "./teams/teams/teams.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
@@ -16,7 +17,8 @@ const routes: Routes = [
       { path: 'team/:id', component: TeamComponent, canActivate: [AuthGuard]},
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
       { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
-      { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard]}
+      { path: 'teams', component: AllTeamsComponent, canActivate: [AuthGuard]},
+      { path: 'your-teams', component: TeamsComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent}
