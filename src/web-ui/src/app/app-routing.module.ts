@@ -7,18 +7,20 @@ import {LoginPageComponent} from "./users/login-page/login-page.component";
 import {RegistrationPageComponent} from "./users/registration-page/registration-page.component";
 import {ProjectComponent} from "./projects/project/project.component";
 import {TeamComponent} from "./teams/team/team.component";
-import {ProjectsComponent} from "./dashboard/projects/projects.component";
+import {AllProjectsComponent} from "./dashboard/all-projects/all-projects.component";
 import {AllTeamsComponent} from "./dashboard/all-teams/all-teams.component";
 import {TeamsComponent} from "./teams/teams/teams.component";
+import {ProjectsComponent} from "./projects/projects/projects.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
       { path: 'project/:id', component: ProjectComponent, canActivate: [AuthGuard] },
       { path: 'team/:id', component: TeamComponent, canActivate: [AuthGuard]},
       { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
-      { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard]},
+      { path: 'projects', component: AllProjectsComponent, canActivate: [AuthGuard]},
       { path: 'teams', component: AllTeamsComponent, canActivate: [AuthGuard]},
-      { path: 'your-teams', component: TeamsComponent, canActivate: [AuthGuard]}
+      { path: 'your-teams', component: TeamsComponent, canActivate: [AuthGuard]},
+      { path: 'your-projects', component: ProjectsComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent}

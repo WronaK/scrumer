@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {DashboardComponent} from "./dashboard/dashboard.component";
-import {ProjectsComponent} from "./projects/projects.component";
+import {AllProjectsComponent} from "./all-projects/all-projects.component";
 import {AllTeamsComponent} from "./all-teams/all-teams.component";
 import {MaterialModule} from "../material.module";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -11,7 +11,7 @@ import { TasksComponent } from './tasks/tasks.component';
 @NgModule({
   declarations: [
     DashboardComponent,
-    ProjectsComponent,
+    AllProjectsComponent,
     AllTeamsComponent,
     TasksComponent
   ],

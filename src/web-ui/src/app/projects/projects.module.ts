@@ -17,6 +17,7 @@ import { MoveTaskComponent } from './move-task/move-task.component';
 import {MatRadioModule} from "@angular/material/radio";
 import {SharedModule} from "../shared/shared.module";
 import {PipesModule} from "../pipes/pipes.module";
+import {ProjectsComponent} from "./projects/projects.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {PipesModule} from "../pipes/pipes.module";
     TeamsComponent,
     AddTeamsComponent,
     MoveTaskComponent,
+    ProjectsComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import {PipesModule} from "../pipes/pipes.module";
   ],
 
   exports: [
-    ProjectComponent
+    ProjectComponent,
+    ProjectsComponent
   ]
 })
 export class ProjectsModule { }

@@ -6,10 +6,10 @@ import {DashboardService} from "../dashboard.service";
 
 @Component({
   selector: 'app-projects',
-  templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss']
+  templateUrl: './all-projects.component.html',
+  styleUrls: ['./all-projects.component.scss']
 })
-export class ProjectsComponent implements OnInit {
+export class AllProjectsComponent implements OnInit {
 
   @ViewChild('widgetsContent') widgetsContent!: ElementRef;
   projects: ProjectDetails[] = [];

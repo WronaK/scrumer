@@ -1,10 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../shared/auth.service";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AddProjectComponent} from "../projects/add-project/add-project.component";
-import {DashboardService} from "../dashboard/dashboard.service";
-import {tap} from "rxjs/operators";
 import {LoginUser} from "../model/user/login.user";
 
 @Component({
@@ -17,9 +13,7 @@ export class HeaderComponent implements OnInit {
   user!: LoginUser;
   isAdmin = false;
   constructor(private router: Router,
-              private authService: AuthService,
-              private dialog: MatDialog,
-              private dashboardService: DashboardService) { }
+              private authService: AuthService) { }
 
   ngOnInit(): void {
     this.getUserData();
@@ -41,20 +35,6 @@ export class HeaderComponent implements OnInit {
     console.log(user)});
   }
 
-  addProject() {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = {
-      request: "ADD"
-    };
-    this.dialog.open(AddProjectComponent, dialogConfig)
-      .afterClosed()
-      .pipe(
-        tap(() => this.dashboardService.uploadProject())
-      ).subscribe();
-  }
-
   toProjects() {
     this.router.navigate(['projects']);
   }
@@ -65,5 +45,9 @@ export class HeaderComponent implements OnInit {
 
   toYourTeams() {
     this.router.navigate(['your-teams']);
+  }
+
+  toYourProjects() {
+    this.router.navigate(['your-projects']);
   }
 }
