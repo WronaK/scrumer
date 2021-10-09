@@ -50,4 +50,8 @@ export class HeaderComponent implements OnInit {
   toYourProjects() {
     this.router.navigate(['your-projects']);
   }
+
+  toChat() {
+    this.router.navigate(['chat']);
+  }
 }

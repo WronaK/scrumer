@@ -15,12 +15,14 @@ import {UsersModule} from "./users/users.module";
 import {HeaderComponent} from './header/header.component';
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {PipesModule} from './pipes/pipes.module';
+import { ChatComponent } from './chat/chat/chat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    HeaderComponent
+    HeaderComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

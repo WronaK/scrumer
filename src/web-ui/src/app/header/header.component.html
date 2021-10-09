@@ -5,6 +5,7 @@
   <div class="menu">
     <div class="item" (click)="toYourTeams()">your teams</div>
     <div class="item" (click)="toYourProjects()">your projects</div>
+    <div class="item" (click)="toChat()">chat</div>
     <div class="item" *ngIf="isAdmin" (click)="toProjects()">projects</div>
     <div class="item" *ngIf="isAdmin" (click)="toTeams()">teams</div>
     <div class="logout item" (click)="logout()">logout</div>
