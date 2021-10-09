@@ -11,6 +11,7 @@ import {AllProjectsComponent} from "./dashboard/all-projects/all-projects.compon
 import {AllTeamsComponent} from "./dashboard/all-teams/all-teams.component";
 import {TeamsComponent} from "./teams/teams/teams.component";
 import {ProjectsComponent} from "./projects/projects/projects.component";
+import {ChatComponent} from "./chat/chat/chat.component";
 
 const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
@@ -20,7 +21,8 @@ const routes: Routes = [
       { path: 'projects', component: AllProjectsComponent, canActivate: [AuthGuard]},
       { path: 'teams', component: AllTeamsComponent, canActivate: [AuthGuard]},
       { path: 'your-teams', component: TeamsComponent, canActivate: [AuthGuard]},
-      { path: 'your-projects', component: ProjectsComponent, canActivate: [AuthGuard]}
+      { path: 'your-projects', component: ProjectsComponent, canActivate: [AuthGuard]},
+      { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]}
     ]},
   { path: 'login', component: LoginPageComponent},
   { path: 'registration', component: RegistrationPageComponent}
