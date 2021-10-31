@@ -1,5 +1,6 @@
 package com.example.scrumer.user.web;
 
+import com.example.scrumer.chat.model.ChannelDto;
 import com.example.scrumer.user.application.UserService;
 import com.example.scrumer.user.application.port.UserUseCase.CreateUserCommand;
 import com.example.scrumer.user.application.port.UserUseCase.TeamCommand;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.ValidationException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +36,11 @@ public class UserController {
 
     private String getUserEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
+
+    @GetMapping("/channel/{id}")
+    public List<ChannelDto> getChannelById(@PathVariable Long id) {
+        return userService.getChannels(id);
     }
 
     @GetMapping("/{id}")

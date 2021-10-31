@@ -1,5 +1,6 @@
 package com.example.scrumer.user.application.port;
 
+import com.example.scrumer.chat.model.ChannelDto;
 import com.example.scrumer.user.domain.User;
 import lombok.Value;
 
@@ -21,6 +22,8 @@ public interface UserUseCase {
     Optional<User> findByEmail(String userEmail);
 
     void addTeam(Long id, TeamCommand command);
+
+    List<ChannelDto> getChannels(Long id);
 
     @Value
     class CreateUserCommand {

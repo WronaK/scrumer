@@ -1,5 +1,6 @@
 package com.example.scrumer.user.application;
 
+import com.example.scrumer.chat.model.ChannelDto;
 import com.example.scrumer.team.db.TeamJpaRepository;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.user.application.port.UserUseCase;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -83,6 +85,11 @@ public class UserService implements UserUseCase {
                             }
                     );
                 });
+    }
+
+    @Override
+    public List<ChannelDto> getChannels(Long id) {
+        return repository.findById(id).get().getChannels().stream().map(channel -> ChannelDto.builder().idChannel(channel.getId()).recipientName(channel.getChannelName()).build()).collect(Collectors.toList());
     }
 
     @Override

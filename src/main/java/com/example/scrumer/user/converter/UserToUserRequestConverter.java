@@ -9,6 +9,7 @@ public class UserToUserRequestConverter {
 
     public UserRequest toDto(User user) {
         return UserRequest.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getUserDetails().getName())
                 .surname(user.getUserDetails().getSurname())

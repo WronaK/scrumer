@@ -1,5 +1,6 @@
 package com.example.scrumer.user.domain;
 
+import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.task.domain.RealizeTask;
 import com.example.scrumer.team.domain.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,9 +42,12 @@ public class User {
     @JsonIgnoreProperties("members")
     private Set<Team> teams = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnoreProperties("user")
     private List<RealizeTask> realizeTasks = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "members")
+    private Set<Channel> channels = new HashSet<>();
 
     public User(String email, String password, UserDetails userDetails) {
         this.email = email;
