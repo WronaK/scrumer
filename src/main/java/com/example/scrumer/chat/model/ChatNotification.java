@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChatNotification {
-    private Long idMessage;
-    private String senderEmail;
+    private Long channelId;
+    private Long senderId;
 }
