@@ -1,8 +1,8 @@
 package com.example.scrumer.user.entity;
 
 import com.example.scrumer.chat.model.Channel;
-import com.example.scrumer.task.domain.RealizeTask;
-import com.example.scrumer.team.domain.Team;
+import com.example.scrumer.task.entity.RealizeTask;
+import com.example.scrumer.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
