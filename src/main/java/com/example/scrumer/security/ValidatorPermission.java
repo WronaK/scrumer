@@ -2,7 +2,7 @@ package com.example.scrumer.security;
 
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.team.domain.Team;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Component;
 

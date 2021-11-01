@@ -1,6 +1,6 @@
-package com.example.scrumer.user.db;
+package com.example.scrumer.user.repository;
 
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

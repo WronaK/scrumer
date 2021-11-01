@@ -10,7 +10,7 @@ import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.task.domain.TaskDetails;
 import com.example.scrumer.team.db.TeamJpaRepository;
-import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;

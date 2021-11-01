@@ -1,6 +1,6 @@
 package com.example.scrumer.chat.model;
 
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;

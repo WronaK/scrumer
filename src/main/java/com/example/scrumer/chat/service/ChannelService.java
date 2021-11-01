@@ -3,8 +3,8 @@ package com.example.scrumer.chat.service;
 import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.chat.repository.ChannelsRepository;
 import com.example.scrumer.chat.service.useCase.ChannelsUseCase;
-import com.example.scrumer.user.db.UserJpaRepository;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.repository.UserJpaRepository;
+import com.example.scrumer.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

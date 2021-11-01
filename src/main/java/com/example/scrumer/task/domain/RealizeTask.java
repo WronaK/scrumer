@@ -1,6 +1,6 @@
 package com.example.scrumer.task.domain;
 
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 

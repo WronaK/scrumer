@@ -7,12 +7,11 @@ import com.example.scrumer.chat.model.MessageDto;
 import com.example.scrumer.chat.repository.ChannelsRepository;
 import com.example.scrumer.chat.repository.MessagesRepository;
 import com.example.scrumer.chat.service.ChannelService;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import javax.transaction.Transactional;
@@ -42,6 +41,6 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(recipients.getId().toString(), "/queue/messages",
                 new ChatNotification(
                         savedMessage.getId(),
-                        messageDto.getSenderEmail()));
+                        1L));
     }
 }

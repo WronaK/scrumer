@@ -2,7 +2,7 @@ package com.example.scrumer.team.domain;
 
 import com.example.scrumer.project.domain.Project;
 import com.example.scrumer.task.domain.Task;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -34,7 +34,12 @@ public class Team {
     @JsonIgnoreProperties("teams")
     private User creator;
 
-    @ManyToMany(mappedBy = "teams", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "teams_members",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
     @JsonIgnoreProperties("teams")
     private Set<User> members = new HashSet<>();
 

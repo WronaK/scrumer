@@ -1,14 +1,14 @@
-package com.example.scrumer.user.converter;
+package com.example.scrumer.user.mapper;
 
-import com.example.scrumer.user.domain.User;
-import com.example.scrumer.user.request.UserRequest;
+import com.example.scrumer.user.entity.User;
+import com.example.scrumer.user.command.UserCommand;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserToUserRequestConverter {
+public class UserMapper {
 
-    public UserRequest toDto(User user) {
-        return UserRequest.builder()
+    public static UserCommand toUserCommand(User user) {
+        return UserCommand.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getUserDetails().getName())

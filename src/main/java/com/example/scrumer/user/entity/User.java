@@ -1,4 +1,4 @@
-package com.example.scrumer.user.domain;
+package com.example.scrumer.user.entity;
 
 import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.task.domain.RealizeTask;
@@ -37,8 +37,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable
+    @ManyToMany(mappedBy = "members", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("members")
     private Set<Team> teams = new HashSet<>();
 
@@ -54,15 +53,6 @@ public class User {
         this.password = password;
         this.roles = Set.of("ROLE_USER");
         this.userDetails = userDetails;
-    }
-
-    public void addTeam(Team team) {
-        if(this.teams == null){
-            this.teams = new HashSet<>();
-        }
-
-        teams.add(team);
-        team.getMembers().add(this);
     }
 }
 

@@ -1,6 +1,6 @@
 package com.example.scrumer.security;
 
-import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.user.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

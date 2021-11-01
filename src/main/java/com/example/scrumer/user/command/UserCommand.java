@@ -1,4 +1,4 @@
-package com.example.scrumer.user.request;
+package com.example.scrumer.user.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,11 +7,11 @@ import lombok.Setter;
 
 import java.util.Set;
 
-@AllArgsConstructor
-@Builder
 @Getter
 @Setter
-public class UserRequest {
+@Builder
+@AllArgsConstructor
+public class UserCommand {
     private Long id;
     private String email;
     private String name;

@@ -1,6 +1,6 @@
 package com.example.scrumer.security;
 
-import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

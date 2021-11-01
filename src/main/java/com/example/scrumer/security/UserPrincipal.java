@@ -1,6 +1,6 @@
 package com.example.scrumer.security;
 
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

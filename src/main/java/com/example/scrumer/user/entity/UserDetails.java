@@ -1,4 +1,4 @@
-package com.example.scrumer.user.domain;
+package com.example.scrumer.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

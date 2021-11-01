@@ -13,8 +13,8 @@ import com.example.scrumer.team.converter.TeamToRestCommandConverter;
 import com.example.scrumer.team.domain.Team;
 import com.example.scrumer.team.request.TeamDetails;
 import com.example.scrumer.team.request.TeamRequest;
-import com.example.scrumer.user.converter.UserToUserRequestConverter;
-import com.example.scrumer.user.request.UserRequest;
+import com.example.scrumer.user.command.UserCommand;
+import com.example.scrumer.user.mapper.UserMapper;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +28,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,7 +41,6 @@ public class TeamsController {
     private final TeamsUseCase teams;
     private final TeamToRestCommandConverter teamConverter;
     private final TaskToRestCommandConverter taskConverter;
-    private final UserToUserRequestConverter userConverter;
     private final ProjectToRestCommandConverter projectConverter;
 
     @Secured({"ROLE_ADMIN"})
@@ -72,12 +74,12 @@ public class TeamsController {
     }
 
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<UserRequest>> getMembers(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
+    public ResponseEntity<List<UserCommand>> getMembers(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
         return teams.findById(id)
                 .map(team ->
                         ResponseEntity.ok(team.getMembers()
                         .stream()
-                        .map(userConverter::toDto)
+                        .map(UserMapper::toUserCommand)
                         .collect(Collectors.toList())))
                 .orElse(ResponseEntity.notFound().build());
     }

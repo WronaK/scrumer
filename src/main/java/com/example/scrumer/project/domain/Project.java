@@ -2,7 +2,7 @@ package com.example.scrumer.project.domain;
 
 import com.example.scrumer.task.domain.Task;
 import com.example.scrumer.team.domain.Team;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

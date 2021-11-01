@@ -7,8 +7,8 @@ import com.example.scrumer.task.domain.RealizeTask;
 import com.example.scrumer.task.domain.StatusTask;
 import com.example.scrumer.task.domain.Subtask;
 import com.example.scrumer.task.web.SubtasksController;
-import com.example.scrumer.user.db.UserJpaRepository;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.repository.UserJpaRepository;
+import com.example.scrumer.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
