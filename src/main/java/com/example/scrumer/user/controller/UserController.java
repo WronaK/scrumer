@@ -1,6 +1,6 @@
 package com.example.scrumer.user.controller;
 
-import com.example.scrumer.chat.model.ChannelDto;
+import com.example.scrumer.chat.command.ChannelCommand;
 import com.example.scrumer.user.command.UserCommand;
 import com.example.scrumer.user.mapper.UserMapper;
 import com.example.scrumer.user.service.useCase.UserUseCase;
@@ -30,15 +30,19 @@ public class UserController {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
-    @GetMapping("/channel/{id}")
-    public List<ChannelDto> getChannelById(@PathVariable Long id) {
-        return userUseCase.getChannels(id);
+    @GetMapping("/channels")
+    public List<ChannelCommand> getChannelById() {
+        return userUseCase.getChannels(getUserEmail());
     }
+
+//    @GetMapping("/private-messages")
+//    public List<PrivateMessagesCommand> getPrivateMessagesById() {
+//        return userUseCase.getPrivateMessages(getUserEmail());
+//    }
 
     @GetMapping("/{id}")
     public UserCommand getById(@PathVariable Long id) {
-        return userUseCase.findById(id).map(UserMapper::toUserCommand)
-                .orElseThrow(() -> new NotFoundException("No user found with id: " + id));
+        return UserMapper.toUserCommand(userUseCase.findById(id));
     }
 
     @DeleteMapping("/{id}")

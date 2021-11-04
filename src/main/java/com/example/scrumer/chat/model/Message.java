@@ -1,27 +1,31 @@
 package com.example.scrumer.chat.model;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
+import java.util.Date;
 
-@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Builder
+@Data
+@Document
 public class Message {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
-    @Email
-    private String senderEmail;
+    private Long senderId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Channel channel;
+    private String senderName;
+
+    private Long channelId;
 
     private String content;
+
+    private Date timestamp;
+
     private MessageStatus status;
 }

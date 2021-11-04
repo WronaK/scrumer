@@ -1,4 +1,4 @@
-package com.example.scrumer.chat.model;
+package com.example.scrumer.chat.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDto {
+public class MessageCommand {
     private Long channelId;
     private String content;
-    private String senderEmail;
+    private Long senderId;
+    private String senderName;
 }

@@ -21,4 +21,8 @@ public class UserDetails {
         this.name = name;
         this.surname = surname;
     }
+
+    public String getUsername() {
+        return  name + " " + surname;
+    }
 }

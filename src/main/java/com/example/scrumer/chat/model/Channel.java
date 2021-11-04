@@ -4,9 +4,7 @@ import com.example.scrumer.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,13 +28,6 @@ public class Channel {
     )
     private Set<User> members = new HashSet<>();
 
-    @OneToMany(
-            mappedBy = "channel",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Message> messages = new ArrayList<>();
-
     public void addMember(User user) {
         this.members.add(user);
         user.getChannels().add(this);
@@ -47,13 +38,6 @@ public class Channel {
         user.getChannels().remove(this);
     }
 
-    public void addMessage(Message message) {
-        messages.add(message);
-        message.setChannel(this);
-    }
-
-    public void removeMessage(Message message) {
-        messages.remove(message);
-        message.setChannel(null);
-    }
+    @Enumerated(value = EnumType.STRING)
+    private ChannelType channelType;
 }

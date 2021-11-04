@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-  db:
+  db_postgres:
     container_name: scrumerdb
     image: postgres:12.4
     restart: always
@@ -11,3 +11,15 @@ services:
       POSTGRES_PASSWORD: kotek123
     ports:
       - 7432:5432
+
+  db_mongo:
+    container_name: scrumermdb
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: scrumermmdb
+      MONGO_INITDB_ROOT_USERNAME: adminmd
+      MONGO_INITDB_ROOT_PASSWORD: psotek123
+    ports:
+      - 27017:27017
+

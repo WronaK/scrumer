@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ChatNotification {
     private Long channelId;
     private Long senderId;
+    private String senderName;
 }

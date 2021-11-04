@@ -45,6 +45,10 @@ public class User {
     @JsonIgnoreProperties("user")
     private List<RealizeTask> realizeTasks = new ArrayList<>();
 
+//    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+//    @JoinColumn(name = "sender_id")
+//    private List<PrivateMessages> privateMessages = new ArrayList<>();
+
     @ManyToMany(mappedBy = "members")
     private Set<Channel> channels = new HashSet<>();
 
@@ -54,5 +58,9 @@ public class User {
         this.roles = Set.of("ROLE_USER");
         this.userDetails = userDetails;
     }
+
+//    public void addPrivateMessage(PrivateMessages privateMessages) {
+//        this.privateMessages.add(privateMessages);
+//    }
 }
 
