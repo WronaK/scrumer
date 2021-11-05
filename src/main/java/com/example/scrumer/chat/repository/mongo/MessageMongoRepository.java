@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageMongoRepository extends MongoRepository<Message, String> {
 
-//    List<Message> findByChannelId(String channelId);
+    List<Message> findMessageByChannelId(Long channelId);
 }

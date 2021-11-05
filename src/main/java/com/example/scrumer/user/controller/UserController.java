@@ -35,11 +35,6 @@ public class UserController {
         return userUseCase.getChannels(getUserEmail());
     }
 
-//    @GetMapping("/private-messages")
-//    public List<PrivateMessagesCommand> getPrivateMessagesById() {
-//        return userUseCase.getPrivateMessages(getUserEmail());
-//    }
-
     @GetMapping("/{id}")
     public UserCommand getById(@PathVariable Long id) {
         return UserMapper.toUserCommand(userUseCase.findById(id));

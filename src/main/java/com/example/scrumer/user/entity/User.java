@@ -1,6 +1,7 @@
 package com.example.scrumer.user.entity;
 
 import com.example.scrumer.chat.model.Channel;
+import com.example.scrumer.chat.model.ChannelUser;
 import com.example.scrumer.task.entity.RealizeTask;
 import com.example.scrumer.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -45,12 +46,8 @@ public class User {
     @JsonIgnoreProperties("user")
     private List<RealizeTask> realizeTasks = new ArrayList<>();
 
-//    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//    @JoinColumn(name = "sender_id")
-//    private List<PrivateMessages> privateMessages = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "members")
-    private Set<Channel> channels = new HashSet<>();
+    @OneToMany(mappedBy = "user")
+    private Set<ChannelUser> userChannels = new HashSet<>();
 
     public User(String email, String password, UserDetails userDetails) {
         this.email = email;
@@ -58,9 +55,5 @@ public class User {
         this.roles = Set.of("ROLE_USER");
         this.userDetails = userDetails;
     }
-
-//    public void addPrivateMessage(PrivateMessages privateMessages) {
-//        this.privateMessages.add(privateMessages);
-//    }
 }
 

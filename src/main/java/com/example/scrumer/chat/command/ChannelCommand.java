@@ -14,4 +14,5 @@ public class ChannelCommand {
     private String channelName;
     private String lastMessage;
     private String channelType;
+    private Long numberNewMessage;
 }

@@ -1,69 +1,98 @@
 package com.example.scrumer.chat.service;
 
 import com.example.scrumer.chat.command.CreateChannelCommand;
-import com.example.scrumer.chat.model.Channel;
-import com.example.scrumer.chat.model.ChannelType;
-import com.example.scrumer.chat.model.Message;
 import com.example.scrumer.chat.command.MessageCommand;
-import com.example.scrumer.chat.model.MessageStatus;
-import com.example.scrumer.chat.repository.jpa.ChannelsRepository;
+import com.example.scrumer.chat.mapper.MessageMapper;
+import com.example.scrumer.chat.model.*;
+import com.example.scrumer.chat.repository.jpa.ChannelUsersJpaRepository;
+import com.example.scrumer.chat.repository.jpa.ChannelRepository;
 import com.example.scrumer.chat.repository.mongo.MessageMongoRepository;
 import com.example.scrumer.chat.service.useCase.ChannelsUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import com.example.scrumer.user.entity.User;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChannelService implements ChannelsUseCase {
-    private final ChannelsRepository channelsRepository;
-    private final UserJpaRepository userJpaRepository;
-    private final MessageMongoRepository messageMongoRepository;
+    private final ChannelRepository channelRepository;
+    private final UserJpaRepository userRepository;
+    private final MessageMongoRepository messageRepository;
+    private final ChannelUsersJpaRepository channelUserRepository;
 
     @Override
     public void createChannel(CreateChannelCommand command, String userEmail) {
-        Set<User> members = getMembers(command);
-        Optional<User> senderUser = userJpaRepository.findByEmail(userEmail);
+        Set<User> members = fetchMembersByEmail(command);
 
-        if (senderUser.isPresent()) {
-            Channel channel = new Channel();
-            channel.setChannelName(command.getChannelName());
-            channel.setChannelType(ChannelType.parseString(command.getChannelType()).get());
-            channel.addMember(senderUser.get());
+        userRepository.findByEmail(userEmail).ifPresent(sender -> {
+            Channel channel = Channel.builder()
+                    .idLastMessage(Strings.EMPTY)
+                    .channelName(command.getChannelName())
+                    .channelType(ChannelType.parseString(command.getChannelType()).orElseThrow())
+                    .build();
 
-            for(User user: members) {
-                channel.addMember(user);
-            }
-            channelsRepository.save(channel);
-        }
+            ChannelUser channelUser = ChannelUser.builder()
+                    .numbersNewMessages(0L)
+                    .channel(channel)
+                    .user(sender)
+                    .build();
+
+            channel.addChannelUser(channelUserRepository.save(channelUser));
+
+            members.forEach(member ->
+                    channel.addChannelUser(channelUserRepository.save(new ChannelUser(channel, member))));
+
+            channelRepository.save(channel);
+        });
     }
 
-    private Set<User> getMembers(CreateChannelCommand command) {
-        return command.getMembers().stream().map(member -> userJpaRepository.findByEmail(member).get()).collect(Collectors.toSet());
+    private Set<User> fetchMembersByEmail(CreateChannelCommand command) {
+        return command.getMembers()
+                .stream()
+                .map(email -> userRepository.findByEmail(email)
+                        .orElseThrow(() -> new NotFoundException("Not found user with email: " + email)))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public Channel findById(Long channelId) {
-        return channelsRepository.findById(channelId).orElseThrow(() -> new NotFoundException("Not found channel with idL " + channelId));
+        return channelRepository
+                .findById(channelId)
+                .orElseThrow(() -> new NotFoundException("Not found channel with idL " + channelId));
     }
 
-    public Message saveNewMessage(MessageCommand command) {
-        Message message = Message.builder()
-                .senderId(command.getSenderId())
-                .senderName(command.getSenderName())
-                .content(command.getContent())
-                .status(MessageStatus.RECEIVED)
-                .channelId(command.getChannelId())
-                .timestamp(new Date())
-                .build();
-        return messageMongoRepository.save(message);
+    @Override
+    public void createNotificationMessage(Long channelId, Long recipientId) {
+        ChannelUser channelUser = channelUserRepository
+                .findChannelUserByChannel_IdAndUser_Id(channelId, recipientId)
+                .orElseThrow(() -> new NotFoundException("Not found channel-user with channel id: " + channelId + " and recipient id: " + recipientId));
+
+        channelUser.incrementNumbersNewMessages();
+        channelUserRepository.save(channelUser);
+    }
+
+    @Override
+    public List<MessageCommand> findMessagesById(Long id) {
+        return messageRepository
+                .findMessageByChannelId(id)
+                .stream()
+                .map(MessageMapper::toMessageCommand).collect(Collectors.toList());
+    }
+
+    @Override
+    public void clearNotification(Long channelId, String userEmail) {
+        ChannelUser channelUser = channelUserRepository
+                .findChannelUserByChannel_IdAndUser_Email(channelId, userEmail)
+                .orElseThrow(() -> new NotFoundException("Not found channel-user with channel id: " + channelId + " and user email: " + userEmail));
+
+        channelUser.clearNumberNewMessages();
+        channelUserRepository.save(channelUser);
     }
 }

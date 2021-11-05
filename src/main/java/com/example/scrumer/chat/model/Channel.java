@@ -5,7 +5,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -18,26 +21,29 @@ public class Channel {
     @GeneratedValue
     private Long id;
 
-    private String channelName = "test name";
+    private String channelName;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "channels_members",
-            joinColumns = @JoinColumn(name = "channel_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> members = new HashSet<>();
-
-    public void addMember(User user) {
-        this.members.add(user);
-        user.getChannels().add(this);
-    }
-
-    public void removeMember(User user) {
-        this.members.remove(user);
-        user.getChannels().remove(this);
-    }
+    @OneToMany(mappedBy = "channel")
+    private Set<ChannelUser> channelUsers = new HashSet<>();
 
     @Enumerated(value = EnumType.STRING)
     private ChannelType channelType;
+
+    private String idLastMessage;
+
+    public void addChannelUser(ChannelUser channelUser) {
+        if (this.channelUsers == null) {
+            this.channelUsers = new HashSet<>();
+        }
+
+        this.channelUsers.add(channelUser);
+        channelUser.getUser().getUserChannels().add(channelUser);
+    }
+
+    public List<User> getRecipients(Long senderId) {
+        return channelUsers.stream()
+                .map(ChannelUser::getUser)
+                .filter(channelUser -> !Objects.equals(channelUser.getId(), senderId))
+                .collect(Collectors.toList());
+    }
 }

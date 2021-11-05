@@ -3,10 +3,14 @@ package com.example.scrumer.user.service;
 import com.example.scrumer.chat.command.ChannelCommand;
 import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.chat.model.ChannelType;
+import com.example.scrumer.chat.model.ChannelUser;
+import com.example.scrumer.chat.model.Message;
+import com.example.scrumer.chat.repository.mongo.MessageMongoRepository;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import com.example.scrumer.user.service.useCase.UserUseCase;
 import lombok.AllArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService implements UserUseCase {
     private final UserJpaRepository repository;
+    private final MessageMongoRepository messageRepository;
 
     @Override
     public User findById(Long id) {
@@ -36,63 +41,53 @@ public class UserService implements UserUseCase {
 
     @Override
     public List<ChannelCommand> getChannels(String email) {
-        return findByEmail(email).get()
-                .getChannels()
+        User user = findByEmail(email).orElseThrow(() -> new NotFoundException("Not found user with email: " + email));
+        return user
+                .getUserChannels()
                 .stream()
-                .map(channel ->
-                        getChannelCommand(channel, email))
+                .map(channelUser ->
+                        getChannelCommand(channelUser.getChannel(), email))
                 .collect(Collectors.toList());
     }
 
     public ChannelCommand getChannelCommand(Channel channel, String email) {
         String channelName = "";
 
+        ChannelUser channelUser = channel.getChannelUsers()
+                .stream()
+                .filter(c -> c.getUser().getEmail().equals(email))
+                .findFirst()
+                .orElseThrow();
+
         if (channel.getChannelType() == ChannelType.GROUP_CHANNEL) {
             channelName = channel.getChannelName();
-        } else {
-            for(User user: channel.getMembers()) {
-                if (!user.getEmail().equals(email)) {
-                    channelName = user.getUserDetails().getUsername();
-                }
-            }
 
-            if (channelName.equals("")) {
-                channelName = "My private conversation";
-            }
+        } else {
+            Optional<ChannelUser> channelUserRecipient = channel.getChannelUsers()
+                    .stream()
+                    .filter(c -> !c.getUser().getEmail().equals(email))
+                    .findFirst();
+            channelName = channelUserRecipient.get().getUser().getUserDetails().getUsername();
         }
 
-        return ChannelCommand.builder()
+        if (channelName.equals("")) {
+            channelName = "My private conversation";
+        }
+
+        ChannelCommand channelCommand =  ChannelCommand.builder()
                 .idChannel(channel.getId())
                 .channelName(channelName)
-                .lastMessage("Last message")
                 .channelType(channel.getChannelType().name())
+                .numberNewMessage(channelUser.getNumbersNewMessages())
                 .build();
+
+        if (channel.getIdLastMessage() != null && !channel.getIdLastMessage().equals(Strings.EMPTY)) {
+            Message lastMessage = messageRepository.findById(channel.getIdLastMessage()).orElseThrow();
+            channelCommand.setLastMessage(lastMessage.getContent());
+        }
+
+        return channelCommand;
     }
-
-//    @Override
-//    public List<PrivateMessagesCommand> getPrivateMessages(String userEmail) {
-//        Optional<User> user = findByEmail(userEmail);
-//        return user.get()
-//                .getPrivateMessages()
-//                .stream()
-//                .map(privateMessages ->
-//                        getToCommand(privateMessages, user.get().getId())
-//                ).collect(Collectors.toList());
-//    }
-//
-//    public PrivateMessagesCommand getToCommand(PrivateMessages privateMessages, Long id) {
-//
-//        return PrivateMessagesCommand.builder()
-//                .conversationId(privateMessages.getConversationId())
-//                .recipientName(privateMessages.getRecipientUsername())
-//                .lastMessage("Last message....")
-//                .build();
-//    }
-
-
-//    public ChannelCommand createChannelCommand(Channel channel) {
-//
-//    }
 
     @Override
     public Optional<User> findByEmail(String userEmail) {
