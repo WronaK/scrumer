@@ -2,8 +2,8 @@ package com.example.scrumer.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.scrumer.user.db.UserJpaRepository;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.user.repository.UserJpaRepository;
+import com.example.scrumer.user.entity.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

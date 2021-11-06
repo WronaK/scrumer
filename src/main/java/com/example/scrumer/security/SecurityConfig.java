@@ -1,6 +1,6 @@
 package com.example.scrumer.security;
 
-import com.example.scrumer.user.db.UserJpaRepository;
+import com.example.scrumer.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/v3/api-docs").permitAll()
                 .antMatchers(  "/api/users").permitAll()
                 .antMatchers(  "/api/login").permitAll()
+                .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
     }
 

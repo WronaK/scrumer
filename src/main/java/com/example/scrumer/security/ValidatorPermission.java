@@ -1,8 +1,8 @@
 package com.example.scrumer.security;
 
-import com.example.scrumer.project.domain.Project;
-import com.example.scrumer.team.domain.Team;
-import com.example.scrumer.user.domain.User;
+import com.example.scrumer.project.entity.Project;
+import com.example.scrumer.team.entity.Team;
+import com.example.scrumer.user.entity.User;
 import javassist.NotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -59,67 +59,53 @@ public class ValidatorPermission {
         throw new NotFoundException("Not found team.");
     }
 
-    public void validateTeamPermission(Optional<Team> team, String email) throws IllegalAccessException, NotFoundException {
-        if(team.isPresent()) {
-            Team myTeam = team.get();
-            if(email.equals(myTeam.getCreator().getEmail())) {
-                return;
-            }
-
-            if(this.isScrumMaster(myTeam.getProjects(), email)) {
-                return;
-            }
-
-            if(this.isMemberTeam(myTeam.getMembers(), email)) {
-                return;
-            }
-
-            throw new IllegalAccessException("Illegal team permission exception");
+    public void validateTeamPermission(Team team, String email) throws IllegalAccessException {
+        if(email.equals(team.getCreator().getEmail())) {
+            return;
         }
-        throw new NotFoundException("Not found team.");
+
+        if(this.isScrumMaster(team.getProjects(), email)) {
+            return;
+        }
+
+        if(this.isMemberTeam(team.getMembers(), email)) {
+            return;
+        }
+
+        throw new IllegalAccessException("Illegal team permission exception");
     }
 
-    public void validateModifyProjectPermission(Optional<Project> project, String email) throws IllegalAccessException, NotFoundException {
-        if(project.isPresent()) {
-            Project myProject = project.get();
-            if (myProject.getScrumMaster() != null && email.equals(myProject.getScrumMaster().getEmail())) {
-                return;
-            }
-
-            if (email.equals(myProject.getCreator().getEmail())) {
-                return;
-            }
-
-            throw new IllegalAccessException("Illegal project permission exception");
+    public void validateModifyProjectPermission(Project project, String email) throws IllegalAccessException {
+        if (project.getScrumMaster() != null && email.equals(project.getScrumMaster().getEmail())) {
+            return;
         }
 
-        throw new NotFoundException("Not found project.");
+        if (email.equals(project.getCreator().getEmail())) {
+            return;
+        }
+
+        throw new IllegalAccessException("Illegal project permission exception");
     }
 
-    public void validateProjectPermission(Optional<Project> project, String email) throws IllegalAccessException, NotFoundException {
-        if(project.isPresent()) {
-            Project myProject = project.get();
-            if (myProject.getProductOwner() != null &&
-                    email.equals(myProject.getProductOwner().getEmail())) {
-                return;
-            }
-
-            if (myProject.getScrumMaster() != null && email.equals(myProject.getScrumMaster().getEmail())) {
-                return;
-            }
-
-            if (email.equals(myProject.getCreator().getEmail())) {
-                return;
-            }
-
-            for (Team team : myProject.getTeams()) {
-                if (this.isMemberTeam(team.getMembers(), email)) {
-                    return;
-                }
-            }
-            throw new IllegalAccessException("Illegal project permission exception");
-
+    public void validateProjectPermission(Project project, String email) throws IllegalAccessException {
+        if (project.getProductOwner() != null &&
+                email.equals(project.getProductOwner().getEmail())) {
+            return;
         }
-        throw new NotFoundException("Not found project.");
+
+        if (project.getScrumMaster() != null && email.equals(project.getScrumMaster().getEmail())) {
+            return;
+        }
+
+        if (email.equals(project.getCreator().getEmail())) {
+            return;
+        }
+
+        for (Team team : project.getTeams()) {
+            if (this.isMemberTeam(team.getMembers(), email)) {
+                return;
+            }
+        }
+        throw new IllegalAccessException("Illegal project permission exception");
     }
 }
