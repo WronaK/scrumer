@@ -1,4 +1,4 @@
-package com.example.scrumer.team.command;
+package com.example.scrumer.websocket.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberTeamCommand {
-    private String email;
+public class ScrumCommand {
+    private Long idTeam;
 }

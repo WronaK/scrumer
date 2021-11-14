@@ -44,6 +44,11 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
+    public Optional<Team> findByIdTeam(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
     public Team addTeam(CreateTeamCommand command, String email) {
         Team team = new Team(command.getName(), command.getAccessCode());
 

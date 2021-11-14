@@ -8,12 +8,15 @@ import javassist.NotFoundException;
 import lombok.Value;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface TeamUseCase {
     List<Team> findAll();
 
     Team findById(Long id) throws NotFoundException, IllegalAccessException;
+
+    Optional<Team> findByIdTeam(Long id);
 
     Team addTeam(CreateTeamCommand command, String email);
 

@@ -1,4 +1,4 @@
-package com.example.scrumer.chat.controller;
+package com.example.scrumer.websocket.controller;
 
 import com.example.scrumer.chat.model.ChatNotification;
 import com.example.scrumer.chat.command.CreateMessageCommand;

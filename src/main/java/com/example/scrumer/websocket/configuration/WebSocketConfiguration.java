@@ -1,4 +1,4 @@
-package com.example.scrumer.chat.configuration;
+package com.example.scrumer.websocket.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,9 +13,9 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/api/test");
+                .addEndpoint("/api/ws");
         registry
-                .addEndpoint("/api/test").withSockJS();
+                .addEndpoint("/api/ws").withSockJS();
     }
 
     @Override
