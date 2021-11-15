@@ -14,6 +14,4 @@ public class CreateProjectCommand {
     private String accessCode;
     private String description;
     private String productOwner;
-    private String scrumMaster;
-    private Set<AddTeamCommand> teams;
 }

@@ -15,5 +15,4 @@ public class UpdateProjectCommand {
     private String accessCode;
     private String description;
     private String productOwner;
-    private String scrumMaster;
 }

@@ -46,8 +46,6 @@ public class ProjectService implements ProjectUseCase {
                 .build();
         userRepository.findByEmail(email).ifPresent(project::setCreator);
         userRepository.findByEmail(command.getProductOwner()).ifPresent(project::setProductOwner);
-        userRepository.findByEmail(command.getScrumMaster()).ifPresent(project::setScrumMaster);
-        this.addTeams(project, command.getTeams());
         return repository.save(project);
     }
 
@@ -110,12 +108,6 @@ public class ProjectService implements ProjectUseCase {
         });
     }
 
-    private void addTeams(Project project, Set<AddTeamCommand> commands) {
-        for (AddTeamCommand command: commands) {
-            this.addTeam(project, command);
-        }
-    }
-
     private void addTeam(Project project, AddTeamCommand command) {
         teamsRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
                 .ifPresent(project::addTeam);
@@ -132,11 +124,6 @@ public class ProjectService implements ProjectUseCase {
 
         if(command.getAccessCode() != null) {
             project.setAccessCode(command.getAccessCode());
-        }
-
-        if(command.getScrumMaster() != null) {
-            userRepository.findByEmail(command.getScrumMaster())
-                    .ifPresent(project::setScrumMaster);
         }
 
         if(command.getProductOwner() != null) {

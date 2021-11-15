@@ -32,7 +32,6 @@ public class ProjectMapper {
                 .description(project.getDescription())
                 .accessCode(project.getAccessCode())
                 .productOwner(project.getProductOwner()!= null ? project.getProductOwner().getEmail() : "")
-                .scrumMaster(project.getScrumMaster()!= null ? project.getScrumMaster().getEmail(): "")
                 .build();
     }
 
