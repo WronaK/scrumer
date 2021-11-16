@@ -32,6 +32,8 @@ public class Project {
 
     private String accessCode;
 
+    private String coverId;
+
     @Column(columnDefinition="text")
     private String description;
 

@@ -1,9 +1,6 @@
 package com.example.scrumer.project.controller;
 
-import com.example.scrumer.project.command.AddTeamCommand;
-import com.example.scrumer.project.command.CreateProjectCommand;
-import com.example.scrumer.project.command.ProjectDetailsCommand;
-import com.example.scrumer.project.command.UpdateProjectCommand;
+import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.mapper.ProjectMapper;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
@@ -19,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,5 +126,22 @@ public class ProjectController {
     }
     private URI createdProjectUri(Project project) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + project.getId().toString()).build().toUri();
+    }
+
+    @PutMapping("/{id}/cover")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addCoverProject(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println("Got file: " + file.getOriginalFilename());
+        projects.updateProjectCover(new UpdateProjectCoverCommand(
+                id,
+                file.getBytes(),
+                file.getContentType(),
+                file.getOriginalFilename()
+        ));
+    }
+
+    @DeleteMapping("/{id}/cover")
+    public void removeBookCover(@PathVariable Long id) {
+        projects.removeProjectCover(id);
     }
 }

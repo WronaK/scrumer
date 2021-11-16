@@ -3,6 +3,7 @@ package com.example.scrumer.project.service;
 import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.project.command.CreateProjectCommand;
 import com.example.scrumer.project.command.UpdateProjectCommand;
+import com.example.scrumer.project.command.UpdateProjectCoverCommand;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
@@ -13,6 +14,9 @@ import com.example.scrumer.task.entity.StatusTask;
 import com.example.scrumer.task.entity.Task;
 import com.example.scrumer.task.entity.TaskDetails;
 import com.example.scrumer.team.repository.TeamJpaRepository;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.Upload;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ public class ProjectService implements ProjectUseCase {
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
     private final TeamJpaRepository teamsRepository;
+    private final UploadUseCase uploadUseCase;
 
     @Override
     public Project findById(Long id) throws IllegalAccessException, NotFoundException {
@@ -106,6 +111,28 @@ public class ProjectService implements ProjectUseCase {
             project.removeTeam(team);
             repository.save(project);
         });
+    }
+
+    @Override
+    public void updateProjectCover(UpdateProjectCoverCommand command) {
+        repository.findById(command.getId())
+                .ifPresent(
+                        project -> {
+                            Upload savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            project.setCoverId(savedUpload.getId());
+                            repository.save(project);
+                        }
+                );
+    }
+
+    @Override
+    public void removeProjectCover(Long id) {
+        repository.findById(id)
+                .ifPresent(project -> {
+                    uploadUseCase.removeById(project.getCoverId());
+                    project.setCoverId(null);
+                    repository.save(project);
+                });
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
