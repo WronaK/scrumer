@@ -47,6 +47,12 @@ public class ProjectController {
     }
 
     @Secured({"ROLE_USER"})
+    @GetMapping("/{id}/information")
+    public ProjectInformationCommand getInformationById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return ProjectMapper.toProjectInformationCommand(projects.findById(id));
+    }
+
+    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/teams")
     public List<TeamCommand> getTeams(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
         return projects.findById(id)
@@ -81,7 +87,7 @@ public class ProjectController {
     @Secured({"ROLE_USER"})
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> addProject(@RequestBody CreateProjectCommand command) {
+    public ResponseEntity<?> createProject(@RequestBody CreateProjectCommand command) {
         Project project = projects.addProject(command, getUserEmail());
         return ResponseEntity.created(createdProjectUri(project)).build();
     }

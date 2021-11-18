@@ -2,8 +2,8 @@ package com.example.scrumer.team.service;
 
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.security.ValidatorPermission;
-import com.example.scrumer.task.repository.TaskJpaRepository;
 import com.example.scrumer.task.entity.StatusTask;
+import com.example.scrumer.task.repository.TaskJpaRepository;
 import com.example.scrumer.team.command.CreateTeamCommand;
 import com.example.scrumer.team.command.MemberTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCommand;
@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,15 +43,14 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public Team addTeam(CreateTeamCommand command, String email) {
-        Team team = new Team(command.getName(), command.getAccessCode());
+    public Team addTeam(CreateTeamCommand command) {
+        Team team = Team.builder()
+                .teamName(command.getTeamName())
+                .description(command.getDescription())
+                .accessCode(command.getAccessCode())
+                .build();
 
-        userRepository.findByEmail(email).ifPresent(creator -> {
-            team.setCreator(creator);
-            team.addMember(creator);
-        });
-
-        team.addMembers(this.fetchUserByEmail(command.getMembers()));
+        userRepository.findById(command.getScrumMaster()).ifPresent(team::setScrumMaster);
         return repository.save(team);
     }
 
@@ -75,10 +73,10 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public void addMember(Long id, MemberTeamCommand command) throws NotFoundException, IllegalAccessException {
-        Team team = findById(id);
+    public void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException {
+        Team team = findById(idTeam);
 
-        User user = userRepository.findByEmail(command.getEmail()).orElseThrow(() -> new NotFoundException("Not found user with email:" + command.getEmail()));
+        User user = userRepository.findById(idMember).orElseThrow(() -> new NotFoundException("Not found user with id:" + idMember));
         team.addMember(user);
         repository.save(team);
     }
@@ -105,19 +103,12 @@ public class TeamService implements TeamUseCase {
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {
         if(toCommand.getName() != null) {
-            team.setName(toCommand.getName());
+            team.setTeamName(toCommand.getName());
         }
 
         if(toCommand.getAccessCode() != null) {
             team.setAccessCode(toCommand.getAccessCode());
         }
-    }
-
-    private Set<User> fetchUserByEmail(Set<MemberTeamCommand> members) {
-        return members.stream()
-                .map(member -> userRepository.findByEmail(member.getEmail())
-                        .orElseThrow(() -> new IllegalArgumentException("Not found user by email: " + member.getEmail()))
-                ).collect(Collectors.toSet());
     }
 
     private String getUserEmail() {

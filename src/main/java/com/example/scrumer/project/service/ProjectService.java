@@ -24,7 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,12 +44,11 @@ public class ProjectService implements ProjectUseCase {
     @Override
     public Project addProject(CreateProjectCommand command, String email) {
         Project project = Project.builder()
-                .name(command.getName())
+                .projectName(command.getProjectName())
                 .description(command.getDescription())
                 .accessCode(command.getAccessCode())
                 .build();
-        userRepository.findByEmail(email).ifPresent(project::setCreator);
-        userRepository.findByEmail(command.getProductOwner()).ifPresent(project::setProductOwner);
+        userRepository.findById(command.getProductOwner()).ifPresent(project::setProductOwner);
         return repository.save(project);
     }
 
@@ -136,13 +134,13 @@ public class ProjectService implements ProjectUseCase {
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
-        teamsRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
+        teamsRepository.findTeamByTeamNameAndAccessCode(command.getName(), command.getAccessCode())
                 .ifPresent(project::addTeam);
     }
 
     private void updateFields(UpdateProjectCommand command, Project project) {
         if(command.getName() != null) {
-            project.setName(command.getName());
+            project.setProjectName(command.getName());
         }
 
         if(command.getDescription() != null) {

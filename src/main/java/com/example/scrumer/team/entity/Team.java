@@ -17,6 +17,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,13 +27,16 @@ public class Team {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String teamName;
 
     private String accessCode;
 
+    @Column(columnDefinition="text")
+    private String description;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
-    private User creator;
+    private User scrumMaster;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -57,23 +61,9 @@ public class Team {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Team(String name, String accessCode) {
-        this.name = name;
-        this.accessCode = accessCode;
-    }
-
     public void addMember(User user) {
         members.add(user);
         user.getTeams().add(this);
-    }
-
-    public void addMembers(Set<User> members) {
-        members.forEach(this::addMember);
-    }
-
-    public void addProject(Project project) {
-        projects.add(project);
-        project.getTeams().add(this);
     }
 
     public void addTaskToSprintBacklog(Task task) {

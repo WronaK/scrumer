@@ -12,4 +12,6 @@ import lombok.Setter;
 public class TeamCommand {
     private Long id;
     private String name;
+    private String description;
+    private String username;
 }

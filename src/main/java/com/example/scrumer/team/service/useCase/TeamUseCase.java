@@ -15,7 +15,7 @@ public interface TeamUseCase {
 
     Team findById(Long id) throws NotFoundException, IllegalAccessException;
 
-    Team addTeam(CreateTeamCommand command, String email);
+    Team addTeam(CreateTeamCommand command);
 
     void deleteById(Long id);
 
@@ -23,7 +23,7 @@ public interface TeamUseCase {
 
     void updateTeam(UpdateTeamCommand toCommand) throws NotFoundException, IllegalAccessException;
 
-    void addMember(Long id, MemberTeamCommand command) throws NotFoundException, IllegalAccessException;
+    void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException;
 
     void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException;
 

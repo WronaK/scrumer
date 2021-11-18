@@ -1,4 +1,4 @@
-package com.example.scrumer.project.command;
+package com.example.scrumer.team.command;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ProjectDetailsCommand {
+public class TeamInformationCommand {
     private Long id;
     private String name;
+    private String accessCode;
     private String description;
     private String username;
 }
+

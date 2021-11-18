@@ -34,23 +34,15 @@ public class ValidatorPermission {
         return false;
     }
 
-    private boolean isScrumMaster(Set<Project> projects, String email) {
-        for (Project project: projects) {
-            if(project.getScrumMaster() != null && email.equals(project.getScrumMaster().getEmail())) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isScrumMaster(Team team, String email) {
+        return email.equals(team.getScrumMaster().getEmail());
     }
 
     public void validateModifyTeamPermission(Optional<Team> team, String email) throws IllegalAccessException, NotFoundException {
         if(team.isPresent()) {
             Team myTeam = team.get();
-            if(email.equals(myTeam.getCreator().getEmail())) {
-                return;
-            }
 
-            if(this.isScrumMaster(myTeam.getProjects(), email)) {
+            if(isScrumMaster(myTeam, email)) {
                 return;
             }
 
@@ -60,11 +52,7 @@ public class ValidatorPermission {
     }
 
     public void validateTeamPermission(Team team, String email) throws IllegalAccessException {
-        if(email.equals(team.getCreator().getEmail())) {
-            return;
-        }
-
-        if(this.isScrumMaster(team.getProjects(), email)) {
+        if(isScrumMaster(team, email)) {
             return;
         }
 
@@ -76,11 +64,7 @@ public class ValidatorPermission {
     }
 
     public void validateModifyProjectPermission(Project project, String email) throws IllegalAccessException {
-        if (project.getScrumMaster() != null && email.equals(project.getScrumMaster().getEmail())) {
-            return;
-        }
-
-        if (email.equals(project.getCreator().getEmail())) {
+        if (email.equals(project.getProductOwner() .getEmail())) {
             return;
         }
 
@@ -88,21 +72,12 @@ public class ValidatorPermission {
     }
 
     public void validateProjectPermission(Project project, String email) throws IllegalAccessException {
-        if (project.getProductOwner() != null &&
-                email.equals(project.getProductOwner().getEmail())) {
-            return;
-        }
-
-        if (project.getScrumMaster() != null && email.equals(project.getScrumMaster().getEmail())) {
-            return;
-        }
-
-        if (email.equals(project.getCreator().getEmail())) {
+        if (email.equals(project.getProductOwner().getEmail())) {
             return;
         }
 
         for (Team team : project.getTeams()) {
-            if (this.isMemberTeam(team.getMembers(), email)) {
+            if (email.equals(team.getScrumMaster().getEmail()) || this.isMemberTeam(team.getMembers(), email)) {
                 return;
             }
         }

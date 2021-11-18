@@ -1,6 +1,7 @@
 package com.example.scrumer.team.controller;
 
 import com.example.scrumer.project.command.ProjectCommand;
+import com.example.scrumer.project.command.ProjectInformationCommand;
 import com.example.scrumer.project.mapper.ProjectMapper;
 import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
@@ -44,6 +45,13 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
+
+    @Secured({"ROLE_USER"})
+    @GetMapping("/{id}/information")
+    public TeamInformationCommand getInformationById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+        return TeamMapper.toTeamInformationCommand(teams.findById(id));
+    }
+
     @Secured({"ROLE_USER"})
     @GetMapping("/{id}/projects")
     public List<ProjectCommand> getProjects(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
@@ -77,8 +85,8 @@ import java.util.stream.Collectors;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> addTeam(@RequestBody CreateTeamCommand command) {
-        Team team = teams.addTeam(command, getUserEmail());
+    public ResponseEntity<?> createTeam(@RequestBody CreateTeamCommand command) {
+        Team team = teams.addTeam(command);
         return ResponseEntity.created(createdTeamUri(team)).build();
     }
 
@@ -90,10 +98,10 @@ import java.util.stream.Collectors;
     }
 
     @Secured({"ROLE_USER"})
-    @PutMapping("/{id}/members")
+    @PutMapping("/{idTeam}/member/{idMember}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addMemberToTeam(@PathVariable Long id, @RequestBody MemberTeamCommand command) throws NotFoundException, IllegalAccessException {
-        teams.addMember(id, command);
+    public void addMemberToTeam(@PathVariable Long idTeam, @PathVariable Long idMember) throws NotFoundException, IllegalAccessException {
+        teams.addMember(idTeam, idMember);
     }
 
     @Secured({"ROLE_USER"})

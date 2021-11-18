@@ -1,7 +1,7 @@
 package com.example.scrumer.user.service.useCase;
 
 import com.example.scrumer.chat.command.ChannelCommand;
-import com.example.scrumer.user.command.UserFindCommand;
+import com.example.scrumer.user.command.SuggestedUserCommand;
 import com.example.scrumer.user.entity.User;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface UserUseCase {
 
     List<ChannelCommand> getChannels(String email);
 
-    List<UserFindCommand> getUsers(String name);
+    List<SuggestedUserCommand> getUsers(String name);
 
 //    List<PrivateMessagesCommand> getPrivateMessages(String userEmail);
 }

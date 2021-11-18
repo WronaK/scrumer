@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class UserFindCommand {
+public class SuggestedUserCommand {
     private Long id;
     private String email;
     private String username;

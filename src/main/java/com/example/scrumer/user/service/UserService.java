@@ -6,7 +6,7 @@ import com.example.scrumer.chat.model.ChannelType;
 import com.example.scrumer.chat.model.ChannelUser;
 import com.example.scrumer.chat.model.Message;
 import com.example.scrumer.chat.repository.mongo.MessageMongoRepository;
-import com.example.scrumer.user.command.UserFindCommand;
+import com.example.scrumer.user.command.SuggestedUserCommand;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import com.example.scrumer.user.service.useCase.UserUseCase;
@@ -52,9 +52,9 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public List<UserFindCommand> getUsers(String name) {
+    public List<SuggestedUserCommand> getUsers(String name) {
         return repository.findUsersByName(name).stream()
-                .map(u -> UserFindCommand.builder().id(u.getId()).email(u.getEmail()).username(u.getUserDetails().getUsername()).build()).collect(Collectors.toList());
+                .map(u -> SuggestedUserCommand.builder().id(u.getId()).email(u.getEmail()).username(u.getUserDetails().getUsername()).build()).collect(Collectors.toList());
     }
 
     public ChannelCommand getChannelCommand(Channel channel, String email) {

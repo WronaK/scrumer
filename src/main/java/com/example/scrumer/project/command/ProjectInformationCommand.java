@@ -9,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ProjectDetailsCommand {
+public class ProjectInformationCommand {
     private Long id;
     private String name;
+    private String accessCode;
     private String description;
     private String username;
 }

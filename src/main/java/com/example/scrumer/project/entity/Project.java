@@ -28,7 +28,7 @@ public class Project {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String projectName;
 
     private String accessCode;
 
@@ -39,15 +39,7 @@ public class Project {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
-    private User creator;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnoreProperties("teams")
     private User productOwner;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnoreProperties("teams")
-    private User scrumMaster;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
@@ -67,12 +59,6 @@ public class Project {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    public Project(String name, String accessCode, String description) {
-        this.name = name;
-        this.accessCode = accessCode;
-        this.description = description;
-    }
 
     public void addTask(Task task) {
         productBacklog.add(task);
