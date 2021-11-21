@@ -15,12 +15,11 @@ import com.example.scrumer.task.entity.Task;
 import com.example.scrumer.task.entity.TaskDetails;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
-import com.example.scrumer.upload.entity.Upload;
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +116,7 @@ public class ProjectService implements ProjectUseCase {
         repository.findById(command.getId())
                 .ifPresent(
                         project -> {
-                            Upload savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
                             project.setCoverId(savedUpload.getId());
                             repository.save(project);
                         }

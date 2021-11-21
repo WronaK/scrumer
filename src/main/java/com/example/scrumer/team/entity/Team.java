@@ -31,7 +31,7 @@ public class Team {
 
     private String accessCode;
 
-    private String coverId;
+    private Long coverId;
 
     @Column(columnDefinition="text")
     private String description;

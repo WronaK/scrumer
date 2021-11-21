@@ -1,14 +1,14 @@
 package com.example.scrumer.upload.service.useCase;
 
 import com.example.scrumer.upload.command.SaveUploadCommand;
-import com.example.scrumer.upload.entity.Upload;
+import com.example.scrumer.upload.entity.UploadEntity;
 
 import java.util.Optional;
 
 public interface UploadUseCase {
-    Upload save(SaveUploadCommand command);
+    UploadEntity save(SaveUploadCommand command);
 
-    Optional<Upload> getById(String id);
+    Optional<UploadEntity> getById(Long id);
 
-    void removeById(String coverId);
+    void removeById(Long id);
 }

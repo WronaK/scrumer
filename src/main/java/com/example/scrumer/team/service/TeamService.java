@@ -5,14 +5,13 @@ import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.entity.StatusTask;
 import com.example.scrumer.task.repository.TaskJpaRepository;
 import com.example.scrumer.team.command.CreateTeamCommand;
-import com.example.scrumer.team.command.MemberTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCoverCommand;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
 import com.example.scrumer.upload.command.SaveUploadCommand;
-import com.example.scrumer.upload.entity.Upload;
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
@@ -22,8 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -111,7 +108,7 @@ public class TeamService implements TeamUseCase {
         repository.findById(command.getId())
                 .ifPresent(
                         team -> {
-                            Upload savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
                             team.setCoverId(savedUpload.getId());
                             repository.save(team);
                         }
