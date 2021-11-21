@@ -1,12 +1,12 @@
 package com.example.scrumer.team.controller;
 
 import com.example.scrumer.project.command.ProjectCommand;
-import com.example.scrumer.project.command.ProjectInformationCommand;
 import com.example.scrumer.project.mapper.ProjectMapper;
 import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.mapper.TeamMapper;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.command.UserCommand;
 import com.example.scrumer.user.mapper.UserMapper;
 import javassist.NotFoundException;
@@ -16,8 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/teams")
 @RequiredArgsConstructor public class TeamController {
     private final TeamUseCase teams;
+    private final UploadUseCase uploadUseCase;
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping
@@ -38,10 +41,10 @@ import java.util.stream.Collectors;
 
     @Secured({"ROLE_USER"})
     @GetMapping("/my-teams")
-    public List<TeamCommand> getAllByLoggerUser() {
+    public List<TeamDetailsCommand> getAllByLoggerUser() {
         return teams.findByUser(this.getUserEmail())
                 .stream()
-                .map(TeamMapper::toCommand)
+                .map(TeamMapper::toTeamDetailsCommand)
                 .collect(Collectors.toList());
     }
 
@@ -130,4 +133,17 @@ import java.util.stream.Collectors;
     private URI createdTeamUri(Team team) {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + team.getId().toString()).build().toUri();
     }
+
+    @PostMapping("/{id}/cover")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addCoverTeam(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        System.out.println("Got file: " + file.getOriginalFilename());
+        teams.updateTeamCover(new UpdateTeamCoverCommand(
+                id,
+                file.getBytes(),
+                file.getContentType(),
+                file.getOriginalFilename()
+        ));
+    }
+
 }

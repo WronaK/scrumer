@@ -15,5 +15,6 @@ public class TeamInformationCommand {
     private String accessCode;
     private String description;
     private String username;
+    private String coverId;
 }
 

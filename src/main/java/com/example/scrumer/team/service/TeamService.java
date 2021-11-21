@@ -7,9 +7,13 @@ import com.example.scrumer.task.repository.TaskJpaRepository;
 import com.example.scrumer.team.command.CreateTeamCommand;
 import com.example.scrumer.team.command.MemberTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCommand;
+import com.example.scrumer.team.command.UpdateTeamCoverCommand;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.Upload;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
@@ -29,6 +33,7 @@ public class TeamService implements TeamUseCase {
     private final ValidatorPermission validatorPermission;
     private final TaskJpaRepository tasksRepository;
     private final ProjectJpaRepository projectRepository;
+    private final UploadUseCase uploadUseCase;
 
     @Override
     public List<Team> findAll() {
@@ -99,6 +104,18 @@ public class TeamService implements TeamUseCase {
             team.removeProject(project);
             repository.save(team);
         });
+    }
+
+    @Override
+    public void updateTeamCover(UpdateTeamCoverCommand command) {
+        repository.findById(command.getId())
+                .ifPresent(
+                        team -> {
+                            Upload savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            team.setCoverId(savedUpload.getId());
+                            repository.save(team);
+                        }
+                );
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {

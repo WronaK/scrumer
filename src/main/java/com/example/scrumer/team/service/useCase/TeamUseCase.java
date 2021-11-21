@@ -3,6 +3,7 @@ package com.example.scrumer.team.service.useCase;
 import com.example.scrumer.team.command.CreateTeamCommand;
 import com.example.scrumer.team.command.MemberTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCommand;
+import com.example.scrumer.team.command.UpdateTeamCoverCommand;
 import com.example.scrumer.team.entity.Team;
 import javassist.NotFoundException;
 import lombok.Value;
@@ -28,4 +29,6 @@ public interface TeamUseCase {
     void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException;
 
     void removeProject(Long id, Long idProject) throws NotFoundException, IllegalAccessException;
+
+    void updateTeamCover(UpdateTeamCoverCommand updateTeamCoverCommand);
 }

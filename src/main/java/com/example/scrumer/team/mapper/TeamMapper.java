@@ -22,7 +22,9 @@ public class TeamMapper {
         return TeamDetailsCommand.builder()
                 .id(team.getId())
                 .name(team.getTeamName())
-                .accessCode(team.getAccessCode())
+                .description(team.getDescription())
+                .username(team.getScrumMaster().getUserDetails().getUsername())
+                .coverId(team.getCoverId())
                 .build();
     }
 

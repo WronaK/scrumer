@@ -134,7 +134,7 @@ public class ProjectController {
         return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + project.getId().toString()).build().toUri();
     }
 
-    @PutMapping("/{id}/cover")
+    @PostMapping("/{id}/cover")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addCoverProject(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
         System.out.println("Got file: " + file.getOriginalFilename());

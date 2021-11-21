@@ -15,4 +15,5 @@ public class ProjectInformationCommand {
     private String accessCode;
     private String description;
     private String username;
+    private String idCover;
 }

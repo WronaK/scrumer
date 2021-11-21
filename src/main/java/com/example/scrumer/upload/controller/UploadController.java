@@ -1,5 +1,7 @@
 package com.example.scrumer.upload.controller;
 
+import com.example.scrumer.project.entity.Project;
+import com.example.scrumer.project.service.useCase.ProjectUseCase;
 import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/uploads")
 public class UploadController {
     private final UploadUseCase uploadUseCase;
+    private final ProjectUseCase projectUseCase;
 
     @GetMapping("/{id}")
     public UploadResponse getUpload(@PathVariable String id) {
@@ -39,6 +42,20 @@ public class UploadController {
             return ResponseEntity
                     .ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                    .contentType(MediaType.parseMediaType(uploadFile.getContentType()))
+                    .body(resource);
+
+        }).orElseThrow(() -> new NotFoundException("Not found file with id: " + id));
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<?> getImage(@PathVariable String id)  {
+        return uploadUseCase.getById(id).map(uploadFile -> {
+            byte[] bytes = uploadFile.getFile();
+            ByteArrayResource resource = new ByteArrayResource(bytes);
+            return ResponseEntity
+                    .ok()
+                    .contentLength(uploadFile.getFile().length)
                     .contentType(MediaType.parseMediaType(uploadFile.getContentType()))
                     .body(resource);
 

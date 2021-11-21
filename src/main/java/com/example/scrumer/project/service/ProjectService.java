@@ -20,6 +20,7 @@ import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

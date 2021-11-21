@@ -14,4 +14,5 @@ public class ProjectDetailsCommand {
     private String name;
     private String description;
     private String username;
+    private String coverId;
 }
