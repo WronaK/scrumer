@@ -19,16 +19,6 @@ public class ProjectMapper {
                 .build();
     }
 
-    public static UpdateProjectCommand toUpdateProjectCommand(Project project) {
-        return UpdateProjectCommand.builder()
-                .id(project.getId())
-                .name(project.getProjectName())
-                .description(project.getDescription())
-                .accessCode(project.getAccessCode())
-                .productOwner(project.getProductOwner().getUserDetails().getUsername())
-                .build();
-    }
-
     public static ProjectCommand toProjectCommand(Project project) {
         return ProjectCommand.builder()
                 .id(project.getId())

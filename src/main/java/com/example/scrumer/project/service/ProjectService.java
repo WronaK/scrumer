@@ -143,8 +143,8 @@ public class ProjectService implements ProjectUseCase {
     }
 
     private void updateFields(UpdateProjectCommand command, Project project) {
-        if(command.getName() != null) {
-            project.setProjectName(command.getName());
+        if(command.getProjectName() != null) {
+            project.setProjectName(command.getProjectName());
         }
 
         if(command.getDescription() != null) {
@@ -156,7 +156,7 @@ public class ProjectService implements ProjectUseCase {
         }
 
         if(command.getProductOwner() != null) {
-            userRepository.findByEmail(command.getProductOwner())
+            userRepository.findById(command.getProductOwner())
                     .ifPresent(project::setProductOwner);
         }
     }

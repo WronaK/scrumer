@@ -11,8 +11,8 @@ import lombok.Setter;
 @Builder
 public class UpdateProjectCommand {
     private Long id;
-    private String name;
+    private String projectName;
     private String accessCode;
     private String description;
-    private String productOwner;
+    private Long productOwner;
 }

@@ -143,12 +143,21 @@ public class TeamService implements TeamUseCase {
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {
-        if(toCommand.getName() != null) {
-            team.setTeamName(toCommand.getName());
+        if(toCommand.getTeamName() != null) {
+            team.setTeamName(toCommand.getTeamName());
+        }
+
+        if (toCommand.getDescription() != null) {
+            team.setDescription(toCommand.getDescription());
         }
 
         if(toCommand.getAccessCode() != null) {
             team.setAccessCode(toCommand.getAccessCode());
+        }
+
+        if(toCommand.getScrumMaster() != null) {
+            userRepository.findById(toCommand.getScrumMaster())
+                    .ifPresent(team::setScrumMaster);
         }
     }
 

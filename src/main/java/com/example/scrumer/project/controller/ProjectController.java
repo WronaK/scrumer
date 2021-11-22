@@ -75,12 +75,6 @@ public class ProjectController {
     }
 
     @Secured({"ROLE_USER"})
-    @GetMapping("/{id}/update")
-    public UpdateProjectCommand getProjectById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
-        return ProjectMapper.toUpdateProjectCommand(projects.findById(id));
-    }
-
-    @Secured({"ROLE_USER"})
     @GetMapping("/{id}/product_backlog")
     public List<TaskCommand> getProductBacklogById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
         return projects.findById(id)
