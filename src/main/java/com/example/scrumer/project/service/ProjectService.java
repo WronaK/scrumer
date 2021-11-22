@@ -1,9 +1,6 @@
 package com.example.scrumer.project.service;
 
-import com.example.scrumer.project.command.AddTeamCommand;
-import com.example.scrumer.project.command.CreateProjectCommand;
-import com.example.scrumer.project.command.UpdateProjectCommand;
-import com.example.scrumer.project.command.UpdateProjectCoverCommand;
+import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
@@ -13,6 +10,7 @@ import com.example.scrumer.task.entity.PriorityStatus;
 import com.example.scrumer.task.entity.StatusTask;
 import com.example.scrumer.task.entity.Task;
 import com.example.scrumer.task.entity.TaskDetails;
+import com.example.scrumer.team.command.SuggestedTeam;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
@@ -24,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -131,6 +130,11 @@ public class ProjectService implements ProjectUseCase {
                     project.setCoverId(null);
                     repository.save(project);
                 });
+    }
+
+    @Override
+    public List<SuggestedProject> findByName(String name) {
+        return repository.findByStartedName(name).stream().map(project -> new SuggestedProject(project.getId(), project.getProjectName())).collect(Collectors.toList());
     }
 
     private void addTeam(Project project, AddTeamCommand command) {

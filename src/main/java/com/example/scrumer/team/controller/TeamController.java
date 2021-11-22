@@ -1,5 +1,6 @@
 package com.example.scrumer.team.controller;
 
+import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.project.command.ProjectCommand;
 import com.example.scrumer.project.mapper.ProjectMapper;
 import com.example.scrumer.team.command.*;
@@ -112,11 +113,24 @@ import java.util.stream.Collectors;
         teams.addMember(idTeam, idMember);
     }
 
+    @PutMapping("/member")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void joinToTeam(@RequestBody AddTeamCommand command) {
+        teams.joinToTeam(getUserEmail(), command);
+    }
+
     @Secured({"ROLE_USER"})
     @PatchMapping("/{id}/task/{idTask}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) throws NotFoundException, IllegalAccessException {
         teams.addTask(id, idTask);
+    }
+
+    @Secured({"ROLE_USER"})
+    @PutMapping("/{id}/project")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addProject(@PathVariable Long id, @RequestBody AddProjectCommand command) throws NotFoundException, IllegalAccessException {
+        teams.addProject(id, command);
     }
 
     @Secured({"ROLE_USER"})

@@ -76,4 +76,9 @@ public class Team {
         projects.remove(project);
         project.getTeams().remove(this);
     }
+
+    public void addProject(Project project) {
+        projects.add(project);
+        project.getTeams().add(this);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.scrumer.team.service.useCase;
 
+import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import javassist.NotFoundException;
@@ -30,4 +31,8 @@ public interface TeamUseCase {
     void updateTeamCover(UpdateTeamCoverCommand updateTeamCoverCommand);
 
     List<SuggestedTeam> findByName(String name);
+
+    void addProject(Long id, AddProjectCommand command) throws NotFoundException, IllegalAccessException;
+
+    void joinToTeam(String userEmail, AddTeamCommand command);
 }

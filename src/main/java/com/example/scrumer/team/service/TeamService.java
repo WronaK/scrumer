@@ -1,13 +1,11 @@
 package com.example.scrumer.team.service;
 
+import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.entity.StatusTask;
 import com.example.scrumer.task.repository.TaskJpaRepository;
-import com.example.scrumer.team.command.CreateTeamCommand;
-import com.example.scrumer.team.command.SuggestedTeam;
-import com.example.scrumer.team.command.UpdateTeamCommand;
-import com.example.scrumer.team.command.UpdateTeamCoverCommand;
+import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
@@ -22,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -120,6 +119,27 @@ public class TeamService implements TeamUseCase {
     @Override
     public List<SuggestedTeam> findByName(String name) {
         return repository.findByStartedName(name).stream().map(team -> new SuggestedTeam(team.getId(), team.getTeamName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addProject(Long id, AddProjectCommand command) throws NotFoundException, IllegalAccessException {
+        Team team = findById(id);
+
+        projectRepository.findProjectByIdAndAccessCode(command.getIdProject(), command.getAccessCode())
+                .ifPresent(team::addProject);
+
+        repository.save(team);
+    }
+
+    @Override
+    public void joinToTeam(String userEmail, AddTeamCommand command) {
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        Optional<Team> team = repository.findTeamByIdAndAccessCode(command.getIdTeam(), command.getAccessCode());
+
+        if (user.isPresent() && team.isPresent()) {
+            team.get().addMember(user.get());
+            repository.save(team.get());
+        }
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {

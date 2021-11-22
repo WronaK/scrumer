@@ -1,9 +1,6 @@
 package com.example.scrumer.project.service.useCase;
 
-import com.example.scrumer.project.command.CreateProjectCommand;
-import com.example.scrumer.project.command.AddTeamCommand;
-import com.example.scrumer.project.command.UpdateProjectCommand;
-import com.example.scrumer.project.command.UpdateProjectCoverCommand;
+import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.task.command.CreateTaskCommand;
 import javassist.NotFoundException;
@@ -32,4 +29,6 @@ public interface ProjectUseCase {
     void updateProjectCover(UpdateProjectCoverCommand command);
 
     void removeProjectCover(Long id);
+
+    List<SuggestedProject> findByName(String name);
 }

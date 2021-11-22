@@ -7,6 +7,7 @@ import com.example.scrumer.project.service.useCase.ProjectUseCase;
 import com.example.scrumer.task.command.CreateTaskCommand;
 import com.example.scrumer.task.mapper.TaskMapper;
 import com.example.scrumer.task.command.TaskCommand;
+import com.example.scrumer.team.command.SuggestedTeam;
 import com.example.scrumer.team.command.TeamCommand;
 import com.example.scrumer.team.mapper.TeamMapper;
 import javassist.NotFoundException;
@@ -66,6 +67,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ProjectDetailsCommand getById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
         return ProjectMapper.toProjectDetailsCommand(projects.findById(id));
+    }
+
+    @GetMapping("/find/{name}")
+    public List<SuggestedProject> getProjects(@PathVariable String name) {
+        return projects.findByName(name);
     }
 
     @Secured({"ROLE_USER"})
