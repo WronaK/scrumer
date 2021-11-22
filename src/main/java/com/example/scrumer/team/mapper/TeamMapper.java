@@ -35,6 +35,7 @@ public class TeamMapper {
                 .description(team.getDescription())
                 .accessCode(team.getAccessCode())
                 .username(team.getScrumMaster().getUserDetails().getUsername())
+                .coverId(team.getCoverId())
                 .build();
     }
 }

@@ -43,7 +43,7 @@ public class ProjectMapper {
                 .accessCode(project.getAccessCode())
                 .description(project.getDescription())
                 .username(project.getProductOwner().getUserDetails().getUsername())
-                .idCover(project.getCoverId())
+                .coverId(project.getCoverId())
                 .build();
     }
 }
