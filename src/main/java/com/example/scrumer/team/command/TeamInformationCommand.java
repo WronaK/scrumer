@@ -1,9 +1,12 @@
 package com.example.scrumer.team.command;
 
+import com.example.scrumer.user.command.AttachmentCommand;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -16,5 +19,6 @@ public class TeamInformationCommand {
     private String description;
     private String username;
     private Long coverId;
+    private List<AttachmentCommand> attachments;
 }
 
