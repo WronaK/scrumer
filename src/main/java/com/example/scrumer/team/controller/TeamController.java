@@ -165,4 +165,10 @@ import java.util.stream.Collectors;
         ));
     }
 
+    @PostMapping("/{id}/attachment")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addAttachmentTeam(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        teams.addAttachment(id, file);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.task.command.CreateTaskCommand;
 import javassist.NotFoundException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,4 +32,6 @@ public interface ProjectUseCase {
     void removeProjectCover(Long id);
 
     List<SuggestedProject> findByName(String name);
+
+    void addAttachment(Long id, MultipartFile file);
 }

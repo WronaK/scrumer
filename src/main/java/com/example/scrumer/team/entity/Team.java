@@ -2,6 +2,7 @@ package com.example.scrumer.team.entity;
 
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.task.entity.Task;
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -63,6 +64,9 @@ public class Team {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UploadEntity> attachments;
+
     public void addMember(User user) {
         members.add(user);
         user.getTeams().add(this);
@@ -80,5 +84,9 @@ public class Team {
     public void addProject(Project project) {
         projects.add(project);
         project.getTeams().add(this);
+    }
+
+    public void addAttachment(UploadEntity attachment) {
+        this.attachments.add(attachment);
     }
 }

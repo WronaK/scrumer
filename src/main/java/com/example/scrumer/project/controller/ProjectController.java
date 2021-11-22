@@ -146,6 +146,12 @@ public class ProjectController {
         ));
     }
 
+    @PostMapping("/{id}/attachment")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addAttachmentProject(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        projects.addAttachment(id, file);
+    }
+
     @DeleteMapping("/{id}/cover")
     public void removeBookCover(@PathVariable Long id) {
         projects.removeProjectCover(id);

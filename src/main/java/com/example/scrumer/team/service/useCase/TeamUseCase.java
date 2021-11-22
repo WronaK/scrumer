@@ -5,6 +5,7 @@ import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import javassist.NotFoundException;
 import lombok.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
@@ -35,4 +36,6 @@ public interface TeamUseCase {
     void addProject(Long id, AddProjectCommand command) throws NotFoundException, IllegalAccessException;
 
     void joinToTeam(String userEmail, AddTeamCommand command);
+
+    void addAttachment(Long id, MultipartFile file);
 }

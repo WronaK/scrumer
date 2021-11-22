@@ -18,7 +18,9 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -140,6 +142,19 @@ public class TeamService implements TeamUseCase {
             team.get().addMember(user.get());
             repository.save(team.get());
         }
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(team -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                team.addAttachment(savedUpload);
+                repository.save(team);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {

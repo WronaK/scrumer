@@ -20,7 +20,9 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -135,6 +137,19 @@ public class ProjectService implements ProjectUseCase {
     @Override
     public List<SuggestedProject> findByName(String name) {
         return repository.findByStartedName(name).stream().map(project -> new SuggestedProject(project.getId(), project.getProjectName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(project -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                project.addAttachment(savedUpload);
+                repository.save(project);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
