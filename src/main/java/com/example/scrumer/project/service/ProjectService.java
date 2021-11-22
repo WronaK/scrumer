@@ -134,7 +134,7 @@ public class ProjectService implements ProjectUseCase {
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
-        teamsRepository.findTeamByTeamNameAndAccessCode(command.getName(), command.getAccessCode())
+        teamsRepository.findTeamByIdAndAccessCode(command.getIdTeam(), command.getAccessCode())
                 .ifPresent(project::addTeam);
     }
 

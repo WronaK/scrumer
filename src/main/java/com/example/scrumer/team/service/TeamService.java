@@ -5,6 +5,7 @@ import com.example.scrumer.security.ValidatorPermission;
 import com.example.scrumer.task.entity.StatusTask;
 import com.example.scrumer.task.repository.TaskJpaRepository;
 import com.example.scrumer.team.command.CreateTeamCommand;
+import com.example.scrumer.team.command.SuggestedTeam;
 import com.example.scrumer.team.command.UpdateTeamCommand;
 import com.example.scrumer.team.command.UpdateTeamCoverCommand;
 import com.example.scrumer.team.entity.Team;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -113,6 +115,11 @@ public class TeamService implements TeamUseCase {
                             repository.save(team);
                         }
                 );
+    }
+
+    @Override
+    public List<SuggestedTeam> findByName(String name) {
+        return repository.findByStartedName(name).stream().map(team -> new SuggestedTeam(team.getId(), team.getTeamName())).collect(Collectors.toList());
     }
 
     private void updateFields(UpdateTeamCommand toCommand, Team team) {

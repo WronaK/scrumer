@@ -108,7 +108,7 @@ public class ProjectController {
     }
 
     @Secured({"ROLE_USER"})
-    @PutMapping("/{id}/teams")
+    @PutMapping("/{id}/team")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addTeam(@PathVariable Long id, @RequestBody AddTeamCommand command) throws NotFoundException, IllegalAccessException {
         projects.addTeam(id, command);

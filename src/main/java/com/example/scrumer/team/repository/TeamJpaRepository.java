@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TeamJpaRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findTeamByTeamNameAndAccessCode(String name, String accessCode);
+    Optional<Team> findTeamByIdAndAccessCode(Long id, String accessCode);
 
     @Query(
             " SELECT distinct t from Team as t " +
@@ -22,4 +22,10 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
                     " or members.email LIKE :email or productOwner.email LIKE :email "
     )
     List<Team> findByUser(@Param("email") String email);
+
+    @Query(
+            " SELECT t from Team t " +
+                    " WHERE t.teamName LIKE CONCAT('%', :name, '%') "
+    )
+    List<Team> findByStartedName(@Param("name") String name);
 }

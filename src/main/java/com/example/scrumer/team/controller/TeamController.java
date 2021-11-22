@@ -65,6 +65,11 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/find/{name}")
+    public List<SuggestedTeam> getTeams(@PathVariable String name) {
+        return teams.findByName(name);
+    }
+
     @GetMapping("/{id}/members")
     public List<UserCommand> getMembers(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
         return teams.findById(id)
