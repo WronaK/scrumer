@@ -25,7 +25,7 @@ public interface TeamUseCase {
 
     void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException;
 
-    void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException;
+    void moveUserStoryToTeam(Long id, Long idUserStory) throws NotFoundException, IllegalAccessException;
 
     void removeProject(Long id, Long idProject) throws NotFoundException, IllegalAccessException;
 

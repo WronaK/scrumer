@@ -1,7 +1,8 @@
 package com.example.scrumer.team.entity;
 
+import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.project.entity.Project;
-import com.example.scrumer.task.entity.Task;
+import com.example.scrumer.issue.entity.Issue;
 import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,9 +56,12 @@ public class Team {
     @JsonIgnoreProperties("teams")
     private Set<Project> projects = new HashSet<>();
 
+    @OneToMany(mappedBy = "team")
+    private List<UserStory> sprintBacklog = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
-    private List<Task> sprintBoard;
+    private List<Issue> sprintBoard = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -72,8 +77,13 @@ public class Team {
         user.getTeams().add(this);
     }
 
-    public void addTaskToSprintBacklog(Task task) {
-        sprintBoard.add(task);
+    public void addIssueToSprintBoard(Issue issue) {
+        sprintBoard.add(issue);
+    }
+
+    public void addUserStoryToSprintBacklog(UserStory userStory) {
+        sprintBacklog.add(userStory);
+        userStory.setTeam(this);
     }
 
     public void removeProject(Project project) {

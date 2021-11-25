@@ -1,4 +1,4 @@
-package com.example.scrumer.task.entity;
+package com.example.scrumer.issue.entity;
 
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,19 +12,19 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RealizeTask {
+public class RealizeIssue {
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("realizeTasks")
-    private Subtask subtask;
+    @JsonIgnoreProperties("realizeIssue")
+    private Issue issues;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("realizeTasks")
+    @JsonIgnoreProperties("realizeIssue")
     private User user;
 
     @Enumerated(value = EnumType.STRING)
-    private StatusTask state;
+    private StatusIssue state;
 }

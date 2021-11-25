@@ -1,10 +1,11 @@
 package com.example.scrumer.team.service;
 
+import com.example.scrumer.issue.repository.UserStoryJpaRepository;
 import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.security.ValidatorPermission;
-import com.example.scrumer.task.entity.StatusTask;
-import com.example.scrumer.task.repository.TaskJpaRepository;
+import com.example.scrumer.issue.entity.StatusIssue;
+import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
@@ -31,9 +32,10 @@ public class TeamService implements TeamUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
-    private final TaskJpaRepository tasksRepository;
+    private final IssueJpaRepository tasksRepository;
     private final ProjectJpaRepository projectRepository;
     private final UploadUseCase uploadUseCase;
+    private final UserStoryJpaRepository userStoryJpaRepository;
 
     @Override
     public List<Team> findAll() {
@@ -87,12 +89,12 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException {
+    public void moveUserStoryToTeam(Long id, Long idUserStory) throws NotFoundException, IllegalAccessException {
         Team team = findById(id);
 
-        tasksRepository.findById(idTask).ifPresent(task -> {
-            task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
-            team.addTaskToSprintBacklog(task);
+        userStoryJpaRepository.findById(idUserStory).ifPresent(userStory -> {
+            userStory.setStatusIssue(StatusIssue.TO_BE_IMPLEMENTED);
+            team.addUserStoryToSprintBacklog(userStory);
             repository.save(team);
         });
     }

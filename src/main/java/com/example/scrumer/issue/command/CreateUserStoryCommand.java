@@ -1,5 +1,6 @@
-package com.example.scrumer.task.command;
+package com.example.scrumer.issue.command;
 
+import com.example.scrumer.issue.entity.PriorityStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CreateTaskCommand {
+public class CreateUserStoryCommand {
     private String title;
     private String description;
-    private String priority;
+    private PriorityStatus priority;
 }

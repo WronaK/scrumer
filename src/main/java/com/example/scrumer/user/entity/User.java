@@ -1,8 +1,8 @@
 package com.example.scrumer.user.entity;
 
-import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.chat.model.ChannelUser;
-import com.example.scrumer.task.entity.RealizeTask;
+import com.example.scrumer.issue.entity.Issue;
+import com.example.scrumer.issue.entity.RealizeIssue;
 import com.example.scrumer.team.entity.Team;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -44,7 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonIgnoreProperties("user")
-    private List<RealizeTask> realizeTasks = new ArrayList<>();
+    private List<RealizeIssue> realizeIssues = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private Set<ChannelUser> userChannels = new HashSet<>();

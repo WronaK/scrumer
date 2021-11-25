@@ -1,16 +1,14 @@
 package com.example.scrumer.project.service;
 
+import com.example.scrumer.issue.command.CreateUserStoryCommand;
+import com.example.scrumer.issue.entity.StatusIssue;
+import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
 import com.example.scrumer.security.ValidatorPermission;
-import com.example.scrumer.task.command.CreateTaskCommand;
-import com.example.scrumer.task.entity.PriorityStatus;
-import com.example.scrumer.task.entity.StatusTask;
-import com.example.scrumer.task.entity.Task;
-import com.example.scrumer.task.entity.TaskDetails;
-import com.example.scrumer.team.command.SuggestedTeam;
+import com.example.scrumer.issue.command.CreateIssueCommand;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
@@ -77,19 +75,17 @@ public class ProjectService implements ProjectUseCase {
     }
 
     @Override
-    public void addTask(Long id, CreateTaskCommand command) throws NotFoundException, IllegalAccessException {
+    public void addUserStory(Long id, CreateUserStoryCommand command) throws NotFoundException, IllegalAccessException {
         Project project = findById(id);
 
-        Task task = Task.builder()
-                .taskDetails(TaskDetails
-                        .builder()
-                        .title(command.getTitle())
-                        .description(command.getDescription())
-                        .priority(PriorityStatus.valueOf(command.getPriority()))
-                        .build())
-                .statusTask(StatusTask.NEW)
+        UserStory userStory = UserStory.builder()
+                .title(command.getTitle())
+                .description(command.getDescription())
+                .priority(command.getPriority())
+                .statusIssue(StatusIssue.NEW)
                 .build();
-        project.addTask(task);
+
+        project.addUserStory(userStory);
         repository.save(project);
     }
 

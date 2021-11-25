@@ -89,7 +89,8 @@ import java.util.stream.Collectors;
     @Secured({"ROLE_USER"})
     @GetMapping("/{id}/sprint_backlog")
     public SprintBacklogCommand getSprintBacklogById(@PathVariable Long id) throws NotFoundException, IllegalAccessException {
-        return new SprintBacklogCommand(teams.findById(id).getSprintBoard());
+        Team team = teams.findById(id);
+        return new SprintBacklogCommand(team.getSprintBacklog(), team.getSprintBoard());
     }
 
     @PostMapping
@@ -120,10 +121,10 @@ import java.util.stream.Collectors;
     }
 
     @Secured({"ROLE_USER"})
-    @PatchMapping("/{id}/task/{idTask}")
+    @PatchMapping("/{id}/user/story/{idUserStory}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTaskToSprintBacklog(@PathVariable Long id, @PathVariable Long idTask) throws NotFoundException, IllegalAccessException {
-        teams.addTask(id, idTask);
+    public void moveUserStoryToTeam(@PathVariable Long id, @PathVariable Long idUserStory) throws NotFoundException, IllegalAccessException {
+        teams.moveUserStoryToTeam(id, idUserStory);
     }
 
     @Secured({"ROLE_USER"})
@@ -167,7 +168,7 @@ import java.util.stream.Collectors;
 
     @PostMapping("/{id}/attachment")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addAttachmentTeam(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+    public void addAttachmentTeam(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         teams.addAttachment(id, file);
     }
 

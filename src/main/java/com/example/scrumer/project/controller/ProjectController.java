@@ -1,13 +1,14 @@
 package com.example.scrumer.project.controller;
 
+import com.example.scrumer.issue.command.CreateUserStoryCommand;
+import com.example.scrumer.issue.command.IssueCommand;
+import com.example.scrumer.issue.command.UserStoryCommand;
+import com.example.scrumer.issue.mapper.IssueMapper;
+import com.example.scrumer.issue.mapper.UserStoryMapper;
 import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.mapper.ProjectMapper;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
-import com.example.scrumer.task.command.CreateTaskCommand;
-import com.example.scrumer.task.mapper.TaskMapper;
-import com.example.scrumer.task.command.TaskCommand;
-import com.example.scrumer.team.command.SuggestedTeam;
 import com.example.scrumer.team.command.TeamCommand;
 import com.example.scrumer.team.mapper.TeamMapper;
 import javassist.NotFoundException;
@@ -76,11 +77,11 @@ public class ProjectController {
 
     @Secured({"ROLE_USER"})
     @GetMapping("/{id}/product_backlog")
-    public List<TaskCommand> getProductBacklogById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
+    public List<UserStoryCommand> getProductBacklogById(@PathVariable Long id) throws IllegalAccessException, NotFoundException {
         return projects.findById(id)
                 .getProductBacklog()
                 .stream()
-                .map(TaskMapper::toDto)
+                .map(UserStoryMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -102,9 +103,9 @@ public class ProjectController {
     @Secured({"ROLE_USER"})
     @PutMapping("/{id}/product_backlog")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void addTaskToProductBacklog(@PathVariable Long id,
-                                        @RequestBody CreateTaskCommand command) throws NotFoundException, IllegalAccessException {
-        projects.addTask(id, command);
+    public void addUserStory(@PathVariable Long id,
+                             @RequestBody CreateUserStoryCommand command) throws NotFoundException, IllegalAccessException {
+        projects.addUserStory(id, command);
     }
 
     @Secured({"ROLE_USER"})

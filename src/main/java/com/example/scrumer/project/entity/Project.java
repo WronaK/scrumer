@@ -1,6 +1,6 @@
 package com.example.scrumer.project.entity;
 
-import com.example.scrumer.task.entity.Task;
+import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
@@ -44,7 +44,7 @@ public class Project {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
-    private List<Task> productBacklog = new ArrayList<>();
+    private List<UserStory> productBacklog = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -64,8 +64,8 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL)
     private List<UploadEntity> attachments;
 
-    public void addTask(Task task) {
-        productBacklog.add(task);
+    public void addUserStory(UserStory userStory) {
+        productBacklog.add(userStory);
     }
 
     public void addTeam(Team team) {
