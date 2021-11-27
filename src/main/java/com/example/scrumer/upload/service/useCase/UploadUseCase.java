@@ -11,4 +11,6 @@ public interface UploadUseCase {
     Optional<UploadEntity> getById(Long id);
 
     void removeById(Long id);
+
+    Optional<UploadEntity> getByLoggerUser(String userEmail);
 }

@@ -26,6 +26,8 @@ public class User {
     private String email;
     private String password;
 
+    private Long imageId;
+
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_details_id", referencedColumnName = "id")
     private UserDetails userDetails;
