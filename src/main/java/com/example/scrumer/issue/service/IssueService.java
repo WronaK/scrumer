@@ -3,7 +3,6 @@ package com.example.scrumer.issue.service;
 import com.example.scrumer.issue.command.CreateIssueCommand;
 import com.example.scrumer.issue.entity.*;
 import com.example.scrumer.issue.mapper.IssueMapper;
-import com.example.scrumer.issue.repository.RealizeIssueJpaRepository;
 import com.example.scrumer.issue.service.useCase.IssueUseCase;
 import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.command.IssueCommand;
@@ -14,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +22,6 @@ import java.util.stream.Collectors;
 public class IssueService implements IssueUseCase {
     private final IssueJpaRepository repository;
     private final TeamJpaRepository teamJpaRepository;
-    private final RealizeIssueJpaRepository realizeIssueJpaRepository;
     private final UserJpaRepository userJpaRepository;
 
     @Override
@@ -72,10 +69,11 @@ public class IssueService implements IssueUseCase {
     public List<IssueCommand> findByEmail(String email) {
         Optional<User> user = userJpaRepository.findByEmail(email);
 
-        return user.map(value -> realizeIssueJpaRepository.findRealizeIssueByUser(value)
-                .stream()
-                .filter(realizeIssue -> realizeIssue.getState()==realizeIssue.getIssues().getStatusIssue())
-                .map(issue -> IssueMapper.toDto(issue.getIssues())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+        return user.get().getRealizeIssues().stream().map(IssueMapper::toDto).collect(Collectors.toList());
+//        return user.map(value -> realizeIssueJpaRepository.findRealizeIssueByUser(value)
+//                .stream()
+//                .filter(realizeIssue -> realizeIssue.getState()==realizeIssue.getIssues().getStatusIssue())
+//                .map(issue -> IssueMapper.toDto(issue.getIssues())).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
     @Override
@@ -83,15 +81,16 @@ public class IssueService implements IssueUseCase {
     public void addIssueToRealize(Long idIssue, Long idUser) {
         repository.findById(idIssue)
                 .ifPresent(issue -> {
-                    userJpaRepository.findById(idUser).ifPresent(user -> {
-                        RealizeIssue realizeIssue = RealizeIssue.builder()
-                                .user(user)
-                                .issues(issue)
-                                .state(issue.getStatusIssue())
-                                .build();
-                        realizeIssueJpaRepository.save(realizeIssue);
-                        issue.addRealizeIssue(realizeIssue, user);
-                    });
+                    userJpaRepository.findById(idUser).ifPresent(issue::addRealizeIssue);
+                });
+    }
+
+    @Override
+    @Transactional
+    public void addIssueToRealizeMe(Long idIssue, String email) {
+        repository.findById(idIssue)
+                .ifPresent(issue -> {
+                    userJpaRepository.findByEmail(email).ifPresent(issue::addRealizeIssue);
                 });
     }
 

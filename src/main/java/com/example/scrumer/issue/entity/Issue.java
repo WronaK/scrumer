@@ -10,7 +10,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -49,12 +51,22 @@ public class Issue {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "issues")
-    @JsonIgnoreProperties("issues")
-    private List<RealizeIssue> realizeIssues = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "assign_issue",
+            joinColumns = @JoinColumn(name = "issue_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnoreProperties("realizeIssues")
+    private Set<User> users = new HashSet<>();
 
-    public void addRealizeIssue(RealizeIssue realizeIssue, User user) {
-        realizeIssues.add(realizeIssue);
-        user.getRealizeIssues().add(realizeIssue);
+    public void addRealizeIssue(User user) {
+        users.add(user);
+        user.getRealizeIssues().add(this);
+    }
+
+    public void removeRealizeIssue(User user) {
+        users.remove(user);
+        user.getRealizeIssues().remove(this);
     }
 }

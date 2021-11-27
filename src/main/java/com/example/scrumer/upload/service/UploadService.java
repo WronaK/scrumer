@@ -59,6 +59,6 @@ public class UploadService implements UploadUseCase {
     public Optional<UploadEntity> getByLoggerUser(String userEmail) {
         Optional<User> user = userJpaRepository.findByEmail(userEmail);
 
-        return user.flatMap(value -> uploadRepository.findById(value.getImageId()));
+        return user.flatMap(value -> uploadRepository.findById(value.getImageId() != null? value.getImageId() : -1));
     }
 }

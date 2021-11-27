@@ -24,4 +24,6 @@ public interface IssueUseCase {
     void addIssueToRealize(Long idIssue, Long idUser);
 
     void changeStatusIssue(Long idIssue);
+
+    void addIssueToRealizeMe(Long idIssue, String email);
 }

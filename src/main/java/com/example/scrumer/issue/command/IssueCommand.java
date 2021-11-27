@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -22,4 +24,5 @@ public class IssueCommand {
     private StatusIssue statusIssue;
     private Long idUserStory;
     private String titleUserStory;
+    private List<AssignCommand> assignCommands;
 }

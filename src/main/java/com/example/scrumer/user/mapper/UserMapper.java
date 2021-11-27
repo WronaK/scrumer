@@ -14,7 +14,7 @@ public class UserMapper {
                 .name(user.getUserDetails().getName())
                 .surname(user.getUserDetails().getSurname())
                 .roles(user.getRoles())
-                .idProfileImage(user.getImageId())
+                .idProfileImage(user.getImageId() != null ? user.getImageId() : -1)
                 .build();
     }
 }

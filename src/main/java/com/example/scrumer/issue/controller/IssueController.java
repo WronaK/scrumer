@@ -37,6 +37,12 @@ public class IssueController {
         issues.addIssueToRealize(idIssue, idUser);
     }
 
+    @PatchMapping("/{idIssue}/realize/me")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addIssueToRealizeMe(@PathVariable Long idIssue) {
+        issues.addIssueToRealizeMe(idIssue, getUserEmail());
+    }
+
     @PatchMapping("/{idIssue}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void changeStatusIssue(@PathVariable Long idIssue) {
