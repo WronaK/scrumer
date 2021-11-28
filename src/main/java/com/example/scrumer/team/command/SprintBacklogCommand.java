@@ -1,9 +1,11 @@
 package com.example.scrumer.team.command;
 
-import com.example.scrumer.task.mapper.TaskMapper;
-import com.example.scrumer.task.entity.Subtask;
-import com.example.scrumer.task.entity.Task;
-import com.example.scrumer.task.command.TaskCommand;
+import com.example.scrumer.issue.command.PBICommand;
+import com.example.scrumer.issue.entity.UserStory;
+import com.example.scrumer.issue.mapper.IssueMapper;
+import com.example.scrumer.issue.entity.Issue;
+import com.example.scrumer.issue.command.IssueCommand;
+import com.example.scrumer.issue.mapper.UserStoryMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,41 +13,41 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
 public class SprintBacklogCommand {
-    private List<TaskCommand> tasksPBI = new ArrayList<>();
-    private List<TaskCommand> tasksTasks = new ArrayList<>();
-    private List<TaskCommand> tasksInProgress = new ArrayList<>();
-    private List<TaskCommand> tasksMergeRequest = new ArrayList<>();
-    private List<TaskCommand> tasksDone = new ArrayList<>();
+    private List<PBICommand> tasksPBI = new ArrayList<>();
+    private List<IssueCommand> tasksToDo = new ArrayList<>();
+    private List<IssueCommand> tasksInProgress = new ArrayList<>();
+    private List<IssueCommand> tasksMergeRequest = new ArrayList<>();
+    private List<IssueCommand> tasksDone = new ArrayList<>();
 
-    public SprintBacklogCommand(List<Task> sprintBacklog) {
+    public SprintBacklogCommand(List<UserStory> userStories, List<Issue> sprintBacklog) {
+        this.tasksPBI = userStories.stream().map(UserStoryMapper::toPBICommand).collect(Collectors.toList());
         this.sort(sprintBacklog);
     }
 
-    private void sort(List<Task> sprintBacklog) {
-        for(Task task: sprintBacklog) {
-            tasksPBI.add(TaskMapper.toDto(task));
-            for(Subtask subtask: task.getSubtasks()) {
-                switch (subtask.getStatusTask()) {
-                    case NEW_TASK:
-                        tasksTasks.add(TaskMapper.toDto(subtask));
-                        break;
-                    case IN_PROGRESS:
-                        tasksInProgress.add(TaskMapper.toDto(subtask));
-                        break;
-                    case MERGE_REQUEST:
-                        tasksMergeRequest.add(TaskMapper.toDto(subtask));
-                        break;
-                    case DONE:
-                        tasksDone.add(TaskMapper.toDto(subtask));
-                        break;
-                }
+    private void sort(List<Issue> sprintBacklog) {
+        for(Issue issue: sprintBacklog) {
+            switch(issue.getStatusIssue()) {
+                case TO_DO:
+                    tasksToDo.add(IssueMapper.toDto(issue));
+                    break;
+                case IN_PROGRESS:
+                    tasksInProgress.add(IssueMapper.toDto(issue));
+                    break;
+                case MERGE_REQUEST:
+                    tasksMergeRequest.add(IssueMapper.toDto(issue));
+                    break;
+                case COMPLETED:
+                    tasksDone.add(IssueMapper.toDto(issue));
+                    break;
             }
+
         }
     }
 }

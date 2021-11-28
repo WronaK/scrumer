@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTeamCommand {
-    private String name;
+    private String teamName;
     private String accessCode;
-    private Set<MemberTeamCommand> members;
+    private String description;
+    private Long scrumMaster;
 }

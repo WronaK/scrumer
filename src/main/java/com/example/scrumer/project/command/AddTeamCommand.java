@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class AddTeamCommand {
-    private String name;
+    private Long idTeam;
     private String accessCode;
 }

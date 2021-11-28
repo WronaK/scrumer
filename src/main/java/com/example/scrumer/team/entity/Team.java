@@ -1,7 +1,9 @@
 package com.example.scrumer.team.entity;
 
+import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.project.entity.Project;
-import com.example.scrumer.task.entity.Task;
+import com.example.scrumer.issue.entity.Issue;
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -11,12 +13,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,13 +30,18 @@ public class Team {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String teamName;
 
     private String accessCode;
 
+    private Long coverId;
+
+    @Column(columnDefinition="text")
+    private String description;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
-    private User creator;
+    private User scrumMaster;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -47,9 +56,12 @@ public class Team {
     @JsonIgnoreProperties("teams")
     private Set<Project> projects = new HashSet<>();
 
+    @OneToMany(mappedBy = "team")
+    private List<UserStory> sprintBacklog = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
-    private List<Task> sprintBoard;
+    private List<Issue> sprintBoard = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -57,18 +69,26 @@ public class Team {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Team(String name, String accessCode) {
-        this.name = name;
-        this.accessCode = accessCode;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UploadEntity> attachments;
 
     public void addMember(User user) {
         members.add(user);
         user.getTeams().add(this);
     }
 
-    public void addMembers(Set<User> members) {
-        members.forEach(this::addMember);
+    public void addIssueToSprintBoard(Issue issue) {
+        sprintBoard.add(issue);
+    }
+
+    public void addUserStoryToSprintBacklog(UserStory userStory) {
+        sprintBacklog.add(userStory);
+        userStory.setTeam(this);
+    }
+
+    public void removeProject(Project project) {
+        projects.remove(project);
+        project.getTeams().remove(this);
     }
 
     public void addProject(Project project) {
@@ -76,12 +96,7 @@ public class Team {
         project.getTeams().add(this);
     }
 
-    public void addTaskToSprintBacklog(Task task) {
-        sprintBoard.add(task);
-    }
-
-    public void removeProject(Project project) {
-        projects.remove(project);
-        project.getTeams().remove(this);
+    public void addAttachment(UploadEntity attachment) {
+        this.attachments.add(attachment);
     }
 }

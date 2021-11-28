@@ -1,7 +1,8 @@
 package com.example.scrumer.project.entity;
 
-import com.example.scrumer.task.entity.Task;
+import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.team.entity.Team;
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -28,28 +29,22 @@ public class Project {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String projectName;
 
     private String accessCode;
+
+    private Long coverId;
 
     @Column(columnDefinition="text")
     private String description;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnoreProperties("teams")
-    private User creator;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnoreProperties("teams")
     private User productOwner;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnoreProperties("teams")
-    private User scrumMaster;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
-    private List<Task> productBacklog = new ArrayList<>();
+    private List<UserStory> productBacklog = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -66,19 +61,20 @@ public class Project {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Project(String name, String accessCode, String description) {
-        this.name = name;
-        this.accessCode = accessCode;
-        this.description = description;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UploadEntity> attachments;
 
-    public void addTask(Task task) {
-        productBacklog.add(task);
+    public void addUserStory(UserStory userStory) {
+        productBacklog.add(userStory);
     }
 
     public void addTeam(Team team) {
         teams.add(team);
         team.getProjects().add(this);
+    }
+
+    public void addAttachment(UploadEntity attachment) {
+        this.attachments.add(attachment);
     }
 
     public void removeTeam(Team team) {

@@ -1,22 +1,27 @@
 package com.example.scrumer.team.service;
 
+import com.example.scrumer.issue.repository.UserStoryJpaRepository;
+import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.security.ValidatorPermission;
-import com.example.scrumer.task.repository.TaskJpaRepository;
-import com.example.scrumer.task.entity.StatusTask;
-import com.example.scrumer.team.command.CreateTeamCommand;
-import com.example.scrumer.team.command.MemberTeamCommand;
-import com.example.scrumer.team.command.UpdateTeamCommand;
+import com.example.scrumer.issue.entity.StatusIssue;
+import com.example.scrumer.issue.repository.IssueJpaRepository;
+import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.UploadEntity;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,8 +33,10 @@ public class TeamService implements TeamUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
-    private final TaskJpaRepository tasksRepository;
+    private final IssueJpaRepository tasksRepository;
     private final ProjectJpaRepository projectRepository;
+    private final UploadUseCase uploadUseCase;
+    private final UserStoryJpaRepository userStoryJpaRepository;
 
     @Override
     public List<Team> findAll() {
@@ -44,20 +51,14 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public Optional<Team> findByIdTeam(Long id) {
-        return repository.findById(id);
-    }
+    public Team addTeam(CreateTeamCommand command) {
+        Team team = Team.builder()
+                .teamName(command.getTeamName())
+                .description(command.getDescription())
+                .accessCode(command.getAccessCode())
+                .build();
 
-    @Override
-    public Team addTeam(CreateTeamCommand command, String email) {
-        Team team = new Team(command.getName(), command.getAccessCode());
-
-        userRepository.findByEmail(email).ifPresent(creator -> {
-            team.setCreator(creator);
-            team.addMember(creator);
-        });
-
-        team.addMembers(this.fetchUserByEmail(command.getMembers()));
+        userRepository.findById(command.getScrumMaster()).ifPresent(team::setScrumMaster);
         return repository.save(team);
     }
 
@@ -80,8 +81,8 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public void addMember(Long id, MemberTeamCommand command) throws NotFoundException, IllegalAccessException {
-        Team team = findById(id);
+    public void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException {
+        Team team = findById(idTeam);
 
         User user = userRepository.findByEmail(command.getEmail()).orElseThrow(() -> new NotFoundException("Not found user with email:" + command.getEmail()));
         team.addMember(user);
@@ -89,7 +90,7 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public void addTask(Long id, Long idTask) throws NotFoundException, IllegalAccessException {
+    public void moveUserStoryToTeam(Long id, Long idUserStory) throws NotFoundException, IllegalAccessException {
         Team team = findById(id);
 
         tasksRepository.findById(idTask).ifPresent(task -> {
@@ -108,21 +109,74 @@ public class TeamService implements TeamUseCase {
         });
     }
 
+    @Override
+    public void updateTeamCover(UpdateTeamCoverCommand command) {
+        repository.findById(command.getId())
+                .ifPresent(
+                        team -> {
+                            UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            team.setCoverId(savedUpload.getId());
+                            repository.save(team);
+                        }
+                );
+    }
+
+    @Override
+    public List<SuggestedTeam> findByName(String name) {
+        return repository.findByStartedName(name).stream().map(team -> new SuggestedTeam(team.getId(), team.getTeamName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addProject(Long id, AddProjectCommand command) throws NotFoundException, IllegalAccessException {
+        Team team = findById(id);
+
+        projectRepository.findProjectByIdAndAccessCode(command.getIdProject(), command.getAccessCode())
+                .ifPresent(team::addProject);
+
+        repository.save(team);
+    }
+
+    @Override
+    public void joinToTeam(String userEmail, AddTeamCommand command) {
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        Optional<Team> team = repository.findTeamByIdAndAccessCode(command.getIdTeam(), command.getAccessCode());
+
+        if (user.isPresent() && team.isPresent()) {
+            team.get().addMember(user.get());
+            repository.save(team.get());
+        }
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(team -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                team.addAttachment(savedUpload);
+                repository.save(team);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private void updateFields(UpdateTeamCommand toCommand, Team team) {
-        if(toCommand.getName() != null) {
-            team.setName(toCommand.getName());
+        if(toCommand.getTeamName() != null) {
+            team.setTeamName(toCommand.getTeamName());
+        }
+
+        if (toCommand.getDescription() != null) {
+            team.setDescription(toCommand.getDescription());
         }
 
         if(toCommand.getAccessCode() != null) {
             team.setAccessCode(toCommand.getAccessCode());
         }
-    }
 
-    private Set<User> fetchUserByEmail(Set<MemberTeamCommand> members) {
-        return members.stream()
-                .map(member -> userRepository.findByEmail(member.getEmail())
-                        .orElseThrow(() -> new IllegalArgumentException("Not found user by email: " + member.getEmail()))
-                ).collect(Collectors.toSet());
+        if(toCommand.getScrumMaster() != null) {
+            userRepository.findById(toCommand.getScrumMaster())
+                    .ifPresent(team::setScrumMaster);
+        }
     }
 
     private String getUserEmail() {

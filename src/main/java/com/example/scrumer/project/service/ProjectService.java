@@ -1,26 +1,28 @@
 package com.example.scrumer.project.service;
 
-import com.example.scrumer.project.command.AddTeamCommand;
-import com.example.scrumer.project.command.CreateProjectCommand;
-import com.example.scrumer.project.command.UpdateProjectCommand;
+import com.example.scrumer.issue.command.CreateUserStoryCommand;
+import com.example.scrumer.issue.entity.StatusIssue;
+import com.example.scrumer.issue.entity.UserStory;
+import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.project.service.useCase.ProjectUseCase;
 import com.example.scrumer.security.ValidatorPermission;
-import com.example.scrumer.task.command.CreateTaskCommand;
-import com.example.scrumer.task.entity.PriorityStatus;
-import com.example.scrumer.task.entity.StatusTask;
-import com.example.scrumer.task.entity.Task;
-import com.example.scrumer.task.entity.TaskDetails;
+import com.example.scrumer.issue.command.CreateIssueCommand;
 import com.example.scrumer.team.repository.TeamJpaRepository;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.UploadEntity;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class ProjectService implements ProjectUseCase {
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
     private final TeamJpaRepository teamsRepository;
+    private final UploadUseCase uploadUseCase;
 
     @Override
     public Project findById(Long id) throws IllegalAccessException, NotFoundException {
@@ -40,14 +43,11 @@ public class ProjectService implements ProjectUseCase {
     @Override
     public Project addProject(CreateProjectCommand command, String email) {
         Project project = Project.builder()
-                .name(command.getName())
+                .projectName(command.getProjectName())
                 .description(command.getDescription())
                 .accessCode(command.getAccessCode())
                 .build();
-        userRepository.findByEmail(email).ifPresent(project::setCreator);
-        userRepository.findByEmail(command.getProductOwner()).ifPresent(project::setProductOwner);
-        userRepository.findByEmail(command.getScrumMaster()).ifPresent(project::setScrumMaster);
-        this.addTeams(project, command.getTeams());
+        userRepository.findById(command.getProductOwner()).ifPresent(project::setProductOwner);
         return repository.save(project);
     }
 
@@ -75,19 +75,17 @@ public class ProjectService implements ProjectUseCase {
     }
 
     @Override
-    public void addTask(Long id, CreateTaskCommand command) throws NotFoundException, IllegalAccessException {
+    public void addUserStory(Long id, CreateUserStoryCommand command) throws NotFoundException, IllegalAccessException {
         Project project = findById(id);
 
-        Task task = Task.builder()
-                .taskDetails(TaskDetails
-                        .builder()
-                        .title(command.getTitle())
-                        .description(command.getDescription())
-                        .priority(PriorityStatus.valueOf(command.getPriority()))
-                        .build())
-                .statusTask(StatusTask.NEW)
+        UserStory userStory = UserStory.builder()
+                .title(command.getTitle())
+                .description(command.getDescription())
+                .priority(command.getPriority())
+                .statusIssue(StatusIssue.NEW)
                 .build();
-        project.addTask(task);
+
+        project.addUserStory(userStory);
         repository.save(project);
     }
 
@@ -110,20 +108,54 @@ public class ProjectService implements ProjectUseCase {
         });
     }
 
-    private void addTeams(Project project, Set<AddTeamCommand> commands) {
-        for (AddTeamCommand command: commands) {
-            this.addTeam(project, command);
-        }
+    @Override
+    public void updateProjectCover(UpdateProjectCoverCommand command) {
+        repository.findById(command.getId())
+                .ifPresent(
+                        project -> {
+                            UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                            project.setCoverId(savedUpload.getId());
+                            repository.save(project);
+                        }
+                );
+    }
+
+    @Override
+    public void removeProjectCover(Long id) {
+        repository.findById(id)
+                .ifPresent(project -> {
+                    uploadUseCase.removeById(project.getCoverId());
+                    project.setCoverId(null);
+                    repository.save(project);
+                });
+    }
+
+    @Override
+    public List<SuggestedProject> findByName(String name) {
+        return repository.findByStartedName(name).stream().map(project -> new SuggestedProject(project.getId(), project.getProjectName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(project -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                project.addAttachment(savedUpload);
+                repository.save(project);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
-        teamsRepository.findTeamByNameAndAccessCode(command.getName(), command.getAccessCode())
+        teamsRepository.findTeamByIdAndAccessCode(command.getIdTeam(), command.getAccessCode())
                 .ifPresent(project::addTeam);
     }
 
     private void updateFields(UpdateProjectCommand command, Project project) {
-        if(command.getName() != null) {
-            project.setName(command.getName());
+        if(command.getProjectName() != null) {
+            project.setProjectName(command.getProjectName());
         }
 
         if(command.getDescription() != null) {
@@ -134,13 +166,8 @@ public class ProjectService implements ProjectUseCase {
             project.setAccessCode(command.getAccessCode());
         }
 
-        if(command.getScrumMaster() != null) {
-            userRepository.findByEmail(command.getScrumMaster())
-                    .ifPresent(project::setScrumMaster);
-        }
-
         if(command.getProductOwner() != null) {
-            userRepository.findByEmail(command.getProductOwner())
+            userRepository.findById(command.getProductOwner())
                     .ifPresent(project::setProductOwner);
         }
     }

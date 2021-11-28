@@ -12,9 +12,7 @@ import lombok.Setter;
 public class ProjectDetailsCommand {
     private Long id;
     private String name;
-    private String accessCode;
     private String description;
-    private String creatorName;
-    private String productOwnerName;
-    private String scrumMasterName;
+    private String username;
+    private Long coverId;
 }

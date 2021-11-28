@@ -6,14 +6,20 @@ import com.example.scrumer.chat.model.ChannelType;
 import com.example.scrumer.chat.model.ChannelUser;
 import com.example.scrumer.chat.model.Message;
 import com.example.scrumer.chat.repository.mongo.MessageMongoRepository;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.UploadEntity;
+import com.example.scrumer.upload.service.useCase.UploadUseCase;
+import com.example.scrumer.user.command.SuggestedUserCommand;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import com.example.scrumer.user.service.useCase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +29,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserUseCase {
     private final UserJpaRepository repository;
     private final MessageMongoRepository messageRepository;
+    private final UploadUseCase uploadUseCase;
 
     @Override
     public User findById(Long id) {
@@ -48,6 +55,27 @@ public class UserService implements UserUseCase {
                 .map(channelUser ->
                         getChannelCommand(channelUser.getChannel(), email))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SuggestedUserCommand> getUsers(String name) {
+        return repository.findUsersByName(name).stream()
+                .map(u -> SuggestedUserCommand.builder().id(u.getId()).email(u.getEmail()).username(u.getUserDetails().getUsername()).build()).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateImageProfile(MultipartFile file, String email) {
+        repository.findByEmail(email).ifPresent(
+                user -> {
+                    try {
+                        UploadEntity uploadEntity = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                        user.setImageId(uploadEntity.getId());
+                        repository.save(user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
     }
 
     public ChannelCommand getChannelCommand(Channel channel, String email) {

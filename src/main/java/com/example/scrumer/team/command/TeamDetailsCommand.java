@@ -12,6 +12,7 @@ import lombok.Setter;
 public class TeamDetailsCommand {
     private Long id;
     private String name;
-    private String accessCode;
-    private String creatorName;
+    private String description;
+    private String username;
+    private Long coverId;
 }

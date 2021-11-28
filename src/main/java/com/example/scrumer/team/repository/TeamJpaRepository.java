@@ -10,12 +10,22 @@ import java.util.Optional;
 
 public interface TeamJpaRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findTeamByNameAndAccessCode(String name, String accessCode);
+    Optional<Team> findTeamByIdAndAccessCode(Long id, String accessCode);
 
     @Query(
-            " SELECT t from Team t JOIN t.members m " +
-                    " WHERE " +
-                    " m.email LIKE :email "
+            " SELECT distinct t from Team as t " +
+                    " LEFT JOIN t.scrumMaster as scrumMaster " +
+                    " LEFT JOIN t.projects as project " +
+                    " LEFT JOIN project.productOwner as productOwner " +
+                    " LEFT JOIN t.members as members " +
+                    " WHERE scrumMaster.email LIKE :email " +
+                    " or members.email LIKE :email or productOwner.email LIKE :email "
     )
     List<Team> findByUser(@Param("email") String email);
+
+    @Query(
+            " SELECT t from Team t " +
+                    " WHERE t.teamName LIKE CONCAT('%', :name, '%') "
+    )
+    List<Team> findByStartedName(@Param("name") String name);
 }
