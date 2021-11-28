@@ -1,5 +1,6 @@
 package com.example.scrumer.issue.entity;
 
+import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -59,6 +60,13 @@ public class Issue {
     )
     @JsonIgnoreProperties("realizeIssues")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UploadEntity> attachments;
+
+    public void addAttachment(UploadEntity attachment) {
+        this.attachments.add(attachment);
+    }
 
     public void addRealizeIssue(User user) {
         users.add(user);

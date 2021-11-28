@@ -9,7 +9,9 @@ import com.example.scrumer.team.repository.TeamJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,5 +49,11 @@ public class UserStoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         userStoryUseCase.deleteById(id);
+    }
+
+    @PostMapping("/{id}/attachment")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addAttachmentIssue(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        userStoryUseCase.addAttachment(id, file);
     }
 }

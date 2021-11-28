@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,12 @@ public class IssueController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addIssueToRealize(@PathVariable Long idIssue, @PathVariable Long idUser) {
         issues.addIssueToRealize(idIssue, idUser);
+    }
+
+    @PostMapping("/{id}/attachment")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void addAttachmentIssue(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        issues.addAttachment(id, file);
     }
 
     @PatchMapping("/{idIssue}/realize/me")

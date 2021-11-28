@@ -7,12 +7,17 @@ import com.example.scrumer.issue.service.useCase.IssueUseCase;
 import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.command.IssueCommand;
 import com.example.scrumer.team.repository.TeamJpaRepository;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.UploadEntity;
+import com.example.scrumer.upload.service.UploadService;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +28,7 @@ public class IssueService implements IssueUseCase {
     private final IssueJpaRepository repository;
     private final TeamJpaRepository teamJpaRepository;
     private final UserJpaRepository userJpaRepository;
+    private final UploadService uploadUseCase;
 
     @Override
     public Optional<Issue> findById(Long id) {
@@ -134,6 +140,19 @@ public class IssueService implements IssueUseCase {
             case IN_PROGRESS -> issue.setStatusIssue(StatusIssue.MERGE_REQUEST);
             case MERGE_REQUEST -> issue.setStatusIssue(StatusIssue.COMPLETED);
         }
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(issue -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                issue.addAttachment(savedUpload);
+                repository.save(issue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
 
