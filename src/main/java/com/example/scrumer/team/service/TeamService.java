@@ -33,7 +33,7 @@ public class TeamService implements TeamUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
-    private final IssueJpaRepository tasksRepository;
+    private final IssueJpaRepository issueRepository;
     private final ProjectJpaRepository projectRepository;
     private final UploadUseCase uploadUseCase;
     private final UserStoryJpaRepository userStoryJpaRepository;
@@ -48,6 +48,11 @@ public class TeamService implements TeamUseCase {
         Team team = repository.findById(id).orElseThrow(() -> new NotFoundException("Not found team wit id: " + id));
         this.validatorPermission.validateTeamPermission(team, this.getUserEmail());
         return team;
+    }
+
+    @Override
+    public Optional<Team> findTeamById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -84,7 +89,7 @@ public class TeamService implements TeamUseCase {
     public void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException {
         Team team = findById(idTeam);
 
-        User user = userRepository.findByEmail(command.getEmail()).orElseThrow(() -> new NotFoundException("Not found user with email:" + command.getEmail()));
+        User user = userRepository.findById(idMember).orElseThrow(() -> new NotFoundException("Not found user with email:" + idMember));
         team.addMember(user);
         repository.save(team);
     }
@@ -93,9 +98,9 @@ public class TeamService implements TeamUseCase {
     public void moveUserStoryToTeam(Long id, Long idUserStory) throws NotFoundException, IllegalAccessException {
         Team team = findById(id);
 
-        tasksRepository.findById(idTask).ifPresent(task -> {
-            task.setStatusTask(StatusTask.FOR_IMPLEMENTATION);
-            team.addTaskToSprintBacklog(task);
+        userStoryJpaRepository.findById(idUserStory).ifPresent(task -> {
+            task.setStatusIssue(StatusIssue.TO_BE_IMPLEMENTED);
+            team.addUserStoryToSprintBacklog(task);
             repository.save(team);
         });
     }

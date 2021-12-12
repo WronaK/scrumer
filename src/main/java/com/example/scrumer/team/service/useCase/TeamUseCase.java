@@ -4,18 +4,19 @@ import com.example.scrumer.project.command.AddTeamCommand;
 import com.example.scrumer.team.command.*;
 import com.example.scrumer.team.entity.Team;
 import javassist.NotFoundException;
-import lombok.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 public interface TeamUseCase {
     List<Team> findAll();
 
     Team findById(Long id) throws NotFoundException, IllegalAccessException;
 
-    Team addTeam(CreateTeamCommand command, String email);
+    Optional<Team> findTeamById(Long id);
+
+    Team addTeam(CreateTeamCommand command);
 
     void deleteById(Long id);
 
