@@ -6,10 +6,12 @@ import com.example.scrumer.user.command.SuggestedUserCommand;
 import com.example.scrumer.user.mapper.UserMapper;
 import com.example.scrumer.user.service.useCase.UserUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
 import java.util.List;
@@ -50,5 +52,11 @@ public class UserController {
     public void deleteById(@PathVariable Long id,
                            @AuthenticationPrincipal UsernamePasswordAuthenticationToken user) {
         userUseCase.deleteById(id);
+    }
+
+    @PostMapping("/profile")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void uploadImageProfile(@RequestParam("profile") MultipartFile file) {
+        userUseCase.updateImageProfile(file, getUserEmail());
     }
 }

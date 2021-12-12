@@ -17,4 +17,5 @@ public class UserCommand {
     private String name;
     private String surname;
     private Set<String> roles;
+    private Long idProfileImage;
 }

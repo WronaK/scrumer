@@ -1,6 +1,7 @@
 package com.example.scrumer.issue.entity;
 
 import com.example.scrumer.team.entity.Team;
+import com.example.scrumer.upload.entity.UploadEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -52,6 +53,13 @@ public class UserStory {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UploadEntity> attachments;
+
+    public void addAttachment(UploadEntity attachment) {
+        this.attachments.add(attachment);
+    }
 
     public void addIssue(Issue issue) {
         issues.add(issue);

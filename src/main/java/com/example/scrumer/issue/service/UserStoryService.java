@@ -8,10 +8,15 @@ import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.repository.UserStoryJpaRepository;
 import com.example.scrumer.issue.service.useCase.UserStoryUseCase;
 import com.example.scrumer.team.repository.TeamJpaRepository;
+import com.example.scrumer.upload.command.SaveUploadCommand;
+import com.example.scrumer.upload.entity.UploadEntity;
+import com.example.scrumer.upload.service.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +26,7 @@ public class UserStoryService implements UserStoryUseCase {
     private final UserStoryJpaRepository userStoryJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
     private final IssueJpaRepository issueJpaRepository;
+    private final UploadService uploadUseCase;
 
     @Override
     public Optional<UserStory> findById(Long id) {
@@ -56,6 +62,19 @@ public class UserStoryService implements UserStoryUseCase {
                     });
         });
 
+    }
+
+    @Override
+    public void addAttachment(Long id, MultipartFile file) {
+        userStoryJpaRepository.findById(id).ifPresent(userStory -> {
+            try {
+                UploadEntity savedUpload = uploadUseCase.save(new SaveUploadCommand(file.getOriginalFilename(), file.getBytes(), file.getContentType()));
+                userStory.addAttachment(savedUpload);
+                userStoryJpaRepository.save(userStory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
