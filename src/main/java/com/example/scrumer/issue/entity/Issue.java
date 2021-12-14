@@ -69,6 +69,9 @@ public class Issue {
     }
 
     public void addRealizeIssue(User user) {
+        if (users == null) {
+            this.users = new HashSet<>();
+        }
         users.add(user);
         user.getRealizeIssues().add(this);
     }

@@ -1,6 +1,7 @@
 package com.example.scrumer.issue.service.useCase;
 
 import com.example.scrumer.issue.command.CreateIssueCommand;
+import com.example.scrumer.issue.command.ImportUserStoryCommand;
 import com.example.scrumer.issue.command.UpdateUserStoryCommand;
 import com.example.scrumer.issue.entity.UserStory;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,4 +21,6 @@ public interface UserStoryUseCase {
     void updateUserStory(UpdateUserStoryCommand userStoryCommand);
 
     void addAttachment(Long id, MultipartFile file);
+
+    void importUserStories(Long idProject, List<ImportUserStoryCommand> commands);
 }

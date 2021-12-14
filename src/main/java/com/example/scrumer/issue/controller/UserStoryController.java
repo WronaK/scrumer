@@ -1,8 +1,6 @@
 package com.example.scrumer.issue.controller;
 
-import com.example.scrumer.issue.command.CreateIssueCommand;
-import com.example.scrumer.issue.command.UpdateUserStoryCommand;
-import com.example.scrumer.issue.command.UserStoryCommand;
+import com.example.scrumer.issue.command.*;
 import com.example.scrumer.issue.mapper.UserStoryMapper;
 import com.example.scrumer.issue.service.useCase.UserStoryUseCase;
 import com.example.scrumer.team.repository.TeamJpaRepository;
@@ -55,5 +53,10 @@ public class UserStoryController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addAttachmentIssue(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
         userStoryUseCase.addAttachment(id, file);
+    }
+
+    @PostMapping("/{idProject}/import")
+    public void importUserStory(@PathVariable Long idProject, @RequestBody List<ImportUserStoryCommand> commands) {
+        userStoryUseCase.importUserStories(idProject, commands);
     }
 }

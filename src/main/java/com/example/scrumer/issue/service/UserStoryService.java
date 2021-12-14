@@ -1,16 +1,20 @@
 package com.example.scrumer.issue.service;
 
 import com.example.scrumer.issue.command.CreateIssueCommand;
+import com.example.scrumer.issue.command.ImportUserStoryCommand;
 import com.example.scrumer.issue.command.UpdateUserStoryCommand;
 import com.example.scrumer.issue.entity.Issue;
 import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.repository.UserStoryJpaRepository;
 import com.example.scrumer.issue.service.useCase.UserStoryUseCase;
+import com.example.scrumer.project.entity.Project;
+import com.example.scrumer.project.repository.ProjectJpaRepository;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.upload.service.UploadService;
+import com.example.scrumer.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class UserStoryService implements UserStoryUseCase {
     private final TeamJpaRepository teamJpaRepository;
     private final IssueJpaRepository issueJpaRepository;
     private final UploadService uploadUseCase;
+    private final ProjectJpaRepository projectJpaRepository;
 
     @Override
     public Optional<UserStory> findById(Long id) {
@@ -75,6 +81,46 @@ public class UserStoryService implements UserStoryUseCase {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public void importUserStories(Long idProject, List<ImportUserStoryCommand> commands) {
+        Optional<Project> project = projectJpaRepository.findById(idProject);
+
+        project.ifPresent(value -> commands.forEach(command -> value.addUserStory(importUserStory(command))));
+    }
+
+    private UserStory importUserStory(ImportUserStoryCommand command) {
+        UserStory.UserStoryBuilder userStoryBuilder = UserStory.builder();
+
+        if (Objects.nonNull(command.getTitle())) {
+            userStoryBuilder.title(command.getTitle());
+        }
+
+        if (Objects.nonNull(command.getPriority())) {
+            userStoryBuilder.priority(command.getPriority());
+        }
+
+        if (Objects.nonNull(command.getDescription())) {
+            userStoryBuilder.description(command.getDescription());
+        }
+
+        if (Objects.nonNull(command.getStoryPoints())) {
+            userStoryBuilder.storyPoints(command.getStoryPoints());
+        }
+
+        if (Objects.nonNull(command.getStatusIssue())) {
+            userStoryBuilder.statusIssue(command.getStatusIssue());
+        }
+
+        UserStory userStory = userStoryJpaRepository.save(userStoryBuilder.build());
+
+        if (Objects.nonNull(command.getIdTeam())) {
+            teamJpaRepository.findById(command.getIdTeam()).ifPresent(team -> team.addUserStoryToSprintBacklog(userStory));
+        }
+
+        return userStory;
     }
 
     @Override

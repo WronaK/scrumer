@@ -1,11 +1,13 @@
 package com.example.scrumer.issue.service;
 
 import com.example.scrumer.issue.command.CreateIssueCommand;
+import com.example.scrumer.issue.command.ImportIssueCommand;
 import com.example.scrumer.issue.entity.*;
 import com.example.scrumer.issue.mapper.IssueMapper;
 import com.example.scrumer.issue.service.useCase.IssueUseCase;
 import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.command.IssueCommand;
+import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
@@ -19,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -154,5 +158,59 @@ public class IssueService implements IssueUseCase {
             }
         });
     }
+
+    @Override
+    @Transactional
+    public void importIssues(Long idTeam, List<ImportIssueCommand> commands) {
+        Optional<Team> team = teamJpaRepository.findById(idTeam);
+
+        team.ifPresent(value -> commands.forEach(command -> value.addIssueToSprintBoard(importIssue(command))));
+    }
+
+    private Issue importIssue(ImportIssueCommand command) {
+        Issue.IssueBuilder issueBuilder = Issue.builder();
+
+        if (Objects.nonNull(command.getTitle())) {
+            issueBuilder.title(command.getTitle());
+        }
+
+        if (Objects.nonNull(command.getDescription())) {
+            issueBuilder.description(command.getDescription());
+        }
+
+        if (Objects.nonNull(command.getStoryPoints())) {
+            issueBuilder.storyPoints(command.getStoryPoints());
+        }
+
+        if (Objects.nonNull(command.getStatusIssue())) {
+            issueBuilder.statusIssue(command.getStatusIssue());
+        }
+
+        if (Objects.nonNull(command.getTypeIssue())) {
+            issueBuilder.typeIssue(command.getTypeIssue());
+        }
+
+        if (Objects.nonNull(command.getPriority())) {
+            issueBuilder.priority(command.getPriority());
+        }
+
+        Issue issue = repository.save(issueBuilder.build());
+
+        if (Objects.nonNull(command.getUsers())) {
+            addUser(issue, command.getUsers());
+        }
+
+        return issue;
+
+    }
+
+    private void addUser(Issue issue, Set<Long> users) {
+
+        for (Long idUser: users) {
+            userJpaRepository.findById(idUser).ifPresent(issue::addRealizeIssue);
+        }
+    }
+
+
 }
 

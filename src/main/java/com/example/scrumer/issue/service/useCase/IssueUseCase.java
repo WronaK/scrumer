@@ -1,6 +1,7 @@
 package com.example.scrumer.issue.service.useCase;
 
 import com.example.scrumer.issue.command.CreateIssueCommand;
+import com.example.scrumer.issue.command.ImportIssueCommand;
 import com.example.scrumer.issue.command.IssueCommand;
 import com.example.scrumer.issue.entity.Issue;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,4 +30,6 @@ public interface IssueUseCase {
     void addIssueToRealizeMe(Long idIssue, String email);
 
     void addAttachment(Long id, MultipartFile file);
+
+    void importIssues(Long idTeam, List<ImportIssueCommand> commands);
 }

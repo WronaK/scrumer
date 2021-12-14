@@ -1,6 +1,7 @@
 package com.example.scrumer.issue.controller;
 
 import com.example.scrumer.issue.command.CreateIssueCommand;
+import com.example.scrumer.issue.command.ImportIssueCommand;
 import com.example.scrumer.issue.command.IssueCommand;
 import com.example.scrumer.issue.mapper.IssueMapper;
 import com.example.scrumer.issue.service.IssueService;
@@ -60,6 +61,11 @@ public class IssueController {
     @PostMapping
     public void createIssue(@RequestBody CreateIssueCommand command) {
         issues.createIssue(command);
+    }
+
+    @PostMapping("/{idTeam}/import")
+    public void importIssue(@PathVariable Long idTeam, @RequestBody List<ImportIssueCommand> commands) {
+        issues.importIssues(idTeam, commands);
     }
 
     @PutMapping()
