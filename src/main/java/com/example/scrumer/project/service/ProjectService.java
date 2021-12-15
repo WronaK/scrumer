@@ -1,8 +1,10 @@
 package com.example.scrumer.project.service;
 
 import com.example.scrumer.issue.command.CreateUserStoryCommand;
+import com.example.scrumer.issue.command.ExportUserStoryCommand;
 import com.example.scrumer.issue.entity.StatusIssue;
 import com.example.scrumer.issue.entity.UserStory;
+import com.example.scrumer.issue.mapper.UserStoryMapper;
 import com.example.scrumer.project.command.*;
 import com.example.scrumer.project.entity.Project;
 import com.example.scrumer.project.repository.ProjectJpaRepository;
@@ -21,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,6 +150,12 @@ public class ProjectService implements ProjectUseCase {
                 e.printStackTrace();
             }
         });
+    }
+
+    public List<ExportUserStoryCommand> getProductBacklogByProjectId(Long idProject) {
+        Optional<Project> project = repository.findById(idProject);
+
+        return project.map(value -> value.getProductBacklog().stream().map(UserStoryMapper::toExportCommand).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
     private void addTeam(Project project, AddTeamCommand command) {
