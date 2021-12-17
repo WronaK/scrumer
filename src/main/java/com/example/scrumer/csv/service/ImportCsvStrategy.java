@@ -120,7 +120,10 @@ public abstract class ImportCsvStrategy {
                 value = value.substring(1, value.length() - 1);
 
                 String[] separateValue = value.split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
-                uniqualValue.addAll(Arrays.stream(separateValue).collect(Collectors.toSet()));
+
+                for(String v: separateValue) {
+                    uniqualValue.add(v);
+                }
             } else if (!value.equals("")) {
                 uniqualValue.add(value);
             }

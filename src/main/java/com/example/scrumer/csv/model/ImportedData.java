@@ -35,12 +35,12 @@ public class ImportedData {
             if (userPreferences.containsKey(mapValueCommand.getFields())) {
                 userPreferences.get(mapValueCommand.getFields()).addValue(mapValueCommand.getValues());
             } else {
-                userPreferences.put(mapValueCommand.getFields(), prepea(mapValueCommand.getValues()));
+                userPreferences.put(mapValueCommand.getFields(), addValues(mapValueCommand.getValues()));
             }
         }
     }
 
-    private Values prepea(List<ValueCommand> valueCommands) {
+    private Values addValues(List<ValueCommand> valueCommands) {
         Values values = new Values(new HashMap<>());
 
         valueCommands.forEach(valueCommand -> values.values.put(valueCommand.getMyValue(), valueCommand.getMatchValue()));
