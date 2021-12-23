@@ -1,4 +1,4 @@
-package com.example.scrumer.poker.command;
+package com.example.scrumer.poker.model;
 
 import com.example.scrumer.issue.entity.TypeIssue;
 import com.example.scrumer.issue.entity.TypeTask;

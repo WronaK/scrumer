@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class TeamVote {
+public class NewVoteCommand {
+    private final String method = "VOTE";
+    private String idScrumPoker;
     private Long idUser;
-    private String estimation;
 }

@@ -4,9 +4,7 @@ import com.example.scrumer.issue.entity.Issue;
 import com.example.scrumer.issue.entity.TypeTask;
 import com.example.scrumer.issue.entity.UserStory;
 import com.example.scrumer.poker.command.*;
-import com.example.scrumer.poker.model.ScrumPoker;
-import com.example.scrumer.poker.model.ScrumPokerStatus;
-import com.example.scrumer.poker.model.Vote;
+import com.example.scrumer.poker.model.*;
 import com.example.scrumer.poker.storage.ScrumPokerStorage;
 import com.example.scrumer.team.service.useCase.TeamUseCase;
 import javassist.NotFoundException;
@@ -114,7 +112,7 @@ public class ScrumPokerService {
         return scrumPoker;
     }
 
-    public ResultEstimationCommand stopEstimated(ChangeEstimationStatusCommand command) throws NotFoundException, IllegalAccessException {
+    public StopEstimationCommand stopEstimated(ChangeEstimationStatusCommand command) throws NotFoundException, IllegalAccessException {
         if (!ScrumPokerStorage.getInstance().getStorage().containsKey(command.getIdScrumPoker())) {
             throw new NotFoundException("Scrum Poker with id: " + command.getIdScrumPoker() + " doesn't exist.");
         }
@@ -128,7 +126,7 @@ public class ScrumPokerService {
         scrumPoker.setScrumPokerStatus(ScrumPokerStatus.NEW);
         ScrumPokerStorage.getInstance().setScrumPoker(scrumPoker);
 
-        return ResultEstimationCommand.builder()
+        return StopEstimationCommand.builder()
                 .idScrumPoker(scrumPoker.getIdScrumPoker())
                 .resultEstimation(calculateResult(scrumPoker.getIndividualEstimation()))
                 .idTask(scrumPoker.getCurrentTask())

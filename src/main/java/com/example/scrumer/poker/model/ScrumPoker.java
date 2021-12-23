@@ -1,12 +1,8 @@
 package com.example.scrumer.poker.model;
 
-import com.example.scrumer.poker.command.TaskCommand;
-import com.example.scrumer.poker.command.TeamVote;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 @Data

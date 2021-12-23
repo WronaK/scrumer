@@ -1,6 +1,7 @@
 package com.example.scrumer.poker.controller;
 
 import com.example.scrumer.poker.command.*;
+import com.example.scrumer.poker.mapper.ScrumPokerMapper;
 import com.example.scrumer.poker.model.ScrumPoker;
 import com.example.scrumer.poker.model.Vote;
 import com.example.scrumer.poker.service.ScrumPokerService;
@@ -23,10 +24,11 @@ public class ScrumPokerController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @PostMapping("/start")
-    public ScrumPoker start(@RequestBody CreateScrumPokerCommand command) {
+    public ScrumPoker createScrumPoker(@RequestBody CreateScrumPokerCommand command) {
         ScrumPoker scrumPoker = scrumPokerService.createScrumPoker(command);
+        NotificationCommand notificationCommand = new NotificationCommand(scrumPoker.getIdScrumPoker());
         scrumPokerService.getMembers(command).forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/scrum",
-                "{\"idScrumPoker\": \"" + scrumPoker.getIdScrumPoker() + "\"}"));
+                notificationCommand));
         return scrumPoker;
     }
 
@@ -34,8 +36,8 @@ public class ScrumPokerController {
     public ScrumPoker join(@RequestBody JoinCommand joinCommand) throws NotFoundException, IllegalAccessException {
         ScrumPoker scrumPoker = scrumPokerService.joinToScrumPoker(joinCommand);
 
-        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/join",
-                scrumPoker));
+        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/scrum",
+                ScrumPokerMapper.toEventCommand(scrumPoker, "JOIN")));
         return scrumPoker;
     }
 
@@ -43,29 +45,27 @@ public class ScrumPokerController {
     public void startEstimation(@RequestBody ChangeEstimationStatusCommand command) throws NotFoundException, IllegalAccessException {
         ScrumPoker scrumPoker = scrumPokerService.startEstimated(command);
 
-        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/start",
-                scrumPoker));
+        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/scrum",
+                ScrumPokerMapper.toEventCommand(scrumPoker, "START")));
     }
 
     @PostMapping("/stop/estimation")
     public void stopEstimation(@RequestBody ChangeEstimationStatusCommand command) throws NotFoundException, IllegalAccessException {
-        ResultEstimationCommand resultEstimationCommand = scrumPokerService.stopEstimated(command);
+        StopEstimationCommand stopEstimationCommand = scrumPokerService.stopEstimated(command);
         ScrumPoker scrumPoker = scrumPokerService.getScrumPoker(command.getIdScrumPoker());
 
-        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/st",
-                resultEstimationCommand));
+        scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/scrum",
+                stopEstimationCommand));
     }
-
 
     @PostMapping("/vote")
     public void vote(@RequestBody VoteCommand command) throws NotFoundException, IllegalAccessException {
         Vote vote = scrumPokerService.voteInTask(command);
         ScrumPoker scrumPoker = scrumPokerService.getScrumPoker(command.getIdScrumPoker());
 
-
         if (vote.isNewVote()) {
-            scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/vote",
-                    "{\"idUser\": \"" + vote.getIdUser() + "\"}"));
+            NewVoteCommand newVoteCommand = new NewVoteCommand(scrumPoker.getIdScrumPoker(), vote.getIdUser());
+            scrumPoker.getMembers().forEach(member -> simpMessagingTemplate.convertAndSendToUser(member.toString(), "/queue/scrum", newVoteCommand));
         }
     }
 }

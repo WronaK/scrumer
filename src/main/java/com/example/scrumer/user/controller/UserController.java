@@ -3,6 +3,8 @@ package com.example.scrumer.user.controller;
 import com.example.scrumer.chat.command.ChannelCommand;
 import com.example.scrumer.user.command.UserCommand;
 import com.example.scrumer.user.command.SuggestedUserCommand;
+import com.example.scrumer.user.command.UserInitialAndImage;
+import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.mapper.UserMapper;
 import com.example.scrumer.user.service.useCase.UserUseCase;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,12 @@ public class UserController {
     @GetMapping("/find/{name}")
     public List<SuggestedUserCommand> getUsers(@PathVariable String name) {
         return userUseCase.getUsers(name);
+    }
+
+    @GetMapping("/base/{idUser}")
+    public UserInitialAndImage getUserInitialAndImage(@PathVariable Long idUser) {
+        User user = userUseCase.findById(idUser);
+        return new UserInitialAndImage(user.getImageId(), new StringBuilder("" + user.getUserDetails().getName().charAt(0) + "" + user.getUserDetails().getSurname().charAt(0)).toString());
     }
 
     @GetMapping("/channels")

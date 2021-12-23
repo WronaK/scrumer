@@ -1,6 +1,5 @@
 package com.example.scrumer.poker.command;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
