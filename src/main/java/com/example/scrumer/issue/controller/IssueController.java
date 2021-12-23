@@ -45,6 +45,12 @@ public class IssueController {
         issues.addAttachment(id, file);
     }
 
+    @PatchMapping("/{id}/points/{storyPoints}")
+    public void setStoryPoints(@PathVariable Long id,
+                               @PathVariable String storyPoints) {
+        issues.setStoryPoints(id, storyPoints);
+    }
+
     @PatchMapping("/{idIssue}/realize/me")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void addIssueToRealizeMe(@PathVariable Long idIssue) {

@@ -29,4 +29,6 @@ public interface IssueUseCase {
     void addIssueToRealizeMe(Long idIssue, String email);
 
     void addAttachment(Long id, MultipartFile file);
+
+    void setStoryPoints(Long id, String storyPoints);
 }

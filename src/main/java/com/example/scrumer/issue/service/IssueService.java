@@ -154,5 +154,13 @@ public class IssueService implements IssueUseCase {
             }
         });
     }
+
+    @Override
+    public void setStoryPoints(Long id, String storyPoints) {
+        repository.findById(id).ifPresent(issue -> {
+            issue.setStoryPoints(Integer.valueOf(storyPoints));
+            repository.save(issue);
+        });
+    }
 }
 

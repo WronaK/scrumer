@@ -137,20 +137,20 @@ public class ScrumPokerService {
     }
 
     private String calculateResult(Set<TeamVote> teamVotes) {
-        List<Integer> votes = new ArrayList<>();
+        List<Double> votes = new ArrayList<>();
 
         for (TeamVote vote: teamVotes) {
             if (vote.getEstimation().equals("?")) {
                 return "I can't estimate the value";
             }
 
-            votes.add(Integer.valueOf(vote.getEstimation()));
+            votes.add(Double.valueOf(vote.getEstimation()));
         }
 
         Collections.sort(votes);
 
         int middle = teamVotes.size()/2;
-        return String.valueOf((teamVotes.size() % 2) == 1 ? votes.get(middle) : Integer.valueOf((votes.get(middle - 1) + votes.get(middle)) / 2));
+        return String.valueOf((teamVotes.size() % 2) == 1 ? votes.get(middle) : ((votes.get(middle - 1) + votes.get(middle)) / 2));
     }
 
     public ScrumPoker leaveScrumPoker(Long idUser, String idScrumPoker) throws NotFoundException {

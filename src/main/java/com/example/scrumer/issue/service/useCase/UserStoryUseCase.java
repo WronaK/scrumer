@@ -20,4 +20,6 @@ public interface UserStoryUseCase {
     void updateUserStory(UpdateUserStoryCommand userStoryCommand);
 
     void addAttachment(Long id, MultipartFile file);
+
+    void setStoryPoints(Long id, String storyPoints);
 }

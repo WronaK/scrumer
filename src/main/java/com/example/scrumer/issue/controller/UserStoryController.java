@@ -45,6 +45,12 @@ public class UserStoryController {
         userStoryUseCase.addIssue(id, command);
     }
 
+    @PatchMapping("/{id}/points/{storyPoints}")
+    public void setStoryPoints(@PathVariable Long id,
+                         @PathVariable String storyPoints) {
+        userStoryUseCase.setStoryPoints(id, storyPoints);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {

@@ -78,6 +78,14 @@ public class UserStoryService implements UserStoryUseCase {
     }
 
     @Override
+    public void setStoryPoints(Long id, String storyPoints) {
+        userStoryJpaRepository.findById(id).ifPresent(userStory -> {
+            userStory.setStoryPoints(Integer.valueOf(storyPoints));
+            userStoryJpaRepository.save(userStory);
+        });
+    }
+
+    @Override
     public void updateUserStory(UpdateUserStoryCommand userStoryCommand) {
         userStoryJpaRepository.findById(userStoryCommand.getId())
                 .map(savedUserStory -> {
