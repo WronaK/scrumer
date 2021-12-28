@@ -1,9 +1,16 @@
 package com.example.scrumer.chat.controller;
 
 import com.example.scrumer.chat.command.CreateChannelCommand;
+import com.example.scrumer.chat.command.CreateMessageCommand;
 import com.example.scrumer.chat.command.MessageCommand;
+import com.example.scrumer.chat.model.Channel;
+import com.example.scrumer.chat.model.ChatNotification;
+import com.example.scrumer.chat.model.Message;
 import com.example.scrumer.chat.service.useCase.ChannelsUseCase;
+import com.example.scrumer.chat.service.useCase.MessageUseCase;
+import com.example.scrumer.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +21,8 @@ import java.util.List;
 @RequestMapping("/api/channels")
 public class ChannelController {
     private final ChannelsUseCase channelsUseCase;
+    private final MessageUseCase messageUseCase;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
     public void createChannel(@RequestBody CreateChannelCommand command) {
@@ -39,4 +48,20 @@ public class ChannelController {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
+    @PostMapping("/send")
+    public void sendMessage(@RequestBody CreateMessageCommand messageCommand) {
+        Channel channel = channelsUseCase.findById(messageCommand.getChannelId());
+        List<User> recipients = channel.getRecipients(messageCommand.getSenderId());
+
+        Message createdMessage = messageUseCase.createMessage(messageCommand);
+        channel.setIdLastMessage(createdMessage.getId());
+
+        recipients.forEach(recipient -> {
+            messagingTemplate.convertAndSendToUser(recipient.getId().toString(), "/queue/chat",
+                    new ChatNotification(
+                            createdMessage.getChannelId(),
+                            createdMessage.getId()));
+            channelsUseCase.createNotificationMessage(createdMessage.getChannelId(), recipient.getId());
+        });
+    }
 }

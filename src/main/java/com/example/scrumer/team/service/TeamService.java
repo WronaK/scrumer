@@ -33,7 +33,6 @@ public class TeamService implements TeamUseCase {
     private final TeamJpaRepository repository;
     private final UserJpaRepository userRepository;
     private final ValidatorPermission validatorPermission;
-    private final IssueJpaRepository issueRepository;
     private final ProjectJpaRepository projectRepository;
     private final UploadUseCase uploadUseCase;
     private final UserStoryJpaRepository userStoryJpaRepository;
