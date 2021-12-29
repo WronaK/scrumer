@@ -23,6 +23,8 @@ public class Channel {
 
     private String channelName;
 
+    private String idChannel;
+
     @OneToMany(mappedBy = "channel")
     private Set<ChannelUser> channelUsers = new HashSet<>();
 

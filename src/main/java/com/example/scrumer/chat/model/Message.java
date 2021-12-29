@@ -21,8 +21,6 @@ public class Message {
 
     private String senderName;
 
-    private Long channelId;
-
     private String content;
 
     private Date timestamp;

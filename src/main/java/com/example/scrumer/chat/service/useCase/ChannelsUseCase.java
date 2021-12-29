@@ -1,13 +1,14 @@
 package com.example.scrumer.chat.service.useCase;
 
 import com.example.scrumer.chat.command.CreateChannelCommand;
+import com.example.scrumer.chat.command.InfoChannel;
 import com.example.scrumer.chat.command.MessageCommand;
 import com.example.scrumer.chat.model.Channel;
 
 import java.util.List;
 
 public interface ChannelsUseCase {
-    void createChannel(CreateChannelCommand command, String userEmail);
+    InfoChannel createChannel(CreateChannelCommand command, String userEmail);
 
     Channel findById(Long id);
 
