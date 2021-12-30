@@ -16,7 +16,7 @@ public class DailyController {
     private final DailyUseCase dailyUseCase;
 
     @PostMapping
-    public void createTask(@RequestBody CreateTaskCommand command) {
+    public void createTask(@RequestBody CreateTaskCommand command) throws ParseException {
         dailyUseCase.createTask(command);
     }
 

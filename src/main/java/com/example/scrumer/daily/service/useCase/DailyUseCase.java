@@ -7,7 +7,7 @@ import javassist.NotFoundException;
 import java.text.ParseException;
 
 public interface DailyUseCase {
-    void createTask(CreateTaskCommand command);
+    void createTask(CreateTaskCommand command) throws ParseException;
 
     DailyCommand findByIdTeam(Long idTeam) throws ParseException, NotFoundException, IllegalAccessException;
 }

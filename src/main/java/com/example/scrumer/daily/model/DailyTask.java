@@ -17,10 +17,6 @@ public class DailyTask {
     @Id
     private String id;
 
-    private Long userId;
-
-    private Long teamId;
-
     private String titleTask;
 
     private TypeTask typeTask;
