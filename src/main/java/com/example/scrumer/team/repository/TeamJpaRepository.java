@@ -28,4 +28,6 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
                     " WHERE t.teamName LIKE CONCAT('%', :name, '%') "
     )
     List<Team> findByStartedName(@Param("name") String name);
+
+    List<Team> findTeamsByTeamNameContains(String name);
 }

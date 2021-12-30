@@ -2,7 +2,7 @@ package com.example.scrumer.chat.controller;
 
 import com.example.scrumer.chat.command.CreateChannelCommand;
 import com.example.scrumer.chat.command.CreateMessageCommand;
-import com.example.scrumer.chat.command.InfoChannel;
+import com.example.scrumer.chat.command.InformationCreatedChannelCommand;
 import com.example.scrumer.chat.command.MessageCommand;
 import com.example.scrumer.chat.model.Channel;
 import com.example.scrumer.chat.model.ChatNotification;
@@ -26,7 +26,7 @@ public class ChannelController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
-    public InfoChannel createChannel(@RequestBody CreateChannelCommand command) {
+    public InformationCreatedChannelCommand createChannel(@RequestBody CreateChannelCommand command) {
         return channelsUseCase.createChannel(command, getUserEmail());
     }
 

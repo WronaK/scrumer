@@ -16,7 +16,7 @@ public interface TeamUseCase {
 
     Optional<Team> findTeamById(Long id);
 
-    Team addTeam(CreateTeamCommand command);
+    void createTeam(CreateTeamCommand command);
 
     void deleteById(Long id);
 

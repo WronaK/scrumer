@@ -13,7 +13,6 @@ import com.example.scrumer.user.mapper.UserMapper;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/teams")
 @RequiredArgsConstructor public class TeamController {
     private final TeamUseCase teams;
-    private final UploadUseCase uploadUseCase;
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping
@@ -95,9 +93,8 @@ import java.util.stream.Collectors;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTeam(@RequestBody CreateTeamCommand command) {
-        Team team = teams.addTeam(command);
-        return ResponseEntity.created(createdTeamUri(team)).build();
+    public void createTeam(@RequestBody CreateTeamCommand command) {
+        teams.createTeam(command);
     }
 
     @Secured({"ROLE_USER"})

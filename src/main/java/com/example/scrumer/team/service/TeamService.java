@@ -15,6 +15,8 @@ import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.upload.service.useCase.UploadUseCase;
 import com.example.scrumer.user.entity.User;
 import com.example.scrumer.user.repository.UserJpaRepository;
+import com.example.scrumer.user.service.UserService;
+import com.example.scrumer.user.service.useCase.UserUseCase;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TeamService implements TeamUseCase {
     private final TeamJpaRepository repository;
-    private final UserJpaRepository userRepository;
+    private final UserUseCase userUseCase;
     private final ValidatorPermission validatorPermission;
     private final ProjectJpaRepository projectRepository;
     private final UploadUseCase uploadUseCase;
@@ -55,15 +57,15 @@ public class TeamService implements TeamUseCase {
     }
 
     @Override
-    public Team addTeam(CreateTeamCommand command) {
+    public void createTeam(CreateTeamCommand command) {
         Team team = Team.builder()
                 .teamName(command.getTeamName())
                 .description(command.getDescription())
                 .accessCode(command.getAccessCode())
                 .build();
 
-        userRepository.findById(command.getScrumMaster()).ifPresent(team::setScrumMaster);
-        return repository.save(team);
+        userUseCase.findUserById(command.getScrumMaster()).ifPresent(team::setScrumMaster);
+        repository.save(team);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class TeamService implements TeamUseCase {
     public void addMember(Long idTeam, Long idMember) throws NotFoundException, IllegalAccessException {
         Team team = findById(idTeam);
 
-        User user = userRepository.findById(idMember).orElseThrow(() -> new NotFoundException("Not found user with email:" + idMember));
+        User user = userUseCase.findById(idMember);
         team.addMember(user);
         repository.save(team);
     }
@@ -142,7 +144,7 @@ public class TeamService implements TeamUseCase {
 
     @Override
     public void joinToTeam(String userEmail, AddTeamCommand command) {
-        Optional<User> user = userRepository.findByEmail(userEmail);
+        Optional<User> user = userUseCase.findByEmail(userEmail);
         Optional<Team> team = repository.findTeamByIdAndAccessCode(command.getIdTeam(), command.getAccessCode());
 
         if (user.isPresent() && team.isPresent()) {
@@ -178,7 +180,7 @@ public class TeamService implements TeamUseCase {
         }
 
         if(toCommand.getScrumMaster() != null) {
-            userRepository.findById(toCommand.getScrumMaster())
+            userUseCase.findUserById(toCommand.getScrumMaster())
                     .ifPresent(team::setScrumMaster);
         }
     }

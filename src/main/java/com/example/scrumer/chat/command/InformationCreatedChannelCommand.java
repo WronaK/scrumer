@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class InfoChannel {
+public class InformationCreatedChannelCommand {
     private Long idChannel;
     private String idChannelMongo;
     private String channelName;

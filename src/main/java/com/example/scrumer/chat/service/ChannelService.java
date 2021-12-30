@@ -1,14 +1,13 @@
 package com.example.scrumer.chat.service;
 
 import com.example.scrumer.chat.command.CreateChannelCommand;
-import com.example.scrumer.chat.command.InfoChannel;
+import com.example.scrumer.chat.command.InformationCreatedChannelCommand;
 import com.example.scrumer.chat.command.MessageCommand;
 import com.example.scrumer.chat.mapper.MessageMapper;
 import com.example.scrumer.chat.model.*;
 import com.example.scrumer.chat.repository.jpa.ChannelUsersJpaRepository;
 import com.example.scrumer.chat.repository.jpa.ChannelRepository;
 import com.example.scrumer.chat.repository.mongo.ChannelMongoRepository;
-import com.example.scrumer.chat.repository.mongo.MessageMongoRepository;
 import com.example.scrumer.chat.service.useCase.ChannelsUseCase;
 import com.example.scrumer.user.repository.UserJpaRepository;
 import com.example.scrumer.user.entity.User;
@@ -28,67 +27,46 @@ import java.util.stream.Collectors;
 public class ChannelService implements ChannelsUseCase {
     private final ChannelRepository channelRepository;
     private final UserJpaRepository userRepository;
-    private final MessageMongoRepository messageRepository;
     private final ChannelUsersJpaRepository channelUserRepository;
     private final ChannelMongoRepository channelMongoRepository;
 
     @Override
-    public InfoChannel createChannel(CreateChannelCommand command, String userEmail) {
-        InfoChannel.InfoChannelBuilder infoChannel = InfoChannel.builder();
+    public InformationCreatedChannelCommand createChannel(CreateChannelCommand command, String loggedUserEmail) {
+        InformationCreatedChannelCommand.InformationCreatedChannelCommandBuilder informationCreatedChannelCommandBuilder = InformationCreatedChannelCommand.builder();
 
-        userRepository.findByEmail(userEmail).ifPresent(sender -> {
-
-            if (command.getChannelType().equals(ChannelType.GROUP_CHANNEL) || (command.getChannelType().equals(ChannelType.PRIVATE_MESSAGES) && !checkIsExistChannel(sender, command.getMembers().get(0), infoChannel))) {
-
+        userRepository.findByEmail(loggedUserEmail).ifPresent(created -> {
+            if (checkIsExistPrivateChannelOrIsGroupChannel(command, informationCreatedChannelCommandBuilder, created)) {
                 Set<User> members = fetchMembersByEmail(command);
 
                 Room room = channelMongoRepository.save(Room.builder().build());
 
                 Channel channel = Channel.builder()
-                        .idLastMessage(Strings.EMPTY)
-                        .idChannel(room.getId())
-                        .channelName(command.getChannelName())
-                        .channelType(command.getChannelType())
-                        .build();
+                    .idLastMessage(Strings.EMPTY)
+                    .idChannel(room.getId())
+                    .channelName(command.getChannelName())
+                    .channelType(command.getChannelType())
+                    .build();
 
-                ChannelUser channelUser = ChannelUser.builder()
-                        .numbersNewMessages(0L)
-                        .channel(channel)
-                        .user(sender)
-                        .build();
+                addedUserToChannel(channel, created, members);
 
-                channel.addChannelUser(channelUserRepository.save(channelUser));
+                Channel savedChannel = channelRepository.save(channel);
 
-                members.forEach(member ->
-                        channel.addChannelUser(channelUserRepository.save(new ChannelUser(channel, member))));
-
-                Channel channelS = channelRepository.save(channel);
-
-                String channelName;
-                if (channel.getChannelType() == ChannelType.GROUP_CHANNEL) {
-                    channelName = channel.getChannelName();
-
-                } else {
-                    Optional<ChannelUser> channelUserRecipient = channel.getChannelUsers()
-                            .stream()
-                            .filter(c -> !c.getUser().getEmail().equals(userEmail))
-                            .findFirst();
-                    channelName = channelUserRecipient.get().getUser().getUserDetails().getUsername();
-                }
-
-                if (channelName.equals("")) {
-                    channelName = "My private conversation";
-                }
-
-
-                infoChannel.idChannel(channelS.getId()).idChannelMongo(channelS.getIdChannel()).channelName(channelName);
+                informationCreatedChannelCommandBuilder
+                    .idChannel(savedChannel.getId())
+                    .idChannelMongo(savedChannel.getIdChannel())
+                    .channelName(savedChannel.getChannelName(loggedUserEmail));
 
             }
         });
-        return infoChannel.build();
+        return informationCreatedChannelCommandBuilder.build();
     }
 
-    private boolean checkIsExistChannel(User sender, Long idRecipient, InfoChannel.InfoChannelBuilder infoChannelBuilder) {
+    private boolean checkIsExistPrivateChannelOrIsGroupChannel(CreateChannelCommand command, InformationCreatedChannelCommand.InformationCreatedChannelCommandBuilder builder, User sender) {
+        return (command.getChannelType().equals(ChannelType.GROUP_CHANNEL) ||
+                (command.getChannelType().equals(ChannelType.PRIVATE_MESSAGES) && !checkIsExistChannel(sender, command.getMembers().get(0), builder)));
+    }
+
+    private boolean checkIsExistChannel(User sender, Long idRecipient, InformationCreatedChannelCommand.InformationCreatedChannelCommandBuilder infoChannelBuilder) {
         for (ChannelUser channelUser: sender.getUserChannels()) {
             Channel channel = channelUser.getChannel();
 
@@ -103,6 +81,19 @@ public class ChannelService implements ChannelsUseCase {
         }
 
         return false;
+    }
+
+    private void addedUserToChannel(Channel channel, User sender, Set<User> members) {
+        ChannelUser channelUser = ChannelUser.builder()
+                .numbersNewMessages(0L)
+                .channel(channel)
+                .user(sender)
+                .build();
+
+        channel.addChannelUser(channelUserRepository.save(channelUser));
+
+        members.forEach(member ->
+                channel.addChannelUser(channelUserRepository.save(new ChannelUser(channel, member))));
     }
 
     private Set<User> fetchMembersByEmail(CreateChannelCommand command) {
