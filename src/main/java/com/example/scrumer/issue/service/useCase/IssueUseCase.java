@@ -31,5 +31,7 @@ public interface IssueUseCase {
 
     void addAttachment(Long id, MultipartFile file);
 
+    void setStoryPoints(Long id, String storyPoints);
+
     void importIssues(Long idTeam, List<ImportIssueCommand> commands);
 }

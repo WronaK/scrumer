@@ -22,5 +22,7 @@ public interface UserStoryUseCase {
 
     void addAttachment(Long id, MultipartFile file);
 
+    void setStoryPoints(Long id, String storyPoints);
+
     void importUserStories(Long idProject, List<ImportUserStoryCommand> commands);
 }

@@ -8,6 +8,7 @@ import com.example.scrumer.issue.service.useCase.IssueUseCase;
 import com.example.scrumer.issue.repository.IssueJpaRepository;
 import com.example.scrumer.issue.command.IssueCommand;
 import com.example.scrumer.team.entity.Team;
+import com.example.scrumer.team.entity.Team;
 import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -156,6 +156,14 @@ public class IssueService implements IssueUseCase {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+    }
+
+    @Override
+    public void setStoryPoints(Long id, String storyPoints) {
+        repository.findById(id).ifPresent(issue -> {
+            issue.setStoryPoints(Integer.valueOf(storyPoints));
+            repository.save(issue);
         });
     }
 

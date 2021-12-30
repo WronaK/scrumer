@@ -37,6 +37,11 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    public Optional<User> findUserById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

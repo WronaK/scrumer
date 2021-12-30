@@ -14,7 +14,6 @@ import com.example.scrumer.team.repository.TeamJpaRepository;
 import com.example.scrumer.upload.command.SaveUploadCommand;
 import com.example.scrumer.upload.entity.UploadEntity;
 import com.example.scrumer.upload.service.UploadService;
-import com.example.scrumer.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,6 +79,14 @@ public class UserStoryService implements UserStoryUseCase {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+    }
+
+    @Override
+    public void setStoryPoints(Long id, String storyPoints) {
+        userStoryJpaRepository.findById(id).ifPresent(userStory -> {
+            userStory.setStoryPoints(Integer.valueOf(storyPoints));
+            userStoryJpaRepository.save(userStory);
         });
     }
 

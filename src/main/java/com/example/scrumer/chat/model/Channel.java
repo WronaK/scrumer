@@ -4,10 +4,7 @@ import com.example.scrumer.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -22,6 +19,8 @@ public class Channel {
     private Long id;
 
     private String channelName;
+
+    private String idChannel;
 
     @OneToMany(mappedBy = "channel")
     private Set<ChannelUser> channelUsers = new HashSet<>();
@@ -45,5 +44,25 @@ public class Channel {
                 .map(ChannelUser::getUser)
                 .filter(channelUser -> !Objects.equals(channelUser.getId(), senderId))
                 .collect(Collectors.toList());
+    }
+
+    public String getChannelName(String senderUser) {
+        String channelName;
+        if (this.getChannelType() == ChannelType.GROUP_CHANNEL) {
+            channelName = this.getChannelName();
+
+        } else {
+            Optional<ChannelUser> channelUserRecipient = this.getChannelUsers()
+                    .stream()
+                    .filter(c -> !c.getUser().getEmail().equals(senderUser))
+                    .findFirst();
+            channelName = channelUserRecipient.get().getUser().getUserDetails().getUsername();
+        }
+
+        if (channelName.equals("")) {
+            channelName = "My private conversation";
+        }
+
+        return channelName;
     }
 }

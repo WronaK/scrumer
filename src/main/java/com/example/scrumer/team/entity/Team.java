@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -98,5 +99,14 @@ public class Team {
 
     public void addAttachment(UploadEntity attachment) {
         this.attachments.add(attachment);
+    }
+
+    public List<Member> getMembersTeam() {
+        List<Member> collection = new ArrayList<>();
+
+
+        members.forEach(member -> collection.add(new Member(member.getId(), member.getUserDetails().getUsername())));
+        collection.add(new Member(scrumMaster.getId(), scrumMaster.getUserDetails().getUsername()));
+        return collection;
     }
 }

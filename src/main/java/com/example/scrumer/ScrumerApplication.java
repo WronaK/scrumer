@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableJpaAuditing
-@EnableMongoRepositories(basePackages = "com.example.scrumer.chat.repository.mongo")
+@EnableMongoRepositories(basePackages = {"com.example.scrumer.chat.repository.mongo", "com.example.scrumer.daily.repository"})
 @EnableJpaRepositories(basePackages = {"com.example.scrumer.upload.repository", "com.example.scrumer.chat.repository.jpa", "com.example.scrumer.project.repository","com.example.scrumer.team.repository", "com.example.scrumer.issue.repository", "com.example.scrumer.user.repository"})
 @SpringBootApplication
 public class ScrumerApplication {

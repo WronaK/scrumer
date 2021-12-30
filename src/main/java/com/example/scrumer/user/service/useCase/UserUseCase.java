@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface UserUseCase {
     User findById(Long id);
 
+    Optional<User> findUserById(Long id);
+
     void deleteById(Long id);
 
     List<User> findAll();
